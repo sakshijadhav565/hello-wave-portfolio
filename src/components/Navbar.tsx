@@ -1,11 +1,12 @@
-import logo from "@/assets/logo.png";
-
 const navLinks = ["Home", "About", "Skills", "Projects", "Contact"];
 
 const Navbar = () => {
   return (
-    <nav className="bg-nav flex items-center px-6 py-2">
-      <img src={logo} alt="Sakshi Codes" className="h-16 w-auto mr-8" />
+    <nav className="bg-nav flex items-center px-6 py-3">
+      <div className="font-pixel text-lg mr-8">
+        <span className="text-hero-heading">SAKSHI</span>{" "}
+        <span className="text-primary">CODES</span>
+      </div>
       <ul className="flex gap-8 ml-auto">
         {navLinks.map((link) => (
           <li key={link}>
