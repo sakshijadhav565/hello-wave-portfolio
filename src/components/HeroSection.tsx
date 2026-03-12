@@ -13,9 +13,12 @@ const HeroSection = () => {
           className="w-full max-w-[550px] rounded-lg shadow-2xl"
         />
       </div>
-      <div className="w-full md:w-1/2 text-center md:text-left">
-        <h1 className="font-pixel text-4xl md:text-5xl lg:text-6xl text-hero-heading mb-4 leading-none tracking-tight whitespace-nowrap">
-          Hey! I'm Sakshi
+      <div className="w-full md:w-1/2 text-center">
+        <h1 className="font-pixel text-3xl md:text-4xl text-hero-heading mb-2 leading-tight tracking-tight">
+          Hey!
+        </h1>
+        <h1 className="font-pixel text-3xl md:text-4xl text-hero-heading mb-4 leading-tight tracking-tight">
+          I'm Sakshi
         </h1>
         <p className="font-pixel text-sm text-foreground mb-6">
           the mind behind Sakshi Codes.
