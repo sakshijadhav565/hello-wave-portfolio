@@ -1,18 +1,20 @@
-import sakshiWaving from "@/assets/sakshi-waving.png";
+import sakshiVideo from "@/assets/sakshi-waving.mp4";
 
 const HeroSection = () => {
   return (
     <section id="home" className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 px-8 md:px-20 py-16 min-h-[80vh]">
       <div className="w-full md:w-1/2 flex justify-center">
-        <img
-          src={sakshiWaving}
-          alt="Sakshi waving"
+        <video
+          src={sakshiVideo}
+          autoPlay
+          loop
+          muted
+          playsInline
           className="w-80 md:w-[450px] rounded-lg shadow-2xl"
-          style={{ animation: "wave 3s ease-in-out infinite", transformOrigin: "70% 70%" }}
         />
       </div>
       <div className="w-full md:w-1/2 text-center">
-        <h1 className="font-pixel text-4xl md:text-5xl text-hero-heading mb-4 leading-tight">
+        <h1 className="font-pixel text-2xl md:text-4xl text-hero-heading mb-4 leading-tight whitespace-nowrap">
           Hey! I'm Sakshi
         </h1>
         <p className="font-body text-lg text-foreground mb-6">
