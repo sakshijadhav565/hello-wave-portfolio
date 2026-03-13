@@ -1,37 +1,68 @@
-import sakshiVideo from "@/assets/sakshi-waving.mp4";
+import sakshiVideo from "@/assets/sakshi-intro.mp4";
 
 const HeroSection = () => {
   return (
-    <section id="home" className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 px-6 md:px-16 py-12 min-h-[80vh]">
-      <div className="w-full md:w-1/2 flex justify-center">
+    <section
+      id="home"
+      className="relative flex flex-col md:flex-row items-center justify-center gap-10 md:gap-20 px-6 md:px-16 py-16 min-h-[80vh]"
+    >
+      {/* Illustration / Video */}
+      <div className="w-full md:w-[42%] flex justify-center animate-float">
         <video
           src={sakshiVideo}
           autoPlay
           loop
           muted
           playsInline
-          className="w-full max-w-[550px] rounded-lg shadow-2xl"
+          className="w-full max-w-[450px] rounded-lg shadow-[0_0_30px_hsl(var(--hero-heading)/0.2)]"
         />
       </div>
-      <div className="w-full md:w-1/2 text-center">
-        <h1 className="font-pixel text-3xl md:text-4xl text-hero-heading mb-2 leading-tight tracking-tight">
+
+      {/* Text Content */}
+      <div className="w-full md:w-1/2 text-center md:text-left">
+        <h1 className="font-pixel text-3xl md:text-4xl text-hero-heading mb-2 leading-tight tracking-tight drop-shadow-[0_0_15px_hsl(var(--hero-heading)/0.5)]">
           Hey!
         </h1>
-        <h1 className="font-pixel text-3xl md:text-4xl text-hero-heading mb-4 leading-tight tracking-tight">
+        <h1 className="font-pixel text-3xl md:text-4xl text-hero-heading mb-5 leading-tight tracking-tight drop-shadow-[0_0_15px_hsl(var(--hero-heading)/0.5)]">
           I'm Sakshi
         </h1>
         <p className="font-pixel text-sm text-foreground mb-6">
           the mind behind Sakshi Codes.
         </p>
-        <p className="font-pixel text-xs text-foreground leading-relaxed mb-4">
-          I specialize in AI, Machine Learning, and intelligent systems. Whether it's building
-          research-backed models, developing full-stack applications, or experimenting with
-          emerging technologies, I'm always ready for a challenge.
+        <p className="font-body text-base text-foreground/90 leading-relaxed mb-4">
+          I specialize in AI, Machine Learning, and intelligent systems. Whether
+          it's building research-backed models, developing full-stack
+          applications, or experimenting with emerging technologies, I'm always
+          ready for a challenge.
         </p>
-        <p className="font-pixel text-xs text-foreground leading-relaxed">
-          I'm deeply interested in solving real-world problems using data and algorithms — and I'm
-          just getting started.
+        <p className="font-body text-base text-foreground/90 leading-relaxed mb-8">
+          I'm deeply interested in solving real-world problems using data and
+          algorithms — and I'm just getting started.
         </p>
+
+        {/* CTA Buttons */}
+        <div className="flex gap-4 justify-center md:justify-start">
+          <a
+            href="#projects"
+            className="px-6 py-3 font-body font-semibold text-hero-heading border-2 border-hero-heading rounded-md transition-all duration-300 hover:bg-hero-heading/10 hover:shadow-[0_0_20px_hsl(var(--hero-heading)/0.4)] hover:scale-105"
+          >
+            View Projects
+          </a>
+          <a
+            href="#"
+            className="px-6 py-3 font-body font-semibold text-hero-heading border-2 border-hero-heading rounded-md transition-all duration-300 hover:bg-hero-heading/10 hover:shadow-[0_0_20px_hsl(var(--hero-heading)/0.4)] hover:scale-105"
+          >
+            Download Resume
+          </a>
+        </div>
+      </div>
+
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 animate-bounce">
+        <span className="font-body text-xs text-foreground/60">
+          Scroll to explore
+        </span>
+        <span className="text-hero-heading text-lg">↓</span>
       </div>
     </section>
   );
