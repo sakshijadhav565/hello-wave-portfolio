@@ -9,7 +9,7 @@ const Navbar = () => {
   return (
     <>
       <nav className="w-full flex items-center px-6 py-2" style={{ background: "linear-gradient(135deg, #ff2f6d, #ff4f9a)" }}>
-        <img src={logo} alt="Sakshi Codes" className="h-[60px] w-auto" />
+        <img src={logo} alt="Sakshi Codes" className="h-[65px] w-auto flex-shrink-0" />
         <ul className="flex gap-9 mx-auto">
           {navLinks.map((link) => (
             <li key={link}>
