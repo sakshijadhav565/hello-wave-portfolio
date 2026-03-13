@@ -1,6 +1,31 @@
+import { useState, useEffect } from "react";
 import sakshiVideo from "@/assets/sakshi-intro.mp4";
 
+const roles = ["AI Developer", "Machine Learning Engineer", "Problem Solver"];
+
 const HeroSection = () => {
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const current = roles[roleIndex];
+    let timeout: ReturnType<typeof setTimeout>;
+
+    if (!isDeleting && charIndex < current.length) {
+      timeout = setTimeout(() => setCharIndex((c) => c + 1), 100);
+    } else if (!isDeleting && charIndex === current.length) {
+      timeout = setTimeout(() => setIsDeleting(true), 1500);
+    } else if (isDeleting && charIndex > 0) {
+      timeout = setTimeout(() => setCharIndex((c) => c - 1), 50);
+    } else if (isDeleting && charIndex === 0) {
+      setIsDeleting(false);
+      setRoleIndex((i) => (i + 1) % roles.length);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [charIndex, isDeleting, roleIndex]);
+
   return (
     <section
       id="home"
@@ -23,9 +48,16 @@ const HeroSection = () => {
         <h1 className="font-pixel text-3xl md:text-4xl text-hero-heading mb-2 leading-tight tracking-tight drop-shadow-[0_0_15px_hsl(var(--hero-heading)/0.5)]">
           Hey!
         </h1>
-        <h1 className="font-pixel text-3xl md:text-4xl text-hero-heading mb-5 leading-tight tracking-tight drop-shadow-[0_0_15px_hsl(var(--hero-heading)/0.5)]">
+        <h1 className="font-pixel text-3xl md:text-4xl text-hero-heading mb-3 leading-tight tracking-tight drop-shadow-[0_0_15px_hsl(var(--hero-heading)/0.5)]">
           I'm Sakshi
         </h1>
+
+        {/* Typing Animation */}
+        <p className="font-pixel text-sm md:text-base text-primary mb-6 h-6">
+          <span>{roles[roleIndex].substring(0, charIndex)}</span>
+          <span className="inline-block w-[2px] h-4 bg-primary ml-0.5 animate-pulse align-middle" />
+        </p>
+
         <p className="font-pixel text-sm text-foreground mb-6">
           the mind behind Sakshi Codes.
         </p>
