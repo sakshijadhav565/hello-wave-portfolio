@@ -78,3 +78,21 @@
 .animate-float {
   animation: float 4s ease-in-out infinite;
 }
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-cursor-blink {
+  animation: cursor-blink 0.8s steps(1) infinite;
+}
+
+@keyframes scroll-hint {
+  0%, 100% { opacity: 0.5; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(6px); }
+}
+
+.animate-scroll-hint {
+  animation: scroll-hint 2.5s ease-in-out infinite;
+}

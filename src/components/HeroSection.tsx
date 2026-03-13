@@ -29,7 +29,7 @@ const HeroSection = () => {
   return (
     <section
       id="home"
-      className="relative flex flex-col md:flex-row items-center justify-center gap-10 md:gap-20 px-6 md:px-16 py-16 min-h-[80vh]"
+      className="relative flex flex-col md:flex-row items-center justify-center gap-10 md:gap-20 px-6 md:px-16 pt-16 pb-28 min-h-[85vh]"
     >
       {/* Illustration / Video */}
       <div className="w-full md:w-[42%] flex justify-center animate-float">
@@ -53,9 +53,12 @@ const HeroSection = () => {
         </h1>
 
         {/* Typing Animation */}
-        <p className="font-pixel text-sm md:text-base text-primary mb-6 h-6">
+        <p className="font-pixel text-sm md:text-base mb-6 h-6" style={{ color: "#ff2f6d" }}>
           <span>{roles[roleIndex].substring(0, charIndex)}</span>
-          <span className="inline-block w-[2px] h-4 bg-primary ml-0.5 animate-pulse align-middle" />
+          <span
+            className="inline-block w-[2px] h-4 ml-0.5 align-middle animate-cursor-blink"
+            style={{ backgroundColor: "#ff2f6d" }}
+          />
         </p>
 
         <p className="font-pixel text-sm text-foreground mb-6">
@@ -73,16 +76,21 @@ const HeroSection = () => {
         </p>
 
         {/* CTA Buttons */}
-        <div className="flex gap-4 justify-center md:justify-start">
+        <div className="flex gap-4 justify-center md:justify-start mb-12">
           <a
             href="#projects"
-            className="px-6 py-3 font-body font-semibold text-hero-heading border-2 border-hero-heading rounded-md transition-all duration-300 hover:bg-hero-heading/10 hover:shadow-[0_0_20px_hsl(var(--hero-heading)/0.4)] hover:scale-105"
+            className="px-6 py-3 font-body font-semibold text-hero-heading border-2 border-hero-heading rounded-md transition-all duration-300 hover:shadow-[0_0_20px_hsl(var(--hero-heading)/0.4)] hover:scale-105"
+            style={{ borderColor: undefined }}
+            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 20px #ff2f6d80"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
           >
             View Projects
           </a>
           <a
             href="#"
-            className="px-6 py-3 font-body font-semibold text-hero-heading border-2 border-hero-heading rounded-md transition-all duration-300 hover:bg-hero-heading/10 hover:shadow-[0_0_20px_hsl(var(--hero-heading)/0.4)] hover:scale-105"
+            className="px-6 py-3 font-body font-semibold text-hero-heading border-2 border-hero-heading rounded-md transition-all duration-300 hover:scale-105"
+            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 20px #ff2f6d80"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
           >
             Download Resume
           </a>
@@ -90,7 +98,7 @@ const HeroSection = () => {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 animate-bounce">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 animate-scroll-hint">
         <span className="font-body text-xs text-foreground/60">
           Scroll to explore
         </span>
