@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { Brain, Code, Lightbulb, Mail, Phone } from "lucide-react";
 
-const PARTICLE_COUNT = 20;
+const PARTICLE_COUNT = 30;
 
 interface Particle {
   x: number;
@@ -31,12 +31,12 @@ const features = [
 ];
 
 const techStack = [
-  { name: "Python", icon: "🐍" },
-  { name: "React", icon: "⚛️" },
-  { name: "TensorFlow", icon: "🧠" },
-  { name: "Git", icon: "📦" },
-  { name: "Docker", icon: "🐳" },
-  { name: "SQL", icon: "🗄️" },
+  { name: "Python", icon: "🐍", delay: "0s" },
+  { name: "React", icon: "⚛️", delay: "0.4s" },
+  { name: "TensorFlow", icon: "🧠", delay: "0.8s" },
+  { name: "Git", icon: "📦", delay: "1.2s" },
+  { name: "Docker", icon: "🐳", delay: "0.6s" },
+  { name: "SQL", icon: "🗄️", delay: "1.0s" },
 ];
 
 const AboutSection = () => {
@@ -60,10 +60,10 @@ const AboutSection = () => {
       Array.from({ length: PARTICLE_COUNT }, () => ({
         x: Math.random() * 100,
         y: Math.random() * 100,
-        size: Math.random() * 1.5 + 0.5,
-        speedX: (Math.random() - 0.5) * 0.08,
-        speedY: (Math.random() - 0.5) * 0.06,
-        opacity: Math.random() * 0.2 + 0.05,
+        size: Math.random() * 2.5 + 1,
+        speedX: (Math.random() - 0.5) * 0.12,
+        speedY: (Math.random() - 0.5) * 0.1,
+        opacity: Math.random() * 0.35 + 0.1,
       })),
     []
   );
@@ -100,7 +100,7 @@ const AboutSection = () => {
         ctx.arc((p.x / 100) * w, (p.y / 100) * h, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `hsla(187,100%,57%,${p.opacity})`;
         ctx.shadowColor = "hsl(187,100%,57%)";
-        ctx.shadowBlur = 4;
+        ctx.shadowBlur = 6;
         ctx.fill();
         ctx.shadowBlur = 0;
       }
@@ -136,9 +136,9 @@ const AboutSection = () => {
         </h2>
 
         {/* Two-column: content left, tech grid right */}
-        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-14 items-center">
           {/* Left column */}
-          <div className="w-full lg:w-[60%] flex flex-col gap-8">
+          <div className="w-full lg:w-[60%] flex flex-col gap-6">
             {/* Short intro */}
             <div>
               <p className="font-pixel text-xs text-primary mb-2">
@@ -155,10 +155,10 @@ const AboutSection = () => {
               {features.map(({ icon: Icon, title, desc }) => (
                 <div
                   key={title}
-                  className="group rounded-lg border border-hero-heading/30 bg-background/60 backdrop-blur-sm p-5 transition-all duration-300 hover:border-hero-heading/70 hover:shadow-[0_0_20px_hsl(var(--hero-heading)/0.15)] hover:-translate-y-1"
+                  className="group rounded-lg border border-hero-heading/30 bg-background/60 backdrop-blur-sm p-5 transition-all duration-300 hover:border-hero-heading/70 hover:shadow-[0_0_24px_hsl(var(--hero-heading)/0.2)] hover:-translate-y-1.5"
                 >
                   <Icon
-                    className="text-hero-heading mb-3 transition-all duration-300 group-hover:drop-shadow-[0_0_8px_hsl(var(--hero-heading)/0.6)]"
+                    className="text-hero-heading mb-3 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_hsl(var(--hero-heading)/0.7)]"
                     size={24}
                   />
                   <h3 className="font-body text-sm font-bold text-foreground mb-2">
@@ -171,8 +171,8 @@ const AboutSection = () => {
               ))}
             </div>
 
-            {/* Contact chips */}
-            <div className="flex flex-wrap gap-3">
+            {/* Contact chips — centered */}
+            <div className="flex flex-wrap gap-3 justify-center">
               <a
                 href="mailto:sakshijadhav565@gmail.com"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-hero-heading/30 bg-background/60 font-body text-xs text-foreground/80 transition-all duration-300 hover:border-hero-heading/60 hover:shadow-[0_0_12px_hsl(var(--hero-heading)/0.15)]"
@@ -187,15 +187,16 @@ const AboutSection = () => {
             </div>
           </div>
 
-          {/* Right column: Tech grid */}
+          {/* Right column: Tech grid with floating animation */}
           <div className="w-full lg:w-[40%] flex items-center justify-center">
             <div className="grid grid-cols-3 gap-4 w-full max-w-[300px]">
-              {techStack.map(({ name, icon }) => (
+              {techStack.map(({ name, icon, delay }) => (
                 <div
                   key={name}
-                  className="group flex flex-col items-center justify-center gap-2 aspect-square rounded-lg border border-hero-heading/20 bg-background/50 backdrop-blur-sm transition-all duration-300 hover:border-hero-heading/60 hover:shadow-[0_0_18px_hsl(var(--hero-heading)/0.2)] hover:-translate-y-0.5"
+                  className="group flex flex-col items-center justify-center gap-2 aspect-square rounded-lg border border-hero-heading/20 bg-background/50 backdrop-blur-sm transition-all duration-300 hover:border-hero-heading/60 hover:shadow-[0_0_22px_hsl(var(--hero-heading)/0.3)] hover:-translate-y-1"
+                  style={{ animation: `about-float 3.5s ease-in-out infinite`, animationDelay: delay }}
                 >
-                  <span className="text-2xl transition-all duration-300 group-hover:drop-shadow-[0_0_10px_hsl(var(--hero-heading)/0.5)]">
+                  <span className="text-2xl transition-all duration-300 group-hover:drop-shadow-[0_0_12px_hsl(var(--hero-heading)/0.6)]">
                     {icon}
                   </span>
                   <span className="font-body text-[10px] font-semibold text-foreground/70 group-hover:text-hero-heading transition-colors duration-300">
