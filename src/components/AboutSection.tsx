@@ -187,13 +187,13 @@ const AboutSection = () => {
             </div>
           </div>
 
-          {/* Right column: Tech grid with floating animation */}
-          <div className="w-full lg:w-[40%] flex items-center justify-center">
+          {/* Right column: Tech grid with floating animation - aligned with cards */}
+          <div className="w-full lg:w-[40%] flex items-center justify-center h-full">
             <div className="grid grid-cols-3 gap-4 w-full max-w-[300px]">
               {techStack.map(({ name, icon, delay }) => (
                 <div
                   key={name}
-                  className="group flex flex-col items-center justify-center gap-2 aspect-square rounded-lg border border-hero-heading/20 bg-background/50 backdrop-blur-sm transition-all duration-300 hover:border-hero-heading/60 hover:shadow-[0_0_22px_hsl(var(--hero-heading)/0.3)] hover:-translate-y-1"
+                  className="group flex flex-col items-center justify-center gap-2 aspect-square rounded-lg border-2 border-hero-heading/30 bg-hero-heading/[0.03] backdrop-blur-sm transition-all duration-300 hover:border-hero-heading hover:shadow-[0_0_22px_hsl(var(--hero-heading)/0.3)] hover:-translate-y-1"
                   style={{ animation: `about-float 3.5s ease-in-out infinite`, animationDelay: delay }}
                 >
                   <span className="text-2xl transition-all duration-300 group-hover:drop-shadow-[0_0_12px_hsl(var(--hero-heading)/0.6)]">
