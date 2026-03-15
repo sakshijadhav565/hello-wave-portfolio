@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { Brain, Code, Lightbulb, Mail, Phone } from "lucide-react";
 
-const PARTICLE_COUNT = 30;
+const PARTICLE_COUNT = 35;
 
 interface Particle {
   x: number;
@@ -30,28 +30,80 @@ const features = [
   },
 ];
 
+const stats = [
+  { label: "Projects Built", value: 10, suffix: "+" },
+  { label: "Technologies Used", value: 8, suffix: "+" },
+  { label: "AI Experiments", value: 15, suffix: "+" },
+];
+
 const techStack = [
   { name: "Python", icon: "🐍", delay: "0s" },
   { name: "React", icon: "⚛️", delay: "0.4s" },
   { name: "TensorFlow", icon: "🧠", delay: "0.8s" },
-  { name: "Git", icon: "📦", delay: "1.2s" },
-  { name: "Docker", icon: "🐳", delay: "0.6s" },
-  { name: "SQL", icon: "🗄️", delay: "1.0s" },
+  { name: "Node.js", icon: "🟢", delay: "1.2s" },
+  { name: "Git", icon: "📦", delay: "0.3s" },
+  { name: "Docker", icon: "🐳", delay: "0.7s" },
+  { name: "SQL", icon: "🗄️", delay: "1.1s" },
+  { name: "Figma", icon: "🎨", delay: "0.5s" },
 ];
+
+/* ── Animated Counter Hook ── */
+function useCountUp(target: number, duration: number, trigger: boolean) {
+  const [count, setCount] = useState(0);
+  const hasPlayed = useRef(false);
+
+  useEffect(() => {
+    if (!trigger || hasPlayed.current) return;
+    hasPlayed.current = true;
+    const start = performance.now();
+    const step = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.round(eased * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [trigger, target, duration]);
+
+  return count;
+}
+
+const StatCard = ({ label, value, suffix, trigger }: { label: string; value: number; suffix: string; trigger: boolean }) => {
+  const count = useCountUp(value, 1200, trigger);
+  return (
+    <div className="flex flex-col items-center gap-1 px-6 py-4 rounded-lg border-2 border-hero-heading/40 bg-hero-heading/[0.04] backdrop-blur-sm transition-all duration-300 hover:border-hero-heading hover:shadow-[0_0_20px_hsl(var(--hero-heading)/0.25)]">
+      <span className="font-pixel text-2xl md:text-3xl text-hero-heading drop-shadow-[0_0_10px_hsl(var(--hero-heading)/0.6)]">
+        {count}{suffix}
+      </span>
+      <span className="font-body text-xs text-foreground/60 uppercase tracking-wider">{label}</span>
+    </div>
+  );
+};
 
 const AboutSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [statsVisible, setStatsVisible] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setIsVisible(true);
-      },
+      ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
       { threshold: 0.1 }
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setStatsVisible(true); },
+      { threshold: 0.3 }
+    );
+    if (statsRef.current) observer.observe(statsRef.current);
     return () => observer.disconnect();
   }, []);
 
@@ -60,10 +112,10 @@ const AboutSection = () => {
       Array.from({ length: PARTICLE_COUNT }, () => ({
         x: Math.random() * 100,
         y: Math.random() * 100,
-        size: Math.random() * 2.5 + 1,
+        size: Math.random() * 3 + 1,
         speedX: (Math.random() - 0.5) * 0.12,
         speedY: (Math.random() - 0.5) * 0.1,
-        opacity: Math.random() * 0.35 + 0.1,
+        opacity: Math.random() * 0.4 + 0.12,
       })),
     []
   );
@@ -100,7 +152,7 @@ const AboutSection = () => {
         ctx.arc((p.x / 100) * w, (p.y / 100) * h, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `hsla(187,100%,57%,${p.opacity})`;
         ctx.shadowColor = "hsl(187,100%,57%)";
-        ctx.shadowBlur = 6;
+        ctx.shadowBlur = 8;
         ctx.fill();
         ctx.shadowBlur = 0;
       }
@@ -118,7 +170,7 @@ const AboutSection = () => {
     <section
       id="about"
       ref={sectionRef}
-      className="relative w-full min-h-screen flex items-center justify-center py-16 px-6 md:px-16 overflow-hidden"
+      className="relative w-full min-h-screen flex items-center justify-center py-20 px-6 md:px-16 overflow-hidden"
     >
       <canvas
         ref={canvasRef}
@@ -126,74 +178,86 @@ const AboutSection = () => {
       />
 
       <div
-        className={`relative z-10 max-w-6xl mx-auto transition-all duration-700 ${
+        className={`relative z-10 max-w-7xl w-full mx-auto transition-all duration-700 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}
       >
         {/* Heading */}
-        <h2 className="font-pixel text-xl md:text-2xl text-hero-heading text-center mb-10 drop-shadow-[0_0_15px_hsl(var(--hero-heading)/0.5)]">
+        <h2 className="font-pixel text-4xl md:text-5xl lg:text-[56px] text-hero-heading text-center mb-12 drop-shadow-[0_0_25px_hsl(var(--hero-heading)/0.6)]">
           ABOUT ME
         </h2>
 
-        {/* Two-column: content left, tech grid right */}
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-14 items-center">
+        {/* Two-column layout */}
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-center">
           {/* Left column */}
-          <div className="w-full lg:w-[60%] flex flex-col gap-6">
-            {/* Short intro */}
+          <div className="w-full lg:w-[58%] flex flex-col gap-8">
+            {/* Intro */}
             <div>
-              <p className="font-pixel text-xs text-primary mb-2">
+              <p className="font-pixel text-sm md:text-base text-primary mb-3 leading-relaxed">
                 Hi, I'm Sakshi — the mind behind Sakshi Codes.
               </p>
-              <p className="font-body text-base text-foreground/85 leading-relaxed">
+              <p className="font-body text-lg md:text-xl text-foreground/85 leading-relaxed">
                 I'm passionate about Artificial Intelligence, Machine Learning,
                 and building intelligent systems that solve real-world problems.
               </p>
             </div>
 
             {/* Feature cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {features.map(({ icon: Icon, title, desc }) => (
                 <div
                   key={title}
-                  className="group rounded-lg border-2 border-hero-heading/50 bg-hero-heading/[0.03] backdrop-blur-sm p-5 transition-all duration-300 hover:border-hero-heading hover:shadow-[0_0_30px_hsl(var(--hero-heading)/0.3)] hover:-translate-y-1.5"
+                  className="group rounded-xl border-[3px] border-hero-heading/50 bg-hero-heading/[0.04] backdrop-blur-sm p-6 transition-all duration-300 hover:border-hero-heading hover:shadow-[0_0_35px_hsl(var(--hero-heading)/0.35)] hover:-translate-y-2"
                 >
                   <Icon
-                    className="text-hero-heading mb-3 transition-all duration-300 group-hover:drop-shadow-[0_0_12px_hsl(var(--hero-heading)/0.8)]"
-                    size={24}
+                    className="text-hero-heading mb-3 transition-all duration-300 group-hover:drop-shadow-[0_0_14px_hsl(var(--hero-heading)/0.8)]"
+                    size={28}
                   />
-                  <h3 className="font-body text-sm font-bold text-foreground mb-2">
+                  <h3 className="font-body text-base font-bold text-foreground mb-2">
                     {title}
                   </h3>
-                  <p className="font-body text-xs text-foreground/70 leading-relaxed">
+                  <p className="font-body text-sm text-foreground/70 leading-relaxed">
                     {desc}
                   </p>
                 </div>
               ))}
             </div>
 
-            {/* Contact chips — centered */}
-            <div className="flex flex-wrap gap-3 justify-center">
+            {/* Divider */}
+            <div className="w-full flex justify-center">
+              <div className="w-3/4 h-px bg-gradient-to-r from-transparent via-hero-heading/50 to-transparent shadow-[0_0_8px_hsl(var(--hero-heading)/0.3)]" />
+            </div>
+
+            {/* Stats row */}
+            <div ref={statsRef} className="grid grid-cols-3 gap-4">
+              {stats.map((s) => (
+                <StatCard key={s.label} {...s} trigger={statsVisible} />
+              ))}
+            </div>
+
+            {/* Contact chips */}
+            <div className="flex flex-wrap gap-4 justify-center">
               <a
                 href="mailto:sakshijadhav565@gmail.com"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-hero-heading/30 bg-background/60 font-body text-xs text-foreground/80 transition-all duration-300 hover:border-hero-heading/60 hover:shadow-[0_0_12px_hsl(var(--hero-heading)/0.15)]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-hero-heading/40 bg-background/60 font-body text-sm text-foreground/80 transition-all duration-300 hover:border-hero-heading/70 hover:shadow-[0_0_15px_hsl(var(--hero-heading)/0.2)]"
               >
-                <Mail size={14} className="text-hero-heading" />
+                <Mail size={16} className="text-hero-heading" />
                 sakshijadhav565@gmail.com
               </a>
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-background/60 font-body text-xs text-foreground/80">
-                <Phone size={14} className="text-primary" />
+              <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/40 bg-background/60 font-body text-sm text-foreground/80">
+                <Phone size={16} className="text-primary" />
                 +91 9604558388
               </span>
             </div>
           </div>
 
-          {/* Right column: Tech grid with floating animation - aligned with cards */}
-          <div className="w-full lg:w-[40%] flex items-center justify-center h-full">
-            <div className="grid grid-cols-3 gap-4 w-full max-w-[300px]">
+          {/* Right column: Tech grid */}
+          <div className="w-full lg:w-[42%] flex items-center justify-center">
+            <div className="grid grid-cols-4 gap-4 w-full max-w-[340px]">
               {techStack.map(({ name, icon, delay }) => (
                 <div
                   key={name}
-                  className="group flex flex-col items-center justify-center gap-2 aspect-square rounded-lg border-2 border-hero-heading/30 bg-hero-heading/[0.03] backdrop-blur-sm transition-all duration-300 hover:border-hero-heading hover:shadow-[0_0_22px_hsl(var(--hero-heading)/0.3)] hover:-translate-y-1"
+                  className="group flex flex-col items-center justify-center gap-2 aspect-square rounded-lg border-2 border-hero-heading/30 bg-hero-heading/[0.04] backdrop-blur-sm transition-all duration-300 hover:border-hero-heading hover:shadow-[0_0_22px_hsl(var(--hero-heading)/0.3)] hover:-translate-y-1"
                   style={{ animation: `about-float 3.5s ease-in-out infinite`, animationDelay: delay }}
                 >
                   <span className="text-2xl transition-all duration-300 group-hover:drop-shadow-[0_0_12px_hsl(var(--hero-heading)/0.6)]">
