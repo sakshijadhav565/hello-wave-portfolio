@@ -15,7 +15,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 322 80% 55%;
+    --primary: 342 100% 59%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 187 100% 50%;
@@ -24,15 +24,15 @@
     --muted: 0 20% 65%;
     --muted-foreground: 0 0% 95%;
 
-    --accent: 322 80% 55%;
+    --accent: 342 100% 59%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 322 50% 65%;
+    --border: 342 80% 60%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 322 80% 55%;
+    --ring: 342 100% 59%;
 
     --radius: 0.5rem;
 
@@ -45,7 +45,7 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    --nav-bg: 322 80% 55%;
+    --nav-bg: 342 100% 59%;
     --hero-heading: 187 100% 50%;
 
     --font-pixel: 'Press Start 2P', cursive;

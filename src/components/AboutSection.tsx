@@ -71,7 +71,7 @@ function useCountUp(target: number, duration: number, trigger: boolean) {
 }
 
 const StatCard = ({ label, value, suffix, trigger }: { label: string; value: number; suffix: string; trigger: boolean }) => {
-  const count = useCountUp(value, 1200, trigger);
+  const count = useCountUp(value, 2800, trigger);
   return (
     <div className="flex flex-col items-center gap-1 px-6 py-4 rounded-lg border-2 border-hero-heading/40 bg-hero-heading/[0.04] backdrop-blur-sm transition-all duration-300 hover:border-hero-heading hover:shadow-[0_0_20px_hsl(var(--hero-heading)/0.25)]">
       <span className="font-pixel text-2xl md:text-3xl text-hero-heading drop-shadow-[0_0_10px_hsl(var(--hero-heading)/0.6)]">
@@ -170,7 +170,7 @@ const AboutSection = () => {
     <section
       id="about"
       ref={sectionRef}
-      className="relative w-full min-h-screen flex items-center justify-center py-20 px-6 md:px-16 overflow-hidden"
+      className="relative w-full min-h-screen flex items-center justify-center py-14 px-6 md:px-16 overflow-hidden"
     >
       <canvas
         ref={canvasRef}
@@ -183,14 +183,14 @@ const AboutSection = () => {
         }`}
       >
         {/* Heading */}
-        <h2 className="font-pixel text-4xl md:text-5xl lg:text-[56px] text-hero-heading text-center mb-12 drop-shadow-[0_0_25px_hsl(var(--hero-heading)/0.6)]">
+        <h2 className="font-pixel text-3xl md:text-4xl lg:text-[48px] text-hero-heading text-center mb-8 drop-shadow-[0_0_25px_hsl(var(--hero-heading)/0.6)]">
           ABOUT ME
         </h2>
 
         {/* Two-column layout */}
-        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-center">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-14 items-center">
           {/* Left column */}
-          <div className="w-full lg:w-[58%] flex flex-col gap-8">
+          <div className="w-full lg:w-[58%] flex flex-col gap-6">
             {/* Intro */}
             <div>
               <p className="font-pixel text-sm md:text-base text-primary mb-3 leading-relaxed">
