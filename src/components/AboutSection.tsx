@@ -170,7 +170,7 @@ const AboutSection = () => {
     <section
       id="about"
       ref={sectionRef}
-      className="relative w-full min-h-screen flex items-center justify-center py-20 px-6 md:px-16 overflow-hidden"
+      className="relative w-full min-h-screen flex items-center justify-center py-14 px-6 md:px-16 overflow-hidden"
     >
       <canvas
         ref={canvasRef}
