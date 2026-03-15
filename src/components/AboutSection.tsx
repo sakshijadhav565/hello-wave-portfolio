@@ -183,7 +183,7 @@ const AboutSection = () => {
         }`}
       >
         {/* Heading */}
-        <h2 className="font-pixel text-4xl md:text-5xl lg:text-[56px] text-hero-heading text-center mb-12 drop-shadow-[0_0_25px_hsl(var(--hero-heading)/0.6)]">
+        <h2 className="font-pixel text-3xl md:text-4xl lg:text-[48px] text-hero-heading text-center mb-8 drop-shadow-[0_0_25px_hsl(var(--hero-heading)/0.6)]">
           ABOUT ME
         </h2>
 
