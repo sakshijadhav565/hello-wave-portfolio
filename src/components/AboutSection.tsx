@@ -155,10 +155,10 @@ const AboutSection = () => {
               {features.map(({ icon: Icon, title, desc }) => (
                 <div
                   key={title}
-                  className="group rounded-lg border border-hero-heading/30 bg-background/60 backdrop-blur-sm p-5 transition-all duration-300 hover:border-hero-heading/70 hover:shadow-[0_0_24px_hsl(var(--hero-heading)/0.2)] hover:-translate-y-1.5"
+                  className="group rounded-lg border-2 border-hero-heading/50 bg-hero-heading/[0.03] backdrop-blur-sm p-5 transition-all duration-300 hover:border-hero-heading hover:shadow-[0_0_30px_hsl(var(--hero-heading)/0.3)] hover:-translate-y-1.5"
                 >
                   <Icon
-                    className="text-hero-heading mb-3 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_hsl(var(--hero-heading)/0.7)]"
+                    className="text-hero-heading mb-3 transition-all duration-300 group-hover:drop-shadow-[0_0_12px_hsl(var(--hero-heading)/0.8)]"
                     size={24}
                   />
                   <h3 className="font-body text-sm font-bold text-foreground mb-2">
