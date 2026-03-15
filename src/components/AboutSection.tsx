@@ -188,9 +188,9 @@ const AboutSection = () => {
         </h2>
 
         {/* Two-column layout */}
-        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-center">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-14 items-center">
           {/* Left column */}
-          <div className="w-full lg:w-[58%] flex flex-col gap-8">
+          <div className="w-full lg:w-[58%] flex flex-col gap-6">
             {/* Intro */}
             <div>
               <p className="font-pixel text-sm md:text-base text-primary mb-3 leading-relaxed">
