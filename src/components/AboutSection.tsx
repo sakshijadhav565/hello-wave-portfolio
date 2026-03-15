@@ -71,7 +71,7 @@ function useCountUp(target: number, duration: number, trigger: boolean) {
 }
 
 const StatCard = ({ label, value, suffix, trigger }: { label: string; value: number; suffix: string; trigger: boolean }) => {
-  const count = useCountUp(value, 1200, trigger);
+  const count = useCountUp(value, 2800, trigger);
   return (
     <div className="flex flex-col items-center gap-1 px-6 py-4 rounded-lg border-2 border-hero-heading/40 bg-hero-heading/[0.04] backdrop-blur-sm transition-all duration-300 hover:border-hero-heading hover:shadow-[0_0_20px_hsl(var(--hero-heading)/0.25)]">
       <span className="font-pixel text-2xl md:text-3xl text-hero-heading drop-shadow-[0_0_10px_hsl(var(--hero-heading)/0.6)]">
