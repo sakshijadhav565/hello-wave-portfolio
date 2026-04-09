@@ -55,6 +55,12 @@ export default {
         },
         nav: "hsl(var(--nav-bg))",
         "hero-heading": "hsl(var(--hero-heading))",
+        cyber: {
+          bg: "hsl(var(--cyber-bg))",
+          card: "hsl(var(--cyber-card))",
+          pink: "hsl(var(--cyber-pink))",
+          cyan: "hsl(var(--cyber-cyan))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
