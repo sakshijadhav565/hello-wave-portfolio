@@ -16,6 +16,8 @@ export default {
       fontFamily: {
         pixel: ["'Press Start 2P'", "cursive"],
         body: ["'Quicksand'", "sans-serif"],
+        orbitron: ["'Orbitron'", "sans-serif"],
+        rajdhani: ["'Rajdhani'", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
