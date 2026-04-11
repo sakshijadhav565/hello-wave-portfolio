@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, useMemo, useCallback } from "react";
-import { Brain, Code, Lightbulb, Mail, Phone } from "lucide-react";
+import { useEffect, useRef, useState, useMemo } from "react";
+import { Mail, Phone } from "lucide-react";
 
 const PARTICLE_COUNT = 35;
 
@@ -12,22 +12,10 @@ interface Particle {
   opacity: number;
 }
 
-const features = [
-  {
-    icon: Brain,
-    title: "AI & Machine Learning",
-    desc: "Building intelligent systems using data, algorithms, and modern AI frameworks.",
-  },
-  {
-    icon: Code,
-    title: "Full-Stack Development",
-    desc: "Creating interactive applications and scalable digital solutions.",
-  },
-  {
-    icon: Lightbulb,
-    title: "Curiosity Driven",
-    desc: "Constantly learning new technologies and pushing the boundaries of innovation.",
-  },
+const mantras = [
+  "> I build systems that think.",
+  "> I turn data into decisions.",
+  "> Always curious. Always building.",
 ];
 
 const stats = [
@@ -47,7 +35,6 @@ const techStack = [
   { name: "Figma", icon: "🎨", delay: "0.5s" },
 ];
 
-/* ── Animated Counter Hook ── */
 function useCountUp(target: number, duration: number, trigger: boolean) {
   const [count, setCount] = useState(0);
   const hasPlayed = useRef(false);
@@ -59,7 +46,6 @@ function useCountUp(target: number, duration: number, trigger: boolean) {
     const step = (now: number) => {
       const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      // ease-out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       setCount(Math.round(eased * target));
       if (progress < 1) requestAnimationFrame(step);
@@ -77,7 +63,7 @@ const StatCard = ({ label, value, suffix, trigger }: { label: string; value: num
       <span className="font-pixel text-2xl md:text-3xl text-hero-heading drop-shadow-[0_0_10px_hsl(var(--hero-heading)/0.6)]">
         {count}{suffix}
       </span>
-      <span className="font-body text-xs text-foreground/60 uppercase tracking-wider">{label}</span>
+      <span className="font-pixel text-[8px] text-foreground/60 uppercase tracking-wider">{label}</span>
     </div>
   );
 };
@@ -196,36 +182,39 @@ const AboutSection = () => {
               <p className="font-pixel text-sm md:text-base text-primary mb-3 leading-relaxed">
                 Hi, I'm Sakshi — the mind behind Sakshi Codes.
               </p>
-              <p className="font-body text-lg md:text-xl text-foreground/85 leading-relaxed">
+              <p className="font-pixel text-xs text-foreground/85 leading-relaxed">
                 I'm passionate about Artificial Intelligence, Machine Learning,
                 and building intelligent systems that solve real-world problems.
               </p>
             </div>
 
-            {/* Feature cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-              {features.map(({ icon: Icon, title, desc }) => (
+            {/* Terminal Mantras replacing feature cards */}
+            <div className="flex flex-col gap-3">
+              {mantras.map((mantra, i) => (
                 <div
-                  key={title}
-                  className="group rounded-xl border-[3px] border-hero-heading/50 bg-hero-heading/[0.04] backdrop-blur-sm p-6 transition-all duration-300 hover:border-hero-heading hover:shadow-[0_0_35px_hsl(var(--hero-heading)/0.35)] hover:-translate-y-2"
+                  key={i}
+                  className="rounded-lg border border-hero-heading/30 bg-hero-heading/[0.04] backdrop-blur-sm px-5 py-3 transition-all duration-300 hover:border-hero-heading/70 hover:shadow-[0_0_20px_hsl(var(--hero-heading)/0.2)]"
+                  style={{
+                    opacity: isVisible ? 1 : 0,
+                    transform: isVisible ? "translateX(0)" : "translateX(-20px)",
+                    transition: `all 0.6s ease-out ${0.3 + i * 0.15}s`,
+                  }}
                 >
-                  <Icon
-                    className="text-hero-heading mb-3 transition-all duration-300 group-hover:drop-shadow-[0_0_14px_hsl(var(--hero-heading)/0.8)]"
-                    size={28}
-                  />
-                  <h3 className="font-body text-base font-bold text-foreground mb-2">
-                    {title}
-                  </h3>
-                  <p className="font-body text-sm text-foreground/70 leading-relaxed">
-                    {desc}
-                  </p>
+                  <span
+                    className="font-pixel text-xs md:text-sm text-hero-heading"
+                    style={{
+                      textShadow: "0 0 8px hsl(183, 100%, 50%)",
+                    }}
+                  >
+                    {mantra}
+                  </span>
                 </div>
               ))}
             </div>
 
             {/* Divider */}
             <div className="w-full flex justify-center">
-              <div className="w-3/4 h-px bg-gradient-to-r from-transparent via-hero-heading/50 to-transparent shadow-[0_0_8px_hsl(var(--hero-heading)/0.3)]" />
+              <div className="w-3/4 h-px bg-gradient-to-r from-transparent via-hero-heading/50 to-transparent" />
             </div>
 
             {/* Stats row */}
@@ -239,12 +228,12 @@ const AboutSection = () => {
             <div className="flex flex-wrap gap-4 justify-center">
               <a
                 href="mailto:sakshijadhav565@gmail.com"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-hero-heading/40 bg-background/60 font-body text-sm text-foreground/80 transition-all duration-300 hover:border-hero-heading/70 hover:shadow-[0_0_15px_hsl(var(--hero-heading)/0.2)]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-hero-heading/40 bg-background/60 font-pixel text-[8px] text-foreground/80 transition-all duration-300 hover:border-hero-heading/70"
               >
                 <Mail size={16} className="text-hero-heading" />
                 sakshijadhav565@gmail.com
               </a>
-              <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/40 bg-background/60 font-body text-sm text-foreground/80">
+              <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/40 bg-background/60 font-pixel text-[8px] text-foreground/80">
                 <Phone size={16} className="text-primary" />
                 +91 9604558388
               </span>
@@ -260,10 +249,10 @@ const AboutSection = () => {
                   className="group flex flex-col items-center justify-center gap-2 aspect-square rounded-lg border-2 border-hero-heading/30 bg-hero-heading/[0.04] backdrop-blur-sm transition-all duration-300 hover:border-hero-heading hover:shadow-[0_0_22px_hsl(var(--hero-heading)/0.3)] hover:-translate-y-1"
                   style={{ animation: `about-float 3.5s ease-in-out infinite`, animationDelay: delay }}
                 >
-                  <span className="text-2xl transition-all duration-300 group-hover:drop-shadow-[0_0_12px_hsl(var(--hero-heading)/0.6)]">
+                  <span className="text-2xl transition-all duration-300">
                     {icon}
                   </span>
-                  <span className="font-body text-[10px] font-semibold text-foreground/70 group-hover:text-hero-heading transition-colors duration-300">
+                  <span className="font-pixel text-[7px] font-semibold text-foreground/70 group-hover:text-hero-heading transition-colors duration-300">
                     {name}
                   </span>
                 </div>
