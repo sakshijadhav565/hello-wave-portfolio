@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Quicksand:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Quicksand:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -50,14 +50,6 @@
 
     --font-pixel: 'Press Start 2P', cursive;
     --font-body: 'Quicksand', sans-serif;
-    --font-orbitron: 'Orbitron', sans-serif;
-    --font-rajdhani: 'Rajdhani', sans-serif;
-
-    --cyber-bg: 234 47% 5%;
-    --cyber-card: 228 33% 7%;
-    --cyber-pink: 340 100% 59%;
-    --cyber-cyan: 183 100% 50%;
-    --cyber-border: 183 100% 50%;
   }
 }
 
@@ -68,7 +60,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-pixel);
+    font-family: var(--font-body);
   }
 }
 
@@ -121,23 +113,3 @@
 
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-.animate-shimmer {
-  background: linear-gradient(90deg, transparent 0%, hsla(183, 100%, 50%, 0.08) 50%, transparent 100%);
-  background-size: 200% 100%;
-  animation: shimmer 2s linear infinite;
-}
-
-@keyframes scan-line {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
-}
-
-.animate-scan-line {
-  animation: scan-line 4s linear infinite;
-}
