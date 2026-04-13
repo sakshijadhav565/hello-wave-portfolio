@@ -108,7 +108,7 @@ const HeroSection = () => {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse 60% 50% at 50% 40%, hsla(187, 100%, 50%, 0.06) 0%, transparent 70%), radial-gradient(ellipse 40% 40% at 70% 60%, hsla(342, 100%, 59%, 0.04) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse 60% 50% at 50% 40%, hsla(187, 100%, 50%, 0.1) 0%, transparent 70%), radial-gradient(ellipse 40% 40% at 70% 60%, hsla(342, 100%, 59%, 0.07) 0%, transparent 70%), radial-gradient(ellipse 80% 60% at 30% 50%, hsla(187, 100%, 50%, 0.04) 0%, transparent 60%)",
         }}
       />
 
@@ -134,17 +134,18 @@ const HeroSection = () => {
       <div
         className="w-full md:w-1/2 text-center md:text-left relative z-10 rounded-2xl p-6 md:p-8"
         style={{
-          background: "hsla(0, 0%, 4%, 0.4)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          border: "1px solid hsla(187, 100%, 50%, 0.08)",
+          background: "hsla(0, 0%, 4%, 0.45)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+          border: "1px solid hsla(187, 100%, 50%, 0.12)",
+          boxShadow: "0 8px 40px hsla(0, 0%, 0%, 0.5), 0 0 30px hsla(187, 100%, 50%, 0.06)",
           transform: `translateY(${-parallaxOffset * 0.5}px)`,
         }}
       >
-        <h1 className="font-pixel text-3xl md:text-4xl text-hero-heading mb-2 leading-tight tracking-tight drop-shadow-[0_0_15px_hsl(var(--hero-heading)/0.5)]">
+        <h1 className="font-pixel text-3xl md:text-4xl text-hero-heading mb-2 leading-tight tracking-tight drop-shadow-[0_0_20px_hsl(var(--hero-heading)/0.7)]">
           Hey!
         </h1>
-        <h1 className="font-pixel text-3xl md:text-4xl text-hero-heading mb-3 leading-tight tracking-tight drop-shadow-[0_0_15px_hsl(var(--hero-heading)/0.5)]">
+        <h1 className="font-pixel text-3xl md:text-4xl text-hero-heading mb-3 leading-tight tracking-tight drop-shadow-[0_0_20px_hsl(var(--hero-heading)/0.7)]">
           I'm Sakshi
         </h1>
 
