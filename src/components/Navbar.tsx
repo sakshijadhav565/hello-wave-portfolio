@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import logo from "@/assets/sakshi-codes-logo.png";
+import logo from "@/assets/sj-logo.png";
 
 const navLinks = ["Home", "About", "Skills", "Projects", "Contact"];
 const sectionIds = ["home", "about", "skills", "projects", "contact"];
@@ -33,13 +33,20 @@ const Navbar = () => {
   return (
     <>
       <nav
-        className="w-full flex items-center px-6 py-1.5 sticky top-0 z-50"
+        className="w-full flex items-center px-6 py-1 sticky top-0 z-50"
         style={{
           background: "linear-gradient(135deg, #ff2f6d, #ff4f9a)",
-          boxShadow: "0 4px 30px rgba(255, 47, 109, 0.35), 0 1px 3px rgba(0,0,0,0.3)",
+          boxShadow: "0 6px 35px rgba(255, 47, 109, 0.4), 0 2px 8px rgba(0,0,0,0.35)",
         }}
       >
-        <img src={logo} alt="Sakshi Codes" className="h-[55px] w-auto flex-shrink-0" />
+        <img
+          src={logo}
+          alt="SJ Logo"
+          className="h-[40px] w-auto flex-shrink-0"
+          style={{
+            filter: "drop-shadow(0 0 6px hsla(187, 100%, 50%, 0.4))",
+          }}
+        />
         <ul className="flex gap-9 mx-auto">
           {navLinks.map((link) => (
             <li key={link}>
