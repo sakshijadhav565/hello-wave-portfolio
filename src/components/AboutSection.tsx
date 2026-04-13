@@ -73,7 +73,7 @@ function useCountUp(target: number, duration: number, trigger: boolean) {
 const StatCard = ({ label, value, suffix, trigger }: { label: string; value: number; suffix: string; trigger: boolean }) => {
   const count = useCountUp(value, 2800, trigger);
   return (
-    <div className="flex flex-col items-center gap-1 px-6 py-4 rounded-lg border-2 border-hero-heading/40 bg-hero-heading/[0.04] backdrop-blur-sm transition-all duration-300 hover:border-hero-heading hover:shadow-[0_0_20px_hsl(var(--hero-heading)/0.25)]">
+    <div className="flex flex-col items-center gap-1 px-6 py-4 rounded-lg border-2 border-hero-heading/40 bg-hero-heading/[0.04] backdrop-blur-sm transition-all duration-300 hover:border-hero-heading hover:shadow-[0_0_20px_hsl(var(--hero-heading)/0.25)] hover:-translate-y-1" style={{ boxShadow: "0 4px 20px hsla(0, 0%, 0%, 0.3)" }}>
       <span className="font-pixel text-2xl md:text-3xl text-hero-heading drop-shadow-[0_0_10px_hsl(var(--hero-heading)/0.6)]">
         {count}{suffix}
       </span>
@@ -194,11 +194,13 @@ const AboutSection = () => {
             {/* Intro */}
             <div>
               <p className="font-pixel text-sm md:text-base text-primary mb-3 leading-relaxed">
-                Hi, I'm Sakshi — the mind behind Sakshi Codes.
+                Beyond code, I focus on building intelligent systems and meaningful digital experiences.
               </p>
-              <p className="font-body text-lg md:text-xl text-foreground/85 leading-relaxed">
-                I'm passionate about Artificial Intelligence, Machine Learning,
-                and building intelligent systems that solve real-world problems.
+              <p className="font-body text-lg md:text-xl text-foreground/85 leading-relaxed mb-2">
+                I enjoy working at the intersection of AI and development — turning ideas into scalable solutions. My approach is rooted in curiosity, experimentation, and solving real-world problems with practical technology.
+              </p>
+              <p className="font-pixel text-xs text-hero-heading/80">
+                My mantra: Build. Experiment. Learn. Repeat.
               </p>
             </div>
 
@@ -208,6 +210,7 @@ const AboutSection = () => {
                 <div
                   key={title}
                   className="group rounded-xl border-[3px] border-hero-heading/50 bg-hero-heading/[0.04] backdrop-blur-sm p-6 transition-all duration-300 hover:border-hero-heading hover:shadow-[0_0_35px_hsl(var(--hero-heading)/0.35)] hover:-translate-y-2"
+                  style={{ boxShadow: "0 4px 24px hsla(0, 0%, 0%, 0.35)" }}
                 >
                   <Icon
                     className="text-hero-heading mb-3 transition-all duration-300 group-hover:drop-shadow-[0_0_14px_hsl(var(--hero-heading)/0.8)]"

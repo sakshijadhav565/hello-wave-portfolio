@@ -185,8 +185,8 @@ function ProjectCard({
         WebkitBackdropFilter: "blur(12px)",
         border: `1.5px solid ${hovered ? "hsla(187, 100%, 50%, 0.5)" : "hsla(187, 100%, 50%, 0.15)"}`,
         boxShadow: hovered
-          ? "0 0 30px hsla(187, 100%, 50%, 0.15), inset 0 0 30px hsla(187, 100%, 50%, 0.03)"
-          : "0 0 10px hsla(187, 100%, 50%, 0.05)",
+          ? "0 8px 40px hsla(187, 100%, 50%, 0.2), 0 0 30px hsla(187, 100%, 50%, 0.15), inset 0 0 30px hsla(187, 100%, 50%, 0.03)"
+          : "0 4px 20px hsla(0, 0%, 0%, 0.3), 0 0 10px hsla(187, 100%, 50%, 0.05)",
         transform: `
           ${visible ? "translateX(0)" : isLeft ? "translateX(-60px)" : "translateX(60px)"}
           ${hovered ? "scale(1.03)" : "scale(1)"}

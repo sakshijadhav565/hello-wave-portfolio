@@ -1,12 +1,73 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import sakshiVideo from "@/assets/sakshi-intro.mp4";
 
 const roles = ["AI Developer", "Machine Learning Engineer", "Problem Solver"];
+
+const PARTICLE_COUNT = 40;
+
+function HeroParticles() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animId: number;
+    const particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      size: Math.random() * 2 + 0.5,
+      sx: (Math.random() - 0.5) * 0.0008,
+      sy: (Math.random() - 0.5) * 0.0006,
+      opacity: Math.random() * 0.3 + 0.08,
+    }));
+
+    const resize = () => {
+      canvas.width = canvas.offsetWidth * 2;
+      canvas.height = canvas.offsetHeight * 2;
+      ctx.setTransform(2, 0, 0, 2, 0, 0);
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const draw = () => {
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      ctx.clearRect(0, 0, w, h);
+      for (const p of particles) {
+        p.x += p.sx;
+        p.y += p.sy;
+        if (p.x < 0 || p.x > 1) p.sx *= -1;
+        if (p.y < 0 || p.y > 1) p.sy *= -1;
+        ctx.beginPath();
+        ctx.arc(p.x * w, p.y * h, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(187, 100%, 50%, ${p.opacity})`;
+        ctx.shadowColor = "hsla(187, 100%, 50%, 0.4)";
+        ctx.shadowBlur = 6;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+      animId = requestAnimationFrame(draw);
+    };
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />;
+}
 
 const HeroSection = () => {
   const [roleIndex, setRoleIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
     const current = roles[roleIndex];
@@ -26,25 +87,60 @@ const HeroSection = () => {
     return () => clearTimeout(timeout);
   }, [charIndex, isDeleting, roleIndex]);
 
+  useEffect(() => {
+    const onScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const parallaxOffset = scrollY * 0.15;
+
   return (
     <section
       id="home"
-      className="relative flex flex-col md:flex-row items-center justify-center gap-10 md:gap-20 px-6 md:px-16 pt-16 pb-28 min-h-[85vh]"
+      ref={sectionRef}
+      className="relative flex flex-col md:flex-row items-center justify-center gap-10 md:gap-20 px-6 md:px-16 pt-16 pb-28 min-h-[85vh] overflow-hidden"
     >
+      {/* Background particles */}
+      <HeroParticles />
+
+      {/* Glowing gradient backdrop */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse 60% 50% at 50% 40%, hsla(187, 100%, 50%, 0.06) 0%, transparent 70%), radial-gradient(ellipse 40% 40% at 70% 60%, hsla(342, 100%, 59%, 0.04) 0%, transparent 70%)",
+        }}
+      />
+
       {/* Illustration / Video */}
-      <div className="w-full md:w-[42%] flex justify-center animate-float">
+      <div
+        className="w-full md:w-[42%] flex justify-center animate-float relative z-10"
+        style={{ transform: `translateY(${-parallaxOffset * 0.3}px)` }}
+      >
         <video
           src={sakshiVideo}
           autoPlay
           loop
           muted
           playsInline
-          className="w-full max-w-[450px] rounded-lg shadow-[0_0_30px_hsl(var(--hero-heading)/0.2)]"
+          className="w-full max-w-[450px] rounded-lg"
+          style={{
+            boxShadow: "0 0 40px hsla(187, 100%, 50%, 0.15), 0 8px 32px rgba(0,0,0,0.4)",
+          }}
         />
       </div>
 
       {/* Text Content */}
-      <div className="w-full md:w-1/2 text-center md:text-left">
+      <div
+        className="w-full md:w-1/2 text-center md:text-left relative z-10 rounded-2xl p-6 md:p-8"
+        style={{
+          background: "hsla(0, 0%, 4%, 0.4)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          border: "1px solid hsla(187, 100%, 50%, 0.08)",
+          transform: `translateY(${-parallaxOffset * 0.5}px)`,
+        }}
+      >
         <h1 className="font-pixel text-3xl md:text-4xl text-hero-heading mb-2 leading-tight tracking-tight drop-shadow-[0_0_15px_hsl(var(--hero-heading)/0.5)]">
           Hey!
         </h1>
@@ -79,18 +175,13 @@ const HeroSection = () => {
         <div className="flex gap-4 justify-center md:justify-start mb-12">
           <a
             href="#projects"
-            className="px-6 py-3 font-body font-semibold text-hero-heading border-2 border-hero-heading rounded-md transition-all duration-300 hover:shadow-[0_0_20px_hsl(var(--hero-heading)/0.4)] hover:scale-105"
-            style={{ borderColor: undefined }}
-            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 20px #ff2f6d80"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+            className="px-6 py-3 font-body font-semibold text-hero-heading border-2 border-hero-heading rounded-md transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_hsl(var(--hero-heading)/0.4)]"
           >
             View Projects
           </a>
           <a
             href="#"
-            className="px-6 py-3 font-body font-semibold text-hero-heading border-2 border-hero-heading rounded-md transition-all duration-300 hover:scale-105"
-            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 20px #ff2f6d80"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+            className="px-6 py-3 font-body font-semibold text-hero-heading border-2 border-hero-heading rounded-md transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_hsl(var(--hero-heading)/0.4)]"
           >
             Download Resume
           </a>
@@ -98,7 +189,7 @@ const HeroSection = () => {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 animate-scroll-hint">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 animate-scroll-hint z-10">
         <span className="font-body text-xs text-foreground/60">
           Scroll to explore
         </span>
