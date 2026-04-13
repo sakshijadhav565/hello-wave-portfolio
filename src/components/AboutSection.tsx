@@ -194,11 +194,13 @@ const AboutSection = () => {
             {/* Intro */}
             <div>
               <p className="font-pixel text-sm md:text-base text-primary mb-3 leading-relaxed">
-                Hi, I'm Sakshi — the mind behind Sakshi Codes.
+                Beyond code, I focus on building intelligent systems and meaningful digital experiences.
               </p>
-              <p className="font-body text-lg md:text-xl text-foreground/85 leading-relaxed">
-                I'm passionate about Artificial Intelligence, Machine Learning,
-                and building intelligent systems that solve real-world problems.
+              <p className="font-body text-lg md:text-xl text-foreground/85 leading-relaxed mb-2">
+                I enjoy working at the intersection of AI and development — turning ideas into scalable solutions. My approach is rooted in curiosity, experimentation, and solving real-world problems with practical technology.
+              </p>
+              <p className="font-pixel text-xs text-hero-heading/80">
+                My mantra: Build. Experiment. Learn. Repeat.
               </p>
             </div>
 
