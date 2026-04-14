@@ -390,7 +390,7 @@ export default function ProjectsSection() {
                                   project={project}
                                   index={idx}
                                   visible={visible}
-                                  onClick={() => setSelectedProject(project)}
+                                  onClick={() => project.title === "Stock Price Prediction" ? navigate("/projects/stock-market-prediction") : setSelectedProject(project)}
                                 />
                               </div>
                               <TimelineNode active={visible} />
@@ -405,7 +405,7 @@ export default function ProjectsSection() {
                                   project={project}
                                   index={idx}
                                   visible={visible}
-                                  onClick={() => setSelectedProject(project)}
+                                  onClick={() => project.title === "Stock Price Prediction" ? navigate("/projects/stock-market-prediction") : setSelectedProject(project)}
                                 />
                               </div>
                             </>
@@ -422,7 +422,7 @@ export default function ProjectsSection() {
                               project={project}
                               index={idx}
                               visible={visible}
-                              onClick={() => setSelectedProject(project)}
+                              onClick={() => project.title === "Stock Price Prediction" ? navigate("/projects/stock-market-prediction") : setSelectedProject(project)}
                             />
                           </div>
                         </div>
