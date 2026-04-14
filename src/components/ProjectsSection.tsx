@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Github, ExternalLink } from "lucide-react";
 import {
   Dialog,
@@ -302,6 +303,7 @@ function ProjectCard({
 
 /* ── Main Section ── */
 export default function ProjectsSection() {
+  const navigate = useNavigate();
   const { ref: titleRef, visible: titleVisible } = useScrollReveal(0.3);
   const cardRefs = projects.map(() => useScrollReveal(0.15));
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -388,7 +390,7 @@ export default function ProjectsSection() {
                                   project={project}
                                   index={idx}
                                   visible={visible}
-                                  onClick={() => setSelectedProject(project)}
+                                  onClick={() => project.title === "Stock Price Prediction" ? navigate("/projects/stock-market-prediction") : setSelectedProject(project)}
                                 />
                               </div>
                               <TimelineNode active={visible} />
@@ -403,7 +405,7 @@ export default function ProjectsSection() {
                                   project={project}
                                   index={idx}
                                   visible={visible}
-                                  onClick={() => setSelectedProject(project)}
+                                  onClick={() => project.title === "Stock Price Prediction" ? navigate("/projects/stock-market-prediction") : setSelectedProject(project)}
                                 />
                               </div>
                             </>
@@ -420,7 +422,7 @@ export default function ProjectsSection() {
                               project={project}
                               index={idx}
                               visible={visible}
-                              onClick={() => setSelectedProject(project)}
+                              onClick={() => project.title === "Stock Price Prediction" ? navigate("/projects/stock-market-prediction") : setSelectedProject(project)}
                             />
                           </div>
                         </div>
