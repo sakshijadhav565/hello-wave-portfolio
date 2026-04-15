@@ -380,8 +380,8 @@ export default function StockMarketPrediction() {
 
       {/* Back button */}
       <div className="relative z-20 max-w-5xl mx-auto px-6 pt-8">
-        <button
-          onClick={() => navigate("/")}
+        <a
+          href="/#projects"
           className="font-pixel text-[11px] tracking-wider flex items-center gap-2 transition-all duration-300 hover:gap-3"
           style={{
             color: "hsl(187,100%,50%)",
@@ -389,7 +389,7 @@ export default function StockMarketPrediction() {
           }}
         >
           <ArrowLeft size={14} /> Back to Projects
-        </button>
+        </a>
       </div>
 
       {/* Hero */}

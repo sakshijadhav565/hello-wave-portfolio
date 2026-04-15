@@ -42,9 +42,8 @@ const Navbar = () => {
         <img
           src={logo}
           alt="SJ Logo"
-          className="h-[48px] w-auto flex-shrink-0"
+          className="h-[52px] w-auto flex-shrink-0"
           style={{
-            filter: "drop-shadow(0 0 8px hsla(187, 100%, 50%, 0.5)) contrast(1.1)",
             objectFit: "contain",
           }}
         />
