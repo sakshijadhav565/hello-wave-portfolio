@@ -43,9 +43,7 @@ const Navbar = () => {
           src={logo}
           alt="SJ Logo"
           className="h-[52px] w-auto flex-shrink-0"
-          style={{
-            objectFit: "contain",
-          }}
+          style={{ objectFit: "contain" }}
         />
         <ul className="flex gap-9 mx-auto">
           {navLinks.map((link) => (
