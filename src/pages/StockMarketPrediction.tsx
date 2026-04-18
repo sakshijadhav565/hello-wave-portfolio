@@ -270,16 +270,12 @@ function ShowcaseCard({
   const isEven = index % 2 === 0;
   const tiltDeg = isEven ? -3 : 3;
 
-  // Asymmetric vertical offsets per index
-  const verticalOffsets = [0, 30, -20, 18, -10];
-  const verticalOffset = verticalOffsets[index % verticalOffsets.length];
-
-  // Negative top margin on alternating cards to create overlap
-  const overlapMargin = index === 0 ? 0 : index % 2 === 0 ? -40 : -60;
+  // Alternating: index 0 → image right (md:flex-row-reverse), index 1 → image left (md:flex-row), etc.
+  const imageRight = index % 2 === 0;
 
   const floatKeyframes = `@keyframes float-${index} {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-${5 + (index % 3) * 2}px); }
+    50% { transform: translateY(-${4 + (index % 3) * 2}px); }
   }`;
 
   const [magneticGlow, setMagneticGlow] = useState(0);
@@ -303,35 +299,33 @@ function ShowcaseCard({
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-8`}
+        className={`flex flex-col ${imageRight ? "md:flex-row-reverse" : "md:flex-row"} items-center gap-10 md:gap-14`}
         style={{
           opacity: visible ? 1 : 0,
           transform: visible
-            ? `translateY(${verticalOffset}px)`
-            : `translateY(50px) translateX(${isEven ? "-40px" : "40px"})`,
-          transition: `all 0.9s cubic-bezier(0.16,1,0.3,1) ${0.1 * index}s`,
-          marginTop: overlapMargin,
+            ? "translateY(0)"
+            : `translateY(40px) translateX(${imageRight ? "30px" : "-30px"})`,
+          transition: `all 0.8s cubic-bezier(0.16,1,0.3,1) ${0.08 * index}s`,
           position: "relative",
-          zIndex: 10 - index,
         }}
       >
-        {/* Image side — 65% width */}
+        {/* Image side — 60% width */}
         <div
-          className="w-full md:w-[65%] flex-shrink-0 relative"
+          className="w-full md:w-[60%] flex-shrink-0 relative"
           style={{
             perspective: "1000px",
-            animation: `float-${index} ${4 + index * 0.4}s ease-in-out infinite`,
+            animation: `float-${index} ${5 + index * 0.3}s ease-in-out infinite`,
           }}
         >
-          {/* Soft offset radial glow behind */}
+          {/* Soft radial glow behind */}
           <div
             className="absolute pointer-events-none"
             style={{
-              width: "115%",
-              height: "115%",
-              top: "-7%",
-              left: isEven ? "-10%" : "-5%",
-              background: `radial-gradient(ellipse at ${isEven ? "65%" : "35%"} 50%, hsla(187,100%,50%,${0.06 + magneticGlow * 0.08}) 0%, transparent 65%)`,
+              width: "110%",
+              height: "110%",
+              top: "-5%",
+              left: "-5%",
+              background: `radial-gradient(ellipse at center, hsla(187,100%,50%,${0.05 + magneticGlow * 0.06}) 0%, transparent 65%)`,
               filter: "blur(28px)",
               transition: "all 0.4s ease",
               zIndex: 0,
@@ -341,20 +335,20 @@ function ShowcaseCard({
             className="rounded-xl overflow-hidden transition-all duration-500 relative"
             style={{
               transform: hovered
-                ? "rotateY(0deg) rotateX(0deg) scale(1.05)"
-                : `rotateY(${tiltDeg}deg) rotateX(2deg) scale(1)`,
-              transformOrigin: isEven ? "left center" : "right center",
+                ? "rotateY(0deg) rotateX(0deg) scale(1.04)"
+                : `perspective(1000px) rotateX(2deg) rotate(${tiltDeg}deg) scale(1)`,
+              transformOrigin: "center center",
               boxShadow: hovered
-                ? `0 25px 70px hsla(187,100%,50%,0.18), 0 0 40px hsla(187,100%,50%,0.14), ${isEven ? "-6px" : "6px"} 0 24px hsla(187,100%,50%,0.12)`
-                : `0 20px 60px hsla(187,100%,50%,0.15), 0 10px 30px hsla(0,0%,0%,0.6), ${isEven ? "-4px" : "4px"} 0 16px hsla(187,100%,50%,${0.06 + magneticGlow * 0.08})`,
-              border: `1px solid hsla(187,100%,55%,${hovered ? 0.45 : 0.18 + magneticGlow * 0.12})`,
+                ? "0 25px 70px hsla(187,100%,50%,0.16), 0 0 35px hsla(187,100%,50%,0.12)"
+                : `0 20px 60px hsla(187,100%,50%,0.12), 0 10px 30px hsla(0,0%,0%,0.55)`,
+              border: `1px solid hsla(187,100%,55%,${hovered ? 0.4 : 0.15 + magneticGlow * 0.1})`,
             }}
           >
             <img src={src} alt={caption} className="w-full block" loading="lazy" />
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: `linear-gradient(${isEven ? "135deg" : "225deg"}, hsla(187,100%,80%,${hovered ? 0.06 : 0.025}) 0%, transparent 50%)`,
+                background: `linear-gradient(${imageRight ? "225deg" : "135deg"}, hsla(187,100%,80%,${hovered ? 0.05 : 0.02}) 0%, transparent 50%)`,
                 transition: "all 0.5s ease",
               }}
             />
@@ -362,7 +356,7 @@ function ShowcaseCard({
         </div>
 
         {/* Caption */}
-        <div className="flex-1 min-w-0 flex flex-col justify-center md:max-w-[28%]">
+        <div className="flex-1 min-w-0 flex flex-col justify-center">
           <div
             className="font-pixel text-[10px] tracking-[0.25em] mb-2"
             style={{ color: "hsla(175,100%,55%,0.65)" }}
@@ -370,10 +364,10 @@ function ShowcaseCard({
             0{index + 1}
           </div>
           <h4
-            className="font-pixel text-sm tracking-wider mb-3"
+            className="font-pixel tracking-wider mb-3"
             style={{
-              color: "hsl(187,100%,55%)",
-              textShadow: "0 0 14px hsla(187,100%,50%,0.4)",
+              color: "hsl(187,100%,60%)",
+              textShadow: "0 0 12px hsla(187,100%,50%,0.35)",
               fontSize: "13px",
             }}
           >
@@ -381,7 +375,7 @@ function ShowcaseCard({
           </h4>
           <p
             className="font-body text-sm leading-[1.85]"
-            style={{ color: "hsla(0,0%,100%,0.7)" }}
+            style={{ color: "hsla(0,0%,100%,0.72)" }}
           >
             {caption}
           </p>
