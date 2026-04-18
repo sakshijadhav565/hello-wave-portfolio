@@ -657,7 +657,7 @@ export default function StockMarketPrediction() {
           <SectionHeading kicker="06 — PRODUCT SHOWCASE">Product Showcase</SectionHeading>
         </Section>
 
-        <div className="mt-10 space-y-2">
+        <div className="mt-10 space-y-20">
           {screenshots.map((s, i) => (
             <ShowcaseCard
               key={i}
