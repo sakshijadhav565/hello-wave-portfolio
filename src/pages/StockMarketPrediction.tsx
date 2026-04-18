@@ -159,18 +159,44 @@ function Section({ children, delay = 0 }: { children: React.ReactNode; delay?: n
   );
 }
 
-/* ── Glow divider ── */
+/* ── Heartbeat divider — visible animated ECG line between sections ── */
 function GlowDivider() {
   return (
-    <div className="relative my-12">
-      <div
-        className="h-px w-full"
-        style={{
-          background: "linear-gradient(90deg, transparent 0%, hsla(187,100%,50%,0.5) 50%, transparent 100%)",
-          opacity: 0.35,
-          boxShadow: "0 0 12px hsla(187,100%,50%,0.18)",
-        }}
-      />
+    <div className="relative my-20 h-[60px] w-full overflow-hidden pointer-events-none select-none">
+      <svg
+        viewBox="0 0 1200 60"
+        preserveAspectRatio="none"
+        className="w-full h-full"
+        style={{ opacity: 0.55 }}
+      >
+        <defs>
+          <linearGradient id={`hb-div-${Math.random().toString(36).slice(2, 7)}`} x1="0" x2="1">
+            <stop offset="0%" stopColor="hsla(187,100%,55%,0)" />
+            <stop offset="20%" stopColor="hsla(187,100%,55%,0.8)" />
+            <stop offset="80%" stopColor="hsla(175,100%,55%,0.8)" />
+            <stop offset="100%" stopColor="hsla(175,100%,55%,0)" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M0,30 L300,30 L320,30 L340,10 L360,50 L380,20 L400,30 L700,30 L720,30 L740,8 L760,52 L780,18 L800,30 L1200,30"
+          fill="none"
+          stroke="hsla(187,100%,60%,0.55)"
+          strokeWidth="1.5"
+          style={{
+            filter: "drop-shadow(0 0 6px hsla(187,100%,55%,0.45))",
+            strokeDasharray: 2400,
+            strokeDashoffset: 2400,
+            animation: "hbDivDraw 6s linear infinite",
+          }}
+        />
+        <style>{`
+          @keyframes hbDivDraw {
+            0% { stroke-dashoffset: 2400; }
+            55% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -2400; }
+          }
+        `}</style>
+      </svg>
     </div>
   );
 }
