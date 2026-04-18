@@ -162,15 +162,51 @@ function Section({ children, delay = 0 }: { children: React.ReactNode; delay?: n
 /* ── Glow divider ── */
 function GlowDivider() {
   return (
-    <div className="relative my-20">
+    <div className="relative my-12">
       <div
         className="h-px w-full"
         style={{
-          background: "linear-gradient(90deg, transparent 0%, hsla(187,100%,50%,0.6) 50%, transparent 100%)",
-          opacity: 0.4,
-          boxShadow: "0 0 14px hsla(187,100%,50%,0.25)",
+          background: "linear-gradient(90deg, transparent 0%, hsla(187,100%,50%,0.5) 50%, transparent 100%)",
+          opacity: 0.35,
+          boxShadow: "0 0 12px hsla(187,100%,50%,0.18)",
         }}
       />
+    </div>
+  );
+}
+
+/* ── Subtle side visual: faint stock-line SVG to balance text-only sections ── */
+function SideStockLine({ side = "right" }: { side?: "left" | "right" }) {
+  return (
+    <div
+      className="hidden md:block absolute top-1/2 -translate-y-1/2 pointer-events-none select-none"
+      style={{
+        [side]: "0",
+        width: "38%",
+        height: "180px",
+        opacity: 0.08,
+      } as React.CSSProperties}
+    >
+      <svg viewBox="0 0 400 180" preserveAspectRatio="none" className="w-full h-full">
+        <defs>
+          <linearGradient id={`side-${side}`} x1="0" x2="1">
+            <stop offset="0%" stopColor="hsla(187,100%,55%,0)" />
+            <stop offset="50%" stopColor="hsla(187,100%,55%,1)" />
+            <stop offset="100%" stopColor="hsla(175,100%,55%,0)" />
+          </linearGradient>
+        </defs>
+        {/* faint grid */}
+        {[0, 45, 90, 135, 180].map((y) => (
+          <line key={y} x1="0" x2="400" y1={y} y2={y} stroke="hsla(187,100%,50%,0.18)" strokeWidth="0.5" />
+        ))}
+        <path
+          d="M0,120 L40,110 L70,118 L100,80 L130,95 L160,60 L190,75 L220,40 L250,55 L280,30 L310,48 L340,25 L370,42 L400,18"
+          fill="none"
+          stroke={`url(#side-${side})`}
+          strokeWidth="1.5"
+          style={{ filter: "drop-shadow(0 0 6px hsla(187,100%,50%,0.5))" }}
+        />
+      </svg>
     </div>
   );
 }
