@@ -601,7 +601,7 @@ export default function StockMarketPrediction() {
 
         {/* PROBLEM */}
         <Section delay={0.05}>
-          <div className="relative md:pl-[40%]">
+          <div className="relative">
             <SideStockLine side="left" />
             <SectionHeading kicker="02 — PROBLEM">Problem</SectionHeading>
             <BodyText>
