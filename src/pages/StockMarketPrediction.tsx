@@ -691,10 +691,10 @@ export default function StockMarketPrediction() {
           </div>
 
           <div
-            className="rounded-2xl py-14 px-8"
+            className="rounded-2xl py-12 px-8 max-w-3xl mx-auto"
             style={{
-              background: "linear-gradient(135deg, hsla(220,20%,5%,0.6) 0%, hsla(195,15%,8%,0.5) 100%)",
-              border: "1px solid hsla(187,100%,50%,0.08)",
+              background: "linear-gradient(135deg, hsla(220,20%,5%,0.5) 0%, hsla(195,15%,8%,0.4) 100%)",
+              border: "1px solid hsla(187,100%,50%,0.06)",
               backdropFilter: "blur(8px)",
             }}
           >
