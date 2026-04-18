@@ -515,7 +515,7 @@ export default function StockMarketPrediction() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 py-20">
+      <div className="relative z-10 max-w-5xl mx-auto px-6 py-14">
         {/* TECH STACK — Quick Info, near top */}
         <Section>
           <SectionHeading kicker="QUICK INFO">Tech Stack</SectionHeading>
