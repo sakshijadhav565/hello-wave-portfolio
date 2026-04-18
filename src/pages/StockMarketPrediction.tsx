@@ -557,37 +557,46 @@ export default function StockMarketPrediction() {
 
         {/* OVERVIEW */}
         <Section delay={0.05}>
-          <SectionHeading kicker="01 — OVERVIEW">Overview</SectionHeading>
-          <BodyText>
-            Stock price prediction is inherently complex due to market volatility and rapidly changing trends.
-            This project uses an LSTM (Long Short-Term Memory) model to analyze time-series data and generate
-            accurate short-term forecasts. The system combines machine learning with real-time data
-            visualization to create an interactive and insightful user experience.
-          </BodyText>
+          <div className="relative">
+            <SideStockLine side="right" />
+            <SectionHeading kicker="01 — OVERVIEW">Overview</SectionHeading>
+            <BodyText>
+              Stock price prediction is inherently complex due to market volatility and rapidly changing trends.
+              This project uses an LSTM (Long Short-Term Memory) model to analyze time-series data and generate
+              accurate short-term forecasts. The system combines machine learning with real-time data
+              visualization to create an interactive and insightful user experience.
+            </BodyText>
+          </div>
         </Section>
 
         <GlowDivider />
 
         {/* PROBLEM */}
         <Section delay={0.05}>
-          <SectionHeading kicker="02 — PROBLEM">Problem</SectionHeading>
-          <BodyText>
-            Traditional prediction methods struggle to capture temporal dependencies in stock data, leading to
-            inconsistent results. Users also lack intuitive tools to explore predictions and understand trends
-            in real time. There is a need for a system that is both technically robust and visually interactive.
-          </BodyText>
+          <div className="relative md:pl-[40%]">
+            <SideStockLine side="left" />
+            <SectionHeading kicker="02 — PROBLEM">Problem</SectionHeading>
+            <BodyText>
+              Traditional prediction methods struggle to capture temporal dependencies in stock data, leading to
+              inconsistent results. Users also lack intuitive tools to explore predictions and understand trends
+              in real time. There is a need for a system that is both technically robust and visually interactive.
+            </BodyText>
+          </div>
         </Section>
 
         <GlowDivider />
 
         {/* SOLUTION */}
         <Section delay={0.05}>
-          <SectionHeading kicker="03 — APPROACH">Solution / Approach</SectionHeading>
-          <BodyText>
-            To address this, an LSTM-based model was implemented to learn patterns from historical stock data.
-            The data is preprocessed into time-series sequences and normalized before being fed into the model.
-            Real-time API integration ensures that predictions remain dynamic and relevant.
-          </BodyText>
+          <div className="relative">
+            <SideStockLine side="right" />
+            <SectionHeading kicker="03 — APPROACH">Solution / Approach</SectionHeading>
+            <BodyText>
+              To address this, an LSTM-based model was implemented to learn patterns from historical stock data.
+              The data is preprocessed into time-series sequences and normalized before being fed into the model.
+              Real-time API integration ensures that predictions remain dynamic and relevant.
+            </BodyText>
+          </div>
         </Section>
 
         <GlowDivider />
