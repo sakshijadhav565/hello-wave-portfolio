@@ -162,15 +162,51 @@ function Section({ children, delay = 0 }: { children: React.ReactNode; delay?: n
 /* ── Glow divider ── */
 function GlowDivider() {
   return (
-    <div className="relative my-20">
+    <div className="relative my-12">
       <div
         className="h-px w-full"
         style={{
-          background: "linear-gradient(90deg, transparent 0%, hsla(187,100%,50%,0.6) 50%, transparent 100%)",
-          opacity: 0.4,
-          boxShadow: "0 0 14px hsla(187,100%,50%,0.25)",
+          background: "linear-gradient(90deg, transparent 0%, hsla(187,100%,50%,0.5) 50%, transparent 100%)",
+          opacity: 0.35,
+          boxShadow: "0 0 12px hsla(187,100%,50%,0.18)",
         }}
       />
+    </div>
+  );
+}
+
+/* ── Subtle side visual: faint stock-line SVG to balance text-only sections ── */
+function SideStockLine({ side = "right" }: { side?: "left" | "right" }) {
+  return (
+    <div
+      className="hidden md:block absolute top-1/2 -translate-y-1/2 pointer-events-none select-none"
+      style={{
+        [side]: "0",
+        width: "38%",
+        height: "180px",
+        opacity: 0.08,
+      } as React.CSSProperties}
+    >
+      <svg viewBox="0 0 400 180" preserveAspectRatio="none" className="w-full h-full">
+        <defs>
+          <linearGradient id={`side-${side}`} x1="0" x2="1">
+            <stop offset="0%" stopColor="hsla(187,100%,55%,0)" />
+            <stop offset="50%" stopColor="hsla(187,100%,55%,1)" />
+            <stop offset="100%" stopColor="hsla(175,100%,55%,0)" />
+          </linearGradient>
+        </defs>
+        {/* faint grid */}
+        {[0, 45, 90, 135, 180].map((y) => (
+          <line key={y} x1="0" x2="400" y1={y} y2={y} stroke="hsla(187,100%,50%,0.18)" strokeWidth="0.5" />
+        ))}
+        <path
+          d="M0,120 L40,110 L70,118 L100,80 L130,95 L160,60 L190,75 L220,40 L250,55 L280,30 L310,48 L340,25 L370,42 L400,18"
+          fill="none"
+          stroke={`url(#side-${side})`}
+          strokeWidth="1.5"
+          style={{ filter: "drop-shadow(0 0 6px hsla(187,100%,50%,0.5))" }}
+        />
+      </svg>
     </div>
   );
 }
@@ -234,16 +270,12 @@ function ShowcaseCard({
   const isEven = index % 2 === 0;
   const tiltDeg = isEven ? -3 : 3;
 
-  // Asymmetric vertical offsets per index
-  const verticalOffsets = [0, 30, -20, 18, -10];
-  const verticalOffset = verticalOffsets[index % verticalOffsets.length];
-
-  // Negative top margin on alternating cards to create overlap
-  const overlapMargin = index === 0 ? 0 : index % 2 === 0 ? -40 : -60;
+  // Alternating: index 0 → image right (md:flex-row-reverse), index 1 → image left (md:flex-row), etc.
+  const imageRight = index % 2 === 0;
 
   const floatKeyframes = `@keyframes float-${index} {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-${5 + (index % 3) * 2}px); }
+    50% { transform: translateY(-${4 + (index % 3) * 2}px); }
   }`;
 
   const [magneticGlow, setMagneticGlow] = useState(0);
@@ -267,35 +299,33 @@ function ShowcaseCard({
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-8`}
+        className={`flex flex-col ${imageRight ? "md:flex-row-reverse" : "md:flex-row"} items-center gap-10 md:gap-14`}
         style={{
           opacity: visible ? 1 : 0,
           transform: visible
-            ? `translateY(${verticalOffset}px)`
-            : `translateY(50px) translateX(${isEven ? "-40px" : "40px"})`,
-          transition: `all 0.9s cubic-bezier(0.16,1,0.3,1) ${0.1 * index}s`,
-          marginTop: overlapMargin,
+            ? "translateY(0)"
+            : `translateY(40px) translateX(${imageRight ? "30px" : "-30px"})`,
+          transition: `all 0.8s cubic-bezier(0.16,1,0.3,1) ${0.08 * index}s`,
           position: "relative",
-          zIndex: 10 - index,
         }}
       >
-        {/* Image side — 65% width */}
+        {/* Image side — 60% width */}
         <div
-          className="w-full md:w-[65%] flex-shrink-0 relative"
+          className="w-full md:w-[60%] flex-shrink-0 relative"
           style={{
             perspective: "1000px",
-            animation: `float-${index} ${4 + index * 0.4}s ease-in-out infinite`,
+            animation: `float-${index} ${5 + index * 0.3}s ease-in-out infinite`,
           }}
         >
-          {/* Soft offset radial glow behind */}
+          {/* Soft radial glow behind */}
           <div
             className="absolute pointer-events-none"
             style={{
-              width: "115%",
-              height: "115%",
-              top: "-7%",
-              left: isEven ? "-10%" : "-5%",
-              background: `radial-gradient(ellipse at ${isEven ? "65%" : "35%"} 50%, hsla(187,100%,50%,${0.06 + magneticGlow * 0.08}) 0%, transparent 65%)`,
+              width: "110%",
+              height: "110%",
+              top: "-5%",
+              left: "-5%",
+              background: `radial-gradient(ellipse at center, hsla(187,100%,50%,${0.05 + magneticGlow * 0.06}) 0%, transparent 65%)`,
               filter: "blur(28px)",
               transition: "all 0.4s ease",
               zIndex: 0,
@@ -305,20 +335,20 @@ function ShowcaseCard({
             className="rounded-xl overflow-hidden transition-all duration-500 relative"
             style={{
               transform: hovered
-                ? "rotateY(0deg) rotateX(0deg) scale(1.05)"
-                : `rotateY(${tiltDeg}deg) rotateX(2deg) scale(1)`,
-              transformOrigin: isEven ? "left center" : "right center",
+                ? "rotateY(0deg) rotateX(0deg) scale(1.04)"
+                : `perspective(1000px) rotateX(2deg) rotate(${tiltDeg}deg) scale(1)`,
+              transformOrigin: "center center",
               boxShadow: hovered
-                ? `0 25px 70px hsla(187,100%,50%,0.18), 0 0 40px hsla(187,100%,50%,0.14), ${isEven ? "-6px" : "6px"} 0 24px hsla(187,100%,50%,0.12)`
-                : `0 20px 60px hsla(187,100%,50%,0.15), 0 10px 30px hsla(0,0%,0%,0.6), ${isEven ? "-4px" : "4px"} 0 16px hsla(187,100%,50%,${0.06 + magneticGlow * 0.08})`,
-              border: `1px solid hsla(187,100%,55%,${hovered ? 0.45 : 0.18 + magneticGlow * 0.12})`,
+                ? "0 25px 70px hsla(187,100%,50%,0.16), 0 0 35px hsla(187,100%,50%,0.12)"
+                : `0 20px 60px hsla(187,100%,50%,0.12), 0 10px 30px hsla(0,0%,0%,0.55)`,
+              border: `1px solid hsla(187,100%,55%,${hovered ? 0.4 : 0.15 + magneticGlow * 0.1})`,
             }}
           >
             <img src={src} alt={caption} className="w-full block" loading="lazy" />
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: `linear-gradient(${isEven ? "135deg" : "225deg"}, hsla(187,100%,80%,${hovered ? 0.06 : 0.025}) 0%, transparent 50%)`,
+                background: `linear-gradient(${imageRight ? "225deg" : "135deg"}, hsla(187,100%,80%,${hovered ? 0.05 : 0.02}) 0%, transparent 50%)`,
                 transition: "all 0.5s ease",
               }}
             />
@@ -326,7 +356,7 @@ function ShowcaseCard({
         </div>
 
         {/* Caption */}
-        <div className="flex-1 min-w-0 flex flex-col justify-center md:max-w-[28%]">
+        <div className="flex-1 min-w-0 flex flex-col justify-center">
           <div
             className="font-pixel text-[10px] tracking-[0.25em] mb-2"
             style={{ color: "hsla(175,100%,55%,0.65)" }}
@@ -334,10 +364,10 @@ function ShowcaseCard({
             0{index + 1}
           </div>
           <h4
-            className="font-pixel text-sm tracking-wider mb-3"
+            className="font-pixel tracking-wider mb-3"
             style={{
-              color: "hsl(187,100%,55%)",
-              textShadow: "0 0 14px hsla(187,100%,50%,0.4)",
+              color: "hsl(187,100%,60%)",
+              textShadow: "0 0 12px hsla(187,100%,50%,0.35)",
               fontSize: "13px",
             }}
           >
@@ -345,7 +375,7 @@ function ShowcaseCard({
           </h4>
           <p
             className="font-body text-sm leading-[1.85]"
-            style={{ color: "hsla(0,0%,100%,0.7)" }}
+            style={{ color: "hsla(0,0%,100%,0.72)" }}
           >
             {caption}
           </p>
@@ -485,7 +515,7 @@ export default function StockMarketPrediction() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 py-20">
+      <div className="relative z-10 max-w-5xl mx-auto px-6 py-14">
         {/* TECH STACK — Quick Info, near top */}
         <Section>
           <SectionHeading kicker="QUICK INFO">Tech Stack</SectionHeading>
@@ -527,37 +557,46 @@ export default function StockMarketPrediction() {
 
         {/* OVERVIEW */}
         <Section delay={0.05}>
-          <SectionHeading kicker="01 — OVERVIEW">Overview</SectionHeading>
-          <BodyText>
-            Stock price prediction is inherently complex due to market volatility and rapidly changing trends.
-            This project uses an LSTM (Long Short-Term Memory) model to analyze time-series data and generate
-            accurate short-term forecasts. The system combines machine learning with real-time data
-            visualization to create an interactive and insightful user experience.
-          </BodyText>
+          <div className="relative">
+            <SideStockLine side="right" />
+            <SectionHeading kicker="01 — OVERVIEW">Overview</SectionHeading>
+            <BodyText>
+              Stock price prediction is inherently complex due to market volatility and rapidly changing trends.
+              This project uses an LSTM (Long Short-Term Memory) model to analyze time-series data and generate
+              accurate short-term forecasts. The system combines machine learning with real-time data
+              visualization to create an interactive and insightful user experience.
+            </BodyText>
+          </div>
         </Section>
 
         <GlowDivider />
 
         {/* PROBLEM */}
         <Section delay={0.05}>
-          <SectionHeading kicker="02 — PROBLEM">Problem</SectionHeading>
-          <BodyText>
-            Traditional prediction methods struggle to capture temporal dependencies in stock data, leading to
-            inconsistent results. Users also lack intuitive tools to explore predictions and understand trends
-            in real time. There is a need for a system that is both technically robust and visually interactive.
-          </BodyText>
+          <div className="relative md:pl-[40%]">
+            <SideStockLine side="left" />
+            <SectionHeading kicker="02 — PROBLEM">Problem</SectionHeading>
+            <BodyText>
+              Traditional prediction methods struggle to capture temporal dependencies in stock data, leading to
+              inconsistent results. Users also lack intuitive tools to explore predictions and understand trends
+              in real time. There is a need for a system that is both technically robust and visually interactive.
+            </BodyText>
+          </div>
         </Section>
 
         <GlowDivider />
 
         {/* SOLUTION */}
         <Section delay={0.05}>
-          <SectionHeading kicker="03 — APPROACH">Solution / Approach</SectionHeading>
-          <BodyText>
-            To address this, an LSTM-based model was implemented to learn patterns from historical stock data.
-            The data is preprocessed into time-series sequences and normalized before being fed into the model.
-            Real-time API integration ensures that predictions remain dynamic and relevant.
-          </BodyText>
+          <div className="relative">
+            <SideStockLine side="right" />
+            <SectionHeading kicker="03 — APPROACH">Solution / Approach</SectionHeading>
+            <BodyText>
+              To address this, an LSTM-based model was implemented to learn patterns from historical stock data.
+              The data is preprocessed into time-series sequences and normalized before being fed into the model.
+              Real-time API integration ensures that predictions remain dynamic and relevant.
+            </BodyText>
+          </div>
         </Section>
 
         <GlowDivider />
@@ -618,7 +657,7 @@ export default function StockMarketPrediction() {
           <SectionHeading kicker="06 — PRODUCT SHOWCASE">Product Showcase</SectionHeading>
         </Section>
 
-        <div className="mt-10 space-y-2">
+        <div className="mt-10 space-y-20">
           {screenshots.map((s, i) => (
             <ShowcaseCard
               key={i}
@@ -652,10 +691,10 @@ export default function StockMarketPrediction() {
           </div>
 
           <div
-            className="rounded-2xl py-14 px-8"
+            className="rounded-2xl py-12 px-8 max-w-3xl mx-auto"
             style={{
-              background: "linear-gradient(135deg, hsla(220,20%,5%,0.6) 0%, hsla(195,15%,8%,0.5) 100%)",
-              border: "1px solid hsla(187,100%,50%,0.08)",
+              background: "linear-gradient(135deg, hsla(220,20%,5%,0.5) 0%, hsla(195,15%,8%,0.4) 100%)",
+              border: "1px solid hsla(187,100%,50%,0.06)",
               backdropFilter: "blur(8px)",
             }}
           >
