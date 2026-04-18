@@ -315,6 +315,9 @@ function ShowcaseCard({
     setMagneticGlow(intensity);
   }, [cursorX, cursorY]);
 
+  // Subtle 3D tilt — use rotateY (not 2D rotate)
+  const tiltY = isEven ? -5 : 5;
+
   return (
     <>
       <style>{floatKeyframes}</style>
@@ -325,7 +328,7 @@ function ShowcaseCard({
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className={`flex flex-col ${imageRight ? "md:flex-row-reverse" : "md:flex-row"} items-center gap-10 md:gap-14`}
+        className={`flex flex-col ${imageRight ? "md:flex-row-reverse" : "md:flex-row"} items-center gap-10 md:gap-12`}
         style={{
           opacity: visible ? 1 : 0,
           transform: visible
@@ -335,11 +338,11 @@ function ShowcaseCard({
           position: "relative",
         }}
       >
-        {/* Image side — 60% width */}
+        {/* Image side — 70% width on md+ */}
         <div
-          className="w-full md:w-[60%] flex-shrink-0 relative"
+          className="w-full md:w-[70%] flex-shrink-0 relative"
           style={{
-            perspective: "1000px",
+            perspective: "1200px",
             animation: `float-${index} ${5 + index * 0.3}s ease-in-out infinite`,
           }}
         >
@@ -351,7 +354,7 @@ function ShowcaseCard({
               height: "110%",
               top: "-5%",
               left: "-5%",
-              background: `radial-gradient(ellipse at center, hsla(187,100%,50%,${0.05 + magneticGlow * 0.06}) 0%, transparent 65%)`,
+              background: `radial-gradient(ellipse at center, hsla(187,100%,50%,${0.06 + magneticGlow * 0.07}) 0%, transparent 65%)`,
               filter: "blur(28px)",
               transition: "all 0.4s ease",
               zIndex: 0,
@@ -361,11 +364,11 @@ function ShowcaseCard({
             className="rounded-xl overflow-hidden transition-all duration-500 relative"
             style={{
               transform: hovered
-                ? "rotateY(0deg) rotateX(0deg) scale(1.04)"
-                : `perspective(1000px) rotateX(2deg) rotate(${tiltDeg}deg) scale(1)`,
+                ? "perspective(1200px) rotateX(0deg) rotateY(0deg) scale(1.04)"
+                : `perspective(1200px) rotateX(2deg) rotateY(${tiltY}deg) scale(1)`,
               transformOrigin: "center center",
               boxShadow: hovered
-                ? "0 25px 70px hsla(187,100%,50%,0.16), 0 0 35px hsla(187,100%,50%,0.12)"
+                ? "0 30px 80px hsla(187,100%,50%,0.18), 0 0 40px hsla(187,100%,50%,0.12)"
                 : `0 20px 60px hsla(187,100%,50%,0.12), 0 10px 30px hsla(0,0%,0%,0.55)`,
               border: `1px solid hsla(187,100%,55%,${hovered ? 0.4 : 0.15 + magneticGlow * 0.1})`,
             }}
@@ -381,8 +384,8 @@ function ShowcaseCard({
           </div>
         </div>
 
-        {/* Caption */}
-        <div className="flex-1 min-w-0 flex flex-col justify-center">
+        {/* Caption — vertically centered, capped width */}
+        <div className="flex-1 min-w-0 flex flex-col justify-center" style={{ maxWidth: "550px" }}>
           <div
             className="font-pixel text-[10px] tracking-[0.25em] mb-2"
             style={{ color: "hsla(175,100%,55%,0.65)" }}
@@ -401,7 +404,7 @@ function ShowcaseCard({
           </h4>
           <p
             className="font-body text-sm leading-[1.85]"
-            style={{ color: "hsla(0,0%,100%,0.72)" }}
+            style={{ color: "hsla(0,0%,100%,0.78)" }}
           >
             {caption}
           </p>
