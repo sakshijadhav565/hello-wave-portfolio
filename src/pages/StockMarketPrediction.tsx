@@ -159,18 +159,44 @@ function Section({ children, delay = 0 }: { children: React.ReactNode; delay?: n
   );
 }
 
-/* ── Glow divider ── */
+/* ── Heartbeat divider — visible animated ECG line between sections ── */
 function GlowDivider() {
   return (
-    <div className="relative my-12">
-      <div
-        className="h-px w-full"
-        style={{
-          background: "linear-gradient(90deg, transparent 0%, hsla(187,100%,50%,0.5) 50%, transparent 100%)",
-          opacity: 0.35,
-          boxShadow: "0 0 12px hsla(187,100%,50%,0.18)",
-        }}
-      />
+    <div className="relative my-20 h-[60px] w-full overflow-hidden pointer-events-none select-none">
+      <svg
+        viewBox="0 0 1200 60"
+        preserveAspectRatio="none"
+        className="w-full h-full"
+        style={{ opacity: 0.55 }}
+      >
+        <defs>
+          <linearGradient id={`hb-div-${Math.random().toString(36).slice(2, 7)}`} x1="0" x2="1">
+            <stop offset="0%" stopColor="hsla(187,100%,55%,0)" />
+            <stop offset="20%" stopColor="hsla(187,100%,55%,0.8)" />
+            <stop offset="80%" stopColor="hsla(175,100%,55%,0.8)" />
+            <stop offset="100%" stopColor="hsla(175,100%,55%,0)" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M0,30 L300,30 L320,30 L340,10 L360,50 L380,20 L400,30 L700,30 L720,30 L740,8 L760,52 L780,18 L800,30 L1200,30"
+          fill="none"
+          stroke="hsla(187,100%,60%,0.55)"
+          strokeWidth="1.5"
+          style={{
+            filter: "drop-shadow(0 0 6px hsla(187,100%,55%,0.45))",
+            strokeDasharray: 2400,
+            strokeDashoffset: 2400,
+            animation: "hbDivDraw 6s linear infinite",
+          }}
+        />
+        <style>{`
+          @keyframes hbDivDraw {
+            0% { stroke-dashoffset: 2400; }
+            55% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -2400; }
+          }
+        `}</style>
+      </svg>
     </div>
   );
 }
@@ -268,7 +294,6 @@ function ShowcaseCard({
   const [hovered, setHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const isEven = index % 2 === 0;
-  const tiltDeg = isEven ? -3 : 3;
 
   // Alternating: index 0 → image right (md:flex-row-reverse), index 1 → image left (md:flex-row), etc.
   const imageRight = index % 2 === 0;
@@ -289,6 +314,9 @@ function ShowcaseCard({
     setMagneticGlow(intensity);
   }, [cursorX, cursorY]);
 
+  // Subtle 3D tilt — use rotateY (not 2D rotate)
+  const tiltY = isEven ? -5 : 5;
+
   return (
     <>
       <style>{floatKeyframes}</style>
@@ -299,7 +327,7 @@ function ShowcaseCard({
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className={`flex flex-col ${imageRight ? "md:flex-row-reverse" : "md:flex-row"} items-center gap-10 md:gap-14`}
+        className={`flex flex-col ${imageRight ? "md:flex-row-reverse" : "md:flex-row"} items-center gap-10 md:gap-12`}
         style={{
           opacity: visible ? 1 : 0,
           transform: visible
@@ -309,11 +337,11 @@ function ShowcaseCard({
           position: "relative",
         }}
       >
-        {/* Image side — 60% width */}
+        {/* Image side — 70% width on md+ */}
         <div
-          className="w-full md:w-[60%] flex-shrink-0 relative"
+          className="w-full md:w-[70%] flex-shrink-0 relative"
           style={{
-            perspective: "1000px",
+            perspective: "1200px",
             animation: `float-${index} ${5 + index * 0.3}s ease-in-out infinite`,
           }}
         >
@@ -325,7 +353,7 @@ function ShowcaseCard({
               height: "110%",
               top: "-5%",
               left: "-5%",
-              background: `radial-gradient(ellipse at center, hsla(187,100%,50%,${0.05 + magneticGlow * 0.06}) 0%, transparent 65%)`,
+              background: `radial-gradient(ellipse at center, hsla(187,100%,50%,${0.06 + magneticGlow * 0.07}) 0%, transparent 65%)`,
               filter: "blur(28px)",
               transition: "all 0.4s ease",
               zIndex: 0,
@@ -335,11 +363,11 @@ function ShowcaseCard({
             className="rounded-xl overflow-hidden transition-all duration-500 relative"
             style={{
               transform: hovered
-                ? "rotateY(0deg) rotateX(0deg) scale(1.04)"
-                : `perspective(1000px) rotateX(2deg) rotate(${tiltDeg}deg) scale(1)`,
+                ? "perspective(1200px) rotateX(0deg) rotateY(0deg) scale(1.04)"
+                : `perspective(1200px) rotateX(2deg) rotateY(${tiltY}deg) scale(1)`,
               transformOrigin: "center center",
               boxShadow: hovered
-                ? "0 25px 70px hsla(187,100%,50%,0.16), 0 0 35px hsla(187,100%,50%,0.12)"
+                ? "0 30px 80px hsla(187,100%,50%,0.18), 0 0 40px hsla(187,100%,50%,0.12)"
                 : `0 20px 60px hsla(187,100%,50%,0.12), 0 10px 30px hsla(0,0%,0%,0.55)`,
               border: `1px solid hsla(187,100%,55%,${hovered ? 0.4 : 0.15 + magneticGlow * 0.1})`,
             }}
@@ -355,8 +383,8 @@ function ShowcaseCard({
           </div>
         </div>
 
-        {/* Caption */}
-        <div className="flex-1 min-w-0 flex flex-col justify-center">
+        {/* Caption — vertically centered, capped width */}
+        <div className="flex-1 min-w-0 flex flex-col justify-center" style={{ maxWidth: "550px" }}>
           <div
             className="font-pixel text-[10px] tracking-[0.25em] mb-2"
             style={{ color: "hsla(175,100%,55%,0.65)" }}
@@ -375,7 +403,7 @@ function ShowcaseCard({
           </h4>
           <p
             className="font-body text-sm leading-[1.85]"
-            style={{ color: "hsla(0,0%,100%,0.72)" }}
+            style={{ color: "hsla(0,0%,100%,0.78)" }}
           >
             {caption}
           </p>
@@ -573,7 +601,7 @@ export default function StockMarketPrediction() {
 
         {/* PROBLEM */}
         <Section delay={0.05}>
-          <div className="relative md:pl-[40%]">
+          <div className="relative">
             <SideStockLine side="left" />
             <SectionHeading kicker="02 — PROBLEM">Problem</SectionHeading>
             <BodyText>
