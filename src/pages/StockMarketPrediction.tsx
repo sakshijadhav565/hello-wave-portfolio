@@ -294,7 +294,6 @@ function ShowcaseCard({
   const [hovered, setHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const isEven = index % 2 === 0;
-  const tiltDeg = isEven ? -3 : 3;
 
   // Alternating: index 0 → image right (md:flex-row-reverse), index 1 → image left (md:flex-row), etc.
   const imageRight = index % 2 === 0;
