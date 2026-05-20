@@ -48,6 +48,15 @@ const projects: Project[] = [
     techStack: ["React", "Tailwind", "TypeScript"],
   },
   {
+    title: "ERP Portal Redesign",
+    tag: "UI / UX Design",
+    tagColor: "pink",
+    description:
+      "Redesigned a college ERP platform through UX research, heuristic evaluation, user testing, and mobile-first UI redesigns to improve usability, accessibility, and academic workflows.",
+    phase: "2025 – Building Phase",
+    techStack: ["Figma", "UX Research", "UI Design", "Wireframing", "Heuristic Evaluation"],
+  },
+  {
     title: "AI Chatbot",
     tag: "AI / NLP",
     tagColor: "cyan",
@@ -390,7 +399,7 @@ export default function ProjectsSection() {
                                   project={project}
                                   index={idx}
                                   visible={visible}
-                                  onClick={() => project.title === "Stock Price Prediction" ? navigate("/projects/stock-market-prediction") : setSelectedProject(project)}
+                                  onClick={() => { if (project.title === "Stock Price Prediction") navigate("/projects/stock-market-prediction"); else if (project.title === "ERP Portal Redesign") navigate("/projects/erp-redesign"); else setSelectedProject(project); }}
                                 />
                               </div>
                               <TimelineNode active={visible} />
@@ -405,7 +414,7 @@ export default function ProjectsSection() {
                                   project={project}
                                   index={idx}
                                   visible={visible}
-                                  onClick={() => project.title === "Stock Price Prediction" ? navigate("/projects/stock-market-prediction") : setSelectedProject(project)}
+                                  onClick={() => { if (project.title === "Stock Price Prediction") navigate("/projects/stock-market-prediction"); else if (project.title === "ERP Portal Redesign") navigate("/projects/erp-redesign"); else setSelectedProject(project); }}
                                 />
                               </div>
                             </>
@@ -422,7 +431,7 @@ export default function ProjectsSection() {
                               project={project}
                               index={idx}
                               visible={visible}
-                              onClick={() => project.title === "Stock Price Prediction" ? navigate("/projects/stock-market-prediction") : setSelectedProject(project)}
+                              onClick={() => { if (project.title === "Stock Price Prediction") navigate("/projects/stock-market-prediction"); else if (project.title === "ERP Portal Redesign") navigate("/projects/erp-redesign"); else setSelectedProject(project); }}
                             />
                           </div>
                         </div>

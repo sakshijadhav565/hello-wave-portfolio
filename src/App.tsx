@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import StockMarketPrediction from "./pages/StockMarketPrediction.tsx";
+import ErpRedesign from "./pages/ErpRedesign.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -17,7 +18,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/projects/stock-market-prediction" element={<StockMarketPrediction />} />
+        <Route path="/projects/stock-market-prediction" element={<StockMarketPrediction />} />
+        <Route path="/projects/erp-redesign" element={<ErpRedesign />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
