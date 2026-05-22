@@ -1,19 +1,23 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ExternalLink, Figma, ChevronDown } from "lucide-react";
-import erpLogin from "@/assets/erp-login.png";
-import erpHome from "@/assets/erp-home.png";
-import erpDashboard from "@/assets/erp-dashboard.png";
-import erpAcademics from "@/assets/erp-academics.png";
-import erpAttendance from "@/assets/erp-attendance.png";
-import erpExamination from "@/assets/erp-examination.png";
-import erpTestscore from "@/assets/erp-testscore.png";
-import erpGradecard from "@/assets/erp-gradecard.png";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Figma, Search, BarChart3, PenTool, Palette, MousePointer2, CheckCircle2, Quote } from "lucide-react";
+
+import loginBefore from "@/assets/erp-login-before.png";
+import loginAfter from "@/assets/erp-login-after.png";
+import homeBefore from "@/assets/erp-home-before.png";
+import homeAfter from "@/assets/erp-home-after.png";
+import attBefore from "@/assets/erp-attendance-before.png";
+import attAfter from "@/assets/erp-attendance-after.png";
+import examBefore from "@/assets/erp-exam-before.png";
+import examAfter from "@/assets/erp-exam-after.png";
+import gradeBefore from "@/assets/erp-grade-before.png";
+import gradeAfter from "@/assets/erp-grade-after.png";
 
 const CYAN = "hsl(187, 100%, 50%)";
 const PINK = "hsl(342, 100%, 59%)";
 
-/* ── Particles ── */
-function ParticlesCanvas() {
+/* ── Subtle particles (reduced) ── */
+function Particles() {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = ref.current;
@@ -28,1025 +32,506 @@ function ParticlesCanvas() {
     };
     resize();
     window.addEventListener("resize", resize);
-    const particles = Array.from({ length: 60 }, () => ({
+    const parts = Array.from({ length: 28 }, () => ({
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: Math.random() * 2 + 0.4,
-      sx: (Math.random() - 0.5) * 0.06,
-      sy: (Math.random() - 0.5) * 0.06,
-      o: Math.random() * 0.5 + 0.15,
-      pink: Math.random() > 0.75,
+      r: Math.random() * 1.4 + 0.3,
+      sx: (Math.random() - 0.5) * 0.04,
+      sy: (Math.random() - 0.5) * 0.04,
+      o: Math.random() * 0.25 + 0.08,
+      pink: Math.random() > 0.8,
     }));
-    const draw = () => {
-      const w = canvas.offsetWidth;
-      const h = canvas.offsetHeight;
+    const tick = () => {
+      const w = canvas.offsetWidth, h = canvas.offsetHeight;
       ctx.clearRect(0, 0, w, h);
-      particles.forEach((p) => {
+      parts.forEach(p => {
         ctx.beginPath();
-        ctx.arc((p.x / 100) * w, (p.y / 100) * h, p.size, 0, Math.PI * 2);
-        const color = p.pink ? `hsla(342, 100%, 59%, ${p.o})` : `hsla(187, 100%, 50%, ${p.o})`;
-        ctx.fillStyle = color;
-        ctx.shadowColor = color;
-        ctx.shadowBlur = 8;
+        ctx.arc((p.x/100)*w, (p.y/100)*h, p.r, 0, Math.PI*2);
+        ctx.fillStyle = p.pink ? `hsla(342,100%,59%,${p.o})` : `hsla(187,100%,50%,${p.o})`;
         ctx.fill();
-        ctx.shadowBlur = 0;
-        p.x += p.sx;
-        p.y += p.sy;
+        p.x += p.sx; p.y += p.sy;
         if (p.x < 0 || p.x > 100) p.sx *= -1;
         if (p.y < 0 || p.y > 100) p.sy *= -1;
       });
-      raf = requestAnimationFrame(draw);
+      raf = requestAnimationFrame(tick);
     };
-    draw();
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
-    };
+    tick();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
   }, []);
-  return <canvas ref={ref} className="fixed inset-0 w-full h-full pointer-events-none z-0" aria-hidden />;
+  return <canvas ref={ref} className="absolute inset-0 w-full h-full pointer-events-none opacity-60" aria-hidden />;
 }
 
-/* ── Reveal ── */
+/* ── Reveal on scroll ── */
 function useReveal(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [v, setV] = useState(false);
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { threshold }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
+    const el = ref.current; if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setV(true); obs.disconnect(); } }, { threshold });
+    obs.observe(el); return () => obs.disconnect();
   }, [threshold]);
-  return { ref, visible };
+  return { ref, v };
 }
 
-/* ── Counter ── */
-function Counter({ to, suffix = "%" }: { to: number; suffix?: string }) {
-  const { ref, visible } = useReveal(0.3);
-  const [val, setVal] = useState(0);
-  useEffect(() => {
-    if (!visible) return;
-    const start = performance.now();
-    const dur = 1400;
-    let raf = 0;
-    const tick = (t: number) => {
-      const p = Math.min((t - start) / dur, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setVal(Math.round(to * eased * 10) / 10);
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [visible, to]);
+function Reveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const { ref, v } = useReveal();
   return (
-    <span ref={ref}>
-      {val}
-      {suffix}
-    </span>
+    <div ref={ref} className={className} style={{
+      opacity: v ? 1 : 0,
+      transform: v ? "translateY(0)" : "translateY(16px)",
+      transition: `opacity 0.7s ease-out ${delay}s, transform 0.7s ease-out ${delay}s`,
+    }}>{children}</div>
   );
 }
 
-/* ── Section heading ── */
-function SectionHeading({ kicker, title }: { kicker: string; title: string }) {
-  const { ref, visible } = useReveal(0.2);
+/* ── Reusable bits ── */
+const card = "rounded-xl border border-white/10 bg-white/[0.025] backdrop-blur-sm";
+const tag = "inline-block font-pixel text-[9px] tracking-widest px-2.5 py-1 rounded-full";
+
+function SectionLabel({ children, color = CYAN }: { children: React.ReactNode; color?: string }) {
   return (
-    <div
-      ref={ref}
-      className="mb-12 text-center"
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(20px)",
-        transition: "all 0.8s ease-out",
-      }}
-    >
-      <div
-        className="font-pixel text-[10px] tracking-[0.3em] mb-3"
-        style={{ color: PINK, textShadow: `0 0 10px ${PINK}` }}
-      >
-        {kicker}
-      </div>
-      <h2
-        className="font-pixel tracking-widest animate-glow-pulse"
-        style={{
-          fontSize: "clamp(22px, 3.4vw, 38px)",
-          color: CYAN,
-          textShadow: `0 0 22px ${CYAN}, 0 0 44px hsla(187,100%,50%,0.35)`,
-        }}
-      >
-        {title}
-      </h2>
-    </div>
+    <span className={tag} style={{
+      color, border: `1px solid ${color === CYAN ? "hsla(187,100%,50%,0.35)" : "hsla(342,100%,59%,0.35)"}`,
+      background: color === CYAN ? "hsla(187,100%,50%,0.06)" : "hsla(342,100%,59%,0.06)",
+    }}>{children}</span>
   );
 }
 
-/* ── Glow card wrapper ── */
-function GlowCard({
-  children,
-  className = "",
-  accent = "cyan",
-}: {
-  children: React.ReactNode;
-  className?: string;
-  accent?: "cyan" | "pink";
-}) {
-  const [hover, setHover] = useState(false);
-  const color = accent === "cyan" ? CYAN : PINK;
+function H2({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      className={`rounded-xl p-6 transition-all duration-500 ${className}`}
-      style={{
-        background: "linear-gradient(135deg, hsla(187,100%,50%,0.04), hsla(0,0%,4%,0.7))",
-        backdropFilter: "blur(14px)",
-        border: `2px solid ${hover ? color : "hsla(187,100%,50%,0.2)"}`,
-        boxShadow: hover
-          ? `0 12px 50px ${color}40, 0 0 40px ${color}30, inset 0 1px 0 hsla(255,255,255,0.05)`
-          : "0 6px 30px hsla(0,0%,0%,0.4), inset 0 1px 0 hsla(255,255,255,0.04)",
-        transform: hover ? "translateY(-4px) scale(1.01)" : "translateY(0) scale(1)",
-      }}
-    >
+    <h2 className="font-sans font-semibold tracking-tight text-white mb-3" style={{ fontSize: "clamp(24px, 3vw, 32px)" }}>
       {children}
-    </div>
+    </h2>
   );
 }
 
-/* ── Showcase row ── */
-type ShowcaseProps = {
-  num: string;
-  title: string;
-  img: string;
-  problems: string[];
-  improvements: string[];
-  outcome: string;
-  reverse?: boolean;
-};
-function ShowcaseRow({ num, title, img, problems, improvements, outcome, reverse }: ShowcaseProps) {
-  const { ref, visible } = useReveal(0.12);
-  return (
-    <div
-      ref={ref}
-      className={`grid md:grid-cols-2 gap-10 items-center ${reverse ? "md:[direction:rtl]" : ""}`}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(40px)",
-        transition: "all 0.9s cubic-bezier(0.16,1,0.3,1)",
-      }}
-    >
-      {/* Image */}
-      <div className="[direction:ltr] relative group">
-        <div
-          className="absolute -inset-4 rounded-2xl opacity-60 blur-2xl pointer-events-none"
-          style={{ background: "radial-gradient(circle, hsla(187,100%,50%,0.25), transparent 70%)" }}
-        />
-        <div
-          className="relative rounded-xl overflow-hidden transition-transform duration-700 group-hover:scale-[1.02]"
-          style={{
-            border: "1.5px solid hsla(187,100%,50%,0.4)",
-            boxShadow: "0 20px 60px hsla(0,0%,0%,0.6), 0 0 30px hsla(187,100%,50%,0.2)",
-            background: "hsla(0,0%,4%,0.6)",
-            transform: "perspective(1200px) rotateX(2deg) rotateY(0deg)",
-          }}
-        >
-          <img src={img} alt={title} loading="lazy" className="w-full h-auto block" />
-        </div>
-        <div
-          className="absolute -top-3 -left-3 font-pixel text-[11px] px-3 py-1.5 rounded-md"
-          style={{
-            color: PINK,
-            background: "hsla(0,0%,4%,0.9)",
-            border: `1px solid ${PINK}`,
-            boxShadow: `0 0 16px ${PINK}80`,
-          }}
-        >
-          {num}
-        </div>
-      </div>
-
-      {/* Text */}
-      <div className="[direction:ltr] space-y-4">
-        <h3
-          className="font-pixel text-[14px] md:text-[16px] tracking-wider"
-          style={{ color: CYAN, textShadow: `0 0 14px ${CYAN}80` }}
-        >
-          {title}
-        </h3>
-
-        <div>
-          <p className="font-pixel text-[9px] tracking-widest mb-2" style={{ color: PINK }}>
-            ▸ PROBLEMS IDENTIFIED
-          </p>
-          <ul className="space-y-1.5">
-            {problems.map((p) => (
-              <li key={p} className="font-body text-sm pl-4 relative" style={{ color: "hsla(0,0%,100%,0.72)" }}>
-                <span className="absolute left-0 top-2 w-1.5 h-1.5 rounded-full" style={{ background: PINK, boxShadow: `0 0 6px ${PINK}` }} />
-                {p}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <p className="font-pixel text-[9px] tracking-widest mb-2" style={{ color: CYAN }}>
-            ▸ IMPROVEMENTS MADE
-          </p>
-          <ul className="space-y-1.5">
-            {improvements.map((p) => (
-              <li key={p} className="font-body text-sm pl-4 relative" style={{ color: "hsla(0,0%,100%,0.85)" }}>
-                <span className="absolute left-0 top-2 w-1.5 h-1.5 rounded-full" style={{ background: CYAN, boxShadow: `0 0 6px ${CYAN}` }} />
-                {p}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div
-          className="mt-3 rounded-lg p-3 font-body text-sm"
-          style={{
-            background: "hsla(187,100%,50%,0.06)",
-            border: "1px solid hsla(187,100%,50%,0.25)",
-            color: "hsla(0,0%,100%,0.85)",
-          }}
-        >
-          <span className="font-pixel text-[9px] tracking-widest mr-2" style={{ color: CYAN }}>
-            FINAL OUTCOME →
-          </span>
-          {outcome}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ── DATA ── */
-const stats = [
-  { v: 56, label: "Disliked Visual Design" },
-  { v: 57, label: "Struggled With Navigation" },
-  { v: 93, label: "Reported Bugs" },
-  { v: 86, label: "Grievance Difficulty" },
-  { v: 79.5, label: "Wanted Dark Mode" },
-];
-
-const painPoints = [
-  "Confusing navigation",
-  "Cluttered UI",
-  "Broken features",
-  "Poor responsiveness",
-  "Difficult grievance system",
-  "Inconsistent typography",
-  "Hard-to-read grade cards",
-  "Weak academic workflow visibility",
-];
-
-const stories = [
-  {
-    name: "Aarohi Sharma",
-    role: "Second Year Engineering Student",
-    avatar: "👩‍🎓",
-    story:
-      "Aarohi frequently struggled while navigating the old ERP portal during exam season. Important academic tools were difficult to locate, attendance tracking was unclear, and the cluttered interface made simple tasks stressful. After the redesign, Aarohi can now quickly access attendance, schedules, exam forms, and academic resources through a clean dashboard with intuitive navigation.",
-    pain: "Confusing navigation and cluttered dashboard.",
-    fix: "Simplified dashboard with quick academic access and improved visual hierarchy.",
-  },
-  {
-    name: "Rohan Mehta",
-    role: "First Year Student",
-    avatar: "👨‍🎓",
-    story:
-      "Rohan mostly accessed the ERP system through his mobile phone, but the old interface was poorly responsive and difficult to use on smaller screens. Important buttons were hard to identify and forms were frustrating to complete. The redesigned mobile-first experience now allows him to navigate smoothly, submit forms easily, and track academic updates without confusion.",
-    pain: "Poor mobile responsiveness.",
-    fix: "Responsive mobile-first UI with cleaner layouts and better accessibility.",
-  },
-  {
-    name: "Neha Patil",
-    role: "Third Year Student",
-    avatar: "👩‍💻",
-    story:
-      "Neha often missed important examination deadlines because notifications and updates were buried deep inside the old ERP portal. The redesign introduced a modern dashboard with upcoming deadlines, notice boards, and clearer academic workflows, helping her stay organized and stress-free.",
-    pain: "Hidden updates and poor information hierarchy.",
-    fix: "Centralized dashboard with notices and upcoming deadlines.",
-  },
-  {
-    name: "Aditya Verma",
-    role: "Final Year Student",
-    avatar: "👨‍💼",
-    story:
-      "Aditya found the grievance system frustrating because submitting complaints required navigating through unclear workflows and inconsistent interfaces. The redesigned grievance experience simplified the process with intuitive navigation, cleaner forms, and improved accessibility.",
-    pain: "Complicated grievance workflow.",
-    fix: "Simplified grievance system with improved UX flow.",
-  },
-];
-
-const heuristics = [
-  { name: "User Control & Freedom", score: 62 },
-  { name: "Error Prevention", score: 48 },
-  { name: "Recognition rather than Recall", score: 55 },
-  { name: "Help & Documentation", score: 40 },
-  { name: "Aesthetic & Minimal Design", score: 44 },
-  { name: "Help Users with Errors", score: 50 },
-  { name: "Flexibility & Efficiency", score: 58 },
-  { name: "Match System & Real World", score: 65 },
-  { name: "Consistency & Standards", score: 52 },
-  { name: "Visibility of System Status", score: 60 },
-];
-
-const userFlow = [
-  "Login & Authentication",
-  "Personalised Dashboard",
-  "Academics Hub",
-  "Attendance & Exams",
-  "Results & Grade Card",
-  "Notices & Grievance",
-];
-
-const showcases: ShowcaseProps[] = [
-  {
-    num: "01",
-    title: "LOGIN SCREEN",
-    img: erpLogin,
-    problems: ["Poor visual hierarchy", "Weak branding visibility", "Cluttered dark interface", "Unclear input fields"],
-    improvements: ["Cleaner modern layout", "Better spacing and typography", "Improved login accessibility", "Stronger institutional branding"],
-    outcome: "A cleaner and more intuitive authentication experience with improved readability and accessibility.",
-  },
-  {
-    num: "02",
-    title: "HOME PAGE",
-    img: erpHome,
-    problems: ["Cluttered card arrangement", "Difficult navigation", "Weak content hierarchy"],
-    improvements: ["Simplified dashboard cards", "Improved spacing and alignment", "Cleaner navigation structure", "Modern card-based UI"],
-    outcome: "Students can now quickly access core ERP modules through a visually organized interface.",
-    reverse: true,
-  },
-  {
-    num: "03",
-    title: "DASHBOARD",
-    img: erpDashboard,
-    problems: ["Empty/uninformative dashboard", "Missing academic overview", "Lack of quick access widgets"],
-    improvements: ["Added GPA overview", "Added schedule tracking", "Added notice board", "Added dashboard widgets"],
-    outcome: "A centralized dashboard experience providing students with important academic insights instantly.",
-  },
-  {
-    num: "04",
-    title: "ACADEMICS PAGE",
-    img: erpAcademics,
-    problems: ["Poor academic navigation", "Difficult attendance visibility", "Cluttered layouts"],
-    improvements: ["Attendance preview card", "Improved card layouts", "Cleaner academic module organization"],
-    outcome: "Improved academic accessibility with simplified navigation and better information hierarchy.",
-    reverse: true,
-  },
-  {
-    num: "05",
-    title: "ATTENDANCE PAGE",
-    img: erpAttendance,
-    problems: ["Attendance visibility issues", "Difficult subject tracking", "Weak data visualization"],
-    improvements: ["Subject-wise attendance cards", "Circular attendance indicators", "Better visual clarity"],
-    outcome: "Students can now monitor attendance efficiently through clear visual progress indicators.",
-  },
-  {
-    num: "06",
-    title: "EXAMINATION PAGE",
-    img: erpExamination,
-    problems: ["Cluttered examination workflow", "Poor access to forms and deadlines", "Weak navigation"],
-    improvements: ["Simplified examination modules", "Added upcoming deadlines", "Improved card hierarchy"],
-    outcome: "A cleaner and stress-free examination experience with easier access to critical actions.",
-    reverse: true,
-  },
-  {
-    num: "07",
-    title: "TEST SCORE PAGE",
-    img: erpTestscore,
-    problems: ["Difficult score interpretation", "Poor analytics visibility", "Lack of progress insights"],
-    improvements: ["Added score analytics cards", "Improved performance visibility", "Better result organization"],
-    outcome: "Students can now easily analyze academic performance with structured score visualization.",
-  },
-  {
-    num: "08",
-    title: "GRADE CARD PAGE",
-    img: erpGradecard,
-    problems: ["Hard-to-read grade table", "Dense information layout", "Poor readability"],
-    improvements: ["Cleaner tabular hierarchy", "Improved typography", "Added semester GPA card"],
-    outcome: "A modern and highly readable academic performance interface with better clarity.",
-    reverse: true,
-  },
-];
-
-const features = [
-  "Attendance Tracking",
-  "Exam Registration",
-  "Dashboard Overview",
-  "Fee Management",
-  "Upcoming Deadlines",
-  "Grade Analytics",
-  "Responsive Mobile UI",
-  "Improved Navigation",
-  "Notice Board",
-  "Better Academic Workflow",
-];
-
-const palette = [
-  { name: "Neon Cyan", hex: "#00E5FF", color: "hsl(187,100%,50%)" },
-  { name: "Hot Pink", hex: "#FF1F6D", color: "hsl(342,100%,59%)" },
-  { name: "Deep Black", hex: "#000000", color: "hsl(0,0%,0%)" },
-  { name: "Surface", hex: "#0A0A0A", color: "hsl(0,0%,4%)" },
-  { name: "Foreground", hex: "#FFFFFF", color: "hsl(0,0%,100%)" },
-];
-
-/* ── Heuristic ring ── */
-function Ring({ score, label }: { score: number; label: string }) {
-  const { ref, visible } = useReveal(0.3);
-  const [v, setV] = useState(0);
-  useEffect(() => {
-    if (!visible) return;
-    const start = performance.now();
-    let raf = 0;
-    const tick = (t: number) => {
-      const p = Math.min((t - start) / 1200, 1);
-      setV(score * (1 - Math.pow(1 - p, 3)));
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [visible, score]);
-  const C = 2 * Math.PI * 32;
-  return (
-    <div ref={ref} className="flex flex-col items-center gap-2">
-      <div className="relative w-20 h-20">
-        <svg viewBox="0 0 72 72" className="w-full h-full -rotate-90">
-          <circle cx="36" cy="36" r="32" fill="none" stroke="hsla(187,100%,50%,0.12)" strokeWidth="4" />
-          <circle
-            cx="36"
-            cy="36"
-            r="32"
-            fill="none"
-            stroke={CYAN}
-            strokeWidth="4"
-            strokeLinecap="round"
-            strokeDasharray={C}
-            strokeDashoffset={C - (v / 100) * C}
-            style={{ filter: `drop-shadow(0 0 6px ${CYAN})` }}
-          />
-        </svg>
-        <div
-          className="absolute inset-0 flex items-center justify-center font-pixel text-[11px]"
-          style={{ color: CYAN, textShadow: `0 0 8px ${CYAN}` }}
-        >
-          {Math.round(v)}
-        </div>
-      </div>
-      <div className="font-body text-[11px] text-center" style={{ color: "hsla(0,0%,100%,0.7)" }}>
-        {label}
-      </div>
-    </div>
-  );
-}
-
-/* ── Main Page ── */
+/* ── Page ── */
 export default function ErpRedesign() {
-  const scrollToCase = () => {
-    document.getElementById("case-study")?.scrollIntoView({ behavior: "smooth" });
-  };
+  const navigate = useNavigate();
+
+  const research = [
+    { value: "56%", label: "Disliked current visual design" },
+    { value: "57%", label: "Found navigation confusing" },
+    { value: "93%", label: "Reported bugs or usability issues" },
+    { value: "86%", label: "Found grievance process difficult" },
+    { value: "79.5%", label: "Wanted dark mode support" },
+  ];
+
+  const personas = [
+    {
+      name: "Aarohi Sharma", age: 19, role: "Second Year Engineering Student",
+      initials: "AS", color: CYAN,
+      goals: ["Access academic tools quickly", "Track attendance", "View schedules easily"],
+      frustrations: ["Confusing navigation", "Difficult module discovery", "Cluttered dashboard"],
+      needs: ["Simple navigation", "Better organization", "Faster access to information"],
+      quote: "I just want to find what I need without clicking through multiple screens.",
+    },
+    {
+      name: "Rohan Mehta", age: 18, role: "First Year Student",
+      initials: "RM", color: PINK,
+      goals: ["Use ERP efficiently on mobile", "Submit forms quickly", "Stay updated on academics"],
+      frustrations: ["Poor responsiveness", "Small touch targets", "Difficult mobile navigation"],
+      needs: ["Mobile-first design", "Better accessibility", "Cleaner layouts"],
+      quote: "I mostly use my phone, so everything should work smoothly there.",
+    },
+    {
+      name: "Neha Patil", age: 20, role: "Third Year Engineering Student",
+      initials: "NP", color: CYAN,
+      goals: ["Track deadlines", "View academic progress", "Stay organized"],
+      frustrations: ["Hidden updates", "Missed notifications", "Weak information hierarchy"],
+      needs: ["Clear reminders", "Better visibility", "Organized dashboard"],
+      quote: "I shouldn't have to search multiple pages to find important updates.",
+    },
+  ];
+
+  const heuristics = [
+    { name: "Visibility of System Status", score: 45 },
+    { name: "Match Between System & Real World", score: 55 },
+    { name: "User Control & Freedom", score: 40 },
+    { name: "Consistency & Standards", score: 35 },
+    { name: "Error Prevention", score: 30 },
+    { name: "Recognition Rather Than Recall", score: 50 },
+    { name: "Flexibility & Efficiency", score: 42 },
+    { name: "Aesthetic & Minimal Design", score: 38 },
+    { name: "Help Users With Errors", score: 33 },
+    { name: "Help & Documentation", score: 28 },
+  ];
+
+  const process = [
+    { icon: Search, label: "Research" },
+    { icon: BarChart3, label: "Analysis" },
+    { icon: PenTool, label: "Wireframing" },
+    { icon: Palette, label: "Visual Design" },
+    { icon: MousePointer2, label: "Prototype" },
+    { icon: CheckCircle2, label: "Final Solution" },
+  ];
+
+  const showcases = [
+    { title: "Login Screen", before: loginBefore, after: loginAfter,
+      challenge: "The original login experience lacked visual hierarchy, clear branding, and intuitive form design.",
+      decision: "Introduced a cleaner layout, improved typography, stronger branding visibility, and modernized form components.",
+      impact: "Improved readability, trust, and ease of authentication." },
+    { title: "Home Page", before: homeBefore, after: homeAfter,
+      challenge: "Students struggled to quickly identify important modules due to cluttered layouts and weak hierarchy.",
+      decision: "Reorganized modules into cleaner card structures with improved spacing and visual consistency.",
+      impact: "Faster navigation and easier access to core academic functions." },
+    { title: "Attendance Page", before: attBefore, after: attAfter,
+      challenge: "Attendance information was difficult to scan and compare across subjects.",
+      decision: "Added subject-wise attendance cards, visual indicators, and clearer information grouping.",
+      impact: "Students can quickly understand attendance status and monitor progress." },
+    { title: "Examination Page", before: examBefore, after: examAfter,
+      challenge: "Important examination actions and deadlines lacked visibility and organization.",
+      decision: "Introduced structured sections, deadline visibility, and simplified navigation paths.",
+      impact: "Reduced cognitive load and improved exam-related task completion." },
+    { title: "Grade Card Page", before: gradeBefore, after: gradeAfter,
+      challenge: "Academic performance data felt dense and difficult to interpret.",
+      decision: "Improved typography, hierarchy, spacing, and performance summaries.",
+      impact: "Created a clearer and more accessible academic overview experience." },
+  ];
+
+  const outcomes = [
+    "Simplified Navigation", "Improved Information Hierarchy", "Mobile-First Experience", "Better Readability",
+    "Faster Access To Academic Tools", "Consistent Design Language", "Improved User Experience", "Modern Visual Identity",
+  ];
+
+  const reflections = [
+    { title: "Importance of User Research", body: "Grounding decisions in real student feedback prevented assumption-led design and surfaced needs we didn't anticipate." },
+    { title: "Designing for Real Workflows", body: "Mapping daily academic tasks revealed where students actually lost time, not where we thought they did." },
+    { title: "Information Architecture", body: "Restructuring modules into clear groups had more impact than any visual change alone." },
+    { title: "Aesthetics vs Usability", body: "Modern visuals matter, but clarity and consistency drove the largest usability gains." },
+    { title: "Mobile-First Thinking", body: "Starting from a 375px frame forced ruthless prioritization that improved every breakpoint." },
+    { title: "Scalable Interfaces", body: "Building with reusable components and tokens means the design can grow without breaking." },
+  ];
 
   return (
-    <div className="relative min-h-screen bg-background overflow-x-hidden">
-      <ParticlesCanvas />
+    <div className="min-h-screen bg-background text-white font-body relative overflow-x-hidden">
+      <Particles />
 
-      {/* Top mini nav */}
-      <div className="fixed top-5 left-5 z-50">
-        <a
-          href="/#projects"
-          className="font-pixel text-[10px] tracking-widest inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:gap-3"
-          style={{
-            color: CYAN,
-            background: "hsla(0,0%,4%,0.85)",
-            border: `1px solid ${CYAN}`,
-            boxShadow: `0 0 18px hsla(187,100%,50%,0.4)`,
-            backdropFilter: "blur(10px)",
-          }}
-        >
+      {/* Subtle ambient glow */}
+      <div className="fixed inset-0 pointer-events-none -z-10" style={{
+        background: "radial-gradient(ellipse 60% 40% at 20% 10%, hsla(187,100%,50%,0.06), transparent 60%), radial-gradient(ellipse 50% 40% at 80% 80%, hsla(342,100%,59%,0.05), transparent 60%)"
+      }} />
+
+      {/* Back nav */}
+      <div className="relative z-20 max-w-6xl mx-auto px-6 pt-8">
+        <button onClick={() => navigate("/#projects")}
+          className="inline-flex items-center gap-2 font-pixel text-[10px] tracking-widest text-white/60 hover:text-cyan-300 transition-colors">
           <ArrowLeft size={14} /> BACK TO PROJECTS
-        </a>
+        </button>
       </div>
 
       {/* HERO */}
-      <section className="relative min-h-screen flex items-center justify-center px-4 pt-24 pb-16 z-10">
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse 60% 50% at 50% 40%, hsla(187,100%,50%,0.12), transparent 70%), radial-gradient(ellipse 40% 30% at 80% 70%, hsla(342,100%,59%,0.10), transparent 70%)",
-          }}
-        />
-        <div className="relative max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <div
-              className="font-pixel text-[10px] tracking-[0.3em] mb-5 inline-block px-3 py-1.5 rounded"
-              style={{
-                color: PINK,
-                border: `1px solid ${PINK}`,
-                background: "hsla(342,100%,59%,0.08)",
-                textShadow: `0 0 8px ${PINK}`,
-              }}
-            >
-              UI / UX CASE STUDY
-            </div>
-            <h1
-              className="font-pixel leading-[1.15] mb-6 animate-glow-pulse"
-              style={{
-                fontSize: "clamp(28px, 5vw, 56px)",
-                color: CYAN,
-                textShadow: `0 0 30px ${CYAN}, 0 0 60px hsla(187,100%,50%,0.4)`,
-              }}
-            >
-              ERP PORTAL<br />REDESIGN
+      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-10 pb-20">
+        <div className="grid md:grid-cols-2 gap-10 items-center">
+          <Reveal>
+            <SectionLabel color={PINK}>UI / UX CASE STUDY</SectionLabel>
+            <h1 className="font-sans font-bold tracking-tight text-white mt-4 mb-4" style={{ fontSize: "clamp(36px, 5vw, 56px)", lineHeight: 1.05 }}>
+              ERP Portal <span style={{ color: CYAN }}>Redesign</span>
             </h1>
-            <p
-              className="font-body text-base md:text-lg max-w-md mb-8"
-              style={{ color: "hsla(0,0%,100%,0.78)" }}
-            >
-              Transforming an outdated student ERP into a modern, mobile-first, user-friendly experience.
+            <p className="text-white/70 text-base md:text-lg leading-relaxed max-w-xl mb-8">
+              Transforming an outdated student ERP into a modern, mobile-first academic experience.
             </p>
-
-            {/* Metadata */}
-            <div className="grid grid-cols-2 gap-3 mb-8 max-w-md">
+            <dl className="grid grid-cols-2 gap-4 text-sm">
               {[
-                { k: "ROLE", v: "UI/UX Designer" },
-                { k: "TEAM", v: "Solo Project" },
-                { k: "DURATION", v: "6 Weeks" },
-                { k: "TOOLS", v: "Figma, Maze" },
-              ].map((m) => (
-                <div
-                  key={m.k}
-                  className="rounded-lg px-3 py-2"
-                  style={{
-                    background: "hsla(0,0%,4%,0.7)",
-                    border: "1px solid hsla(187,100%,50%,0.25)",
-                  }}
-                >
-                  <div className="font-pixel text-[8px] tracking-widest mb-1" style={{ color: PINK }}>
-                    {m.k}
-                  </div>
-                  <div className="font-body text-sm" style={{ color: "hsla(0,0%,100%,0.9)" }}>
-                    {m.v}
-                  </div>
+                ["Duration", "6 Weeks"],
+                ["Role", "UI / UX Designer"],
+                ["Team", "Team Project"],
+                ["Tools", "Figma, FigJam"],
+              ].map(([k, v]) => (
+                <div key={k} className={`${card} px-4 py-3`}>
+                  <dt className="font-pixel text-[9px] tracking-widest text-white/40 mb-1">{k.toUpperCase()}</dt>
+                  <dd className="text-white/90 font-medium">{v}</dd>
                 </div>
               ))}
-            </div>
+            </dl>
+          </Reveal>
 
-            <div className="flex flex-wrap gap-3">
-              <a
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                className="font-pixel text-[10px] tracking-widest px-5 py-3 rounded-lg inline-flex items-center gap-2 transition-all hover:-translate-y-0.5"
-                style={{
-                  color: "hsl(0,0%,0%)",
-                  background: CYAN,
-                  boxShadow: `0 0 24px ${CYAN}, 0 0 50px hsla(187,100%,50%,0.4)`,
-                }}
-              >
-                <Figma size={14} /> VIEW PROTOTYPE
-              </a>
-              <button
-                onClick={scrollToCase}
-                className="font-pixel text-[10px] tracking-widest px-5 py-3 rounded-lg inline-flex items-center gap-2 transition-all hover:-translate-y-0.5"
-                style={{
-                  color: CYAN,
-                  background: "hsla(0,0%,4%,0.6)",
-                  border: `1px solid ${CYAN}`,
-                  boxShadow: `0 0 16px hsla(187,100%,50%,0.3)`,
-                }}
-              >
-                SCROLL TO CASE STUDY <ChevronDown size={14} />
-              </button>
+          {/* Floating collage */}
+          <Reveal delay={0.15}>
+            <div className="relative h-[420px] md:h-[480px]">
+              <img src={loginAfter} alt="Login redesign mockup" loading="lazy"
+                className="absolute top-0 left-4 w-[46%] rounded-2xl border border-white/10 shadow-2xl"
+                style={{ transform: "rotate(-6deg)", boxShadow: "0 20px 60px rgba(0,0,0,0.5), 0 0 30px hsla(187,100%,50%,0.12)" }} />
+              <img src={homeAfter} alt="Home redesign mockup" loading="lazy"
+                className="absolute top-10 right-0 w-[46%] rounded-2xl border border-white/10 shadow-2xl"
+                style={{ transform: "rotate(4deg)", boxShadow: "0 20px 60px rgba(0,0,0,0.5), 0 0 30px hsla(342,100%,59%,0.12)" }} />
+              <img src={attAfter} alt="Attendance redesign mockup" loading="lazy"
+                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[46%] rounded-2xl border border-white/10 shadow-2xl"
+                style={{ transform: "rotate(-2deg)", boxShadow: "0 20px 60px rgba(0,0,0,0.5), 0 0 30px hsla(187,100%,50%,0.12)" }} />
             </div>
-          </div>
-
-          {/* Floating mockups */}
-          <div className="relative h-[500px] hidden md:block">
-            <div
-              className="absolute top-0 right-12 w-52 rounded-2xl overflow-hidden animate-float"
-              style={{
-                border: `2px solid ${CYAN}`,
-                boxShadow: `0 0 40px hsla(187,100%,50%,0.5), 0 20px 60px hsla(0,0%,0%,0.6)`,
-                transform: "perspective(1000px) rotateY(-12deg) rotateX(4deg)",
-                animationDelay: "0s",
-              }}
-            >
-              <img src={erpDashboard} alt="dashboard mockup" className="w-full" />
-            </div>
-            <div
-              className="absolute bottom-0 left-0 w-48 rounded-2xl overflow-hidden animate-float"
-              style={{
-                border: `2px solid ${PINK}`,
-                boxShadow: `0 0 40px hsla(342,100%,59%,0.5), 0 20px 60px hsla(0,0%,0%,0.6)`,
-                transform: "perspective(1000px) rotateY(10deg) rotateX(-4deg)",
-                animationDelay: "1.5s",
-              }}
-            >
-              <img src={erpAttendance} alt="attendance mockup" className="w-full" />
-            </div>
-            <div
-              className="absolute top-20 left-24 w-44 rounded-2xl overflow-hidden animate-float"
-              style={{
-                border: `1.5px solid hsla(187,100%,50%,0.7)`,
-                boxShadow: `0 0 30px hsla(187,100%,50%,0.4)`,
-                transform: "perspective(1000px) rotateY(-4deg)",
-                animationDelay: "0.7s",
-              }}
-            >
-              <img src={erpGradecard} alt="grade card mockup" className="w-full" />
-            </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* OVERVIEW STATS */}
-      <section id="case-study" className="relative py-20 px-4 z-10">
-        <div className="max-w-6xl mx-auto">
-          <SectionHeading kicker="01 — PROJECT OVERVIEW" title="THE NUMBERS DON'T LIE" />
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {stats.map((s) => (
-              <GlowCard key={s.label} className="text-center">
-                <div
-                  className="font-pixel mb-3"
-                  style={{
-                    fontSize: "clamp(22px, 3vw, 34px)",
-                    color: CYAN,
-                    textShadow: `0 0 18px ${CYAN}`,
-                  }}
-                >
-                  <Counter to={s.v} />
-                </div>
-                <div className="font-body text-xs" style={{ color: "hsla(0,0%,100%,0.7)" }}>
-                  {s.label}
-                </div>
-              </GlowCard>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* UX RESEARCH */}
-      <section className="relative py-20 px-4 z-10">
-        <div className="max-w-6xl mx-auto">
-          <SectionHeading kicker="02 — UX RESEARCH" title="LISTENING TO STUDENTS" />
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <GlowCard>
-              <h3 className="font-pixel text-[12px] mb-4 tracking-wider" style={{ color: PINK, textShadow: `0 0 10px ${PINK}` }}>
-                ▸ RESEARCH METHOD
-              </h3>
-              <ul className="space-y-2 font-body text-sm" style={{ color: "hsla(0,0%,100%,0.78)" }}>
-                <li>• Survey conducted with 120+ students across years</li>
-                <li>• 1-on-1 contextual interviews with 15 users</li>
-                <li>• Heuristic evaluation against Nielsen's 10 principles</li>
-                <li>• Usability testing on existing portal flows</li>
-                <li>• Competitive analysis of modern student portals</li>
-              </ul>
-            </GlowCard>
-            <GlowCard accent="pink">
-              <h3 className="font-pixel text-[12px] mb-4 tracking-wider" style={{ color: CYAN, textShadow: `0 0 10px ${CYAN}` }}>
-                ▸ KEY INSIGHTS
-              </h3>
-              <ul className="space-y-2 font-body text-sm" style={{ color: "hsla(0,0%,100%,0.78)" }}>
-                <li>• 79.5% of students wanted a dark mode option</li>
-                <li>• Mobile usage outpaced desktop by 3:1</li>
-                <li>• Navigation depth caused most task failures</li>
-                <li>• Grade & attendance flows were top pain points</li>
-                <li>• Students wanted at-a-glance academic overviews</li>
-              </ul>
-            </GlowCard>
-          </div>
-
-          <h3
-            className="font-pixel text-[12px] tracking-widest text-center mb-6"
-            style={{ color: PINK, textShadow: `0 0 10px ${PINK}` }}
-          >
-            ▸ PAIN POINTS IDENTIFIED
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {painPoints.map((p) => (
-              <div
-                key={p}
-                className="rounded-lg p-4 text-center transition-all hover:-translate-y-1"
-                style={{
-                  background: "hsla(342,100%,59%,0.05)",
-                  border: "1px solid hsla(342,100%,59%,0.3)",
-                  boxShadow: "0 0 16px hsla(342,100%,59%,0.1)",
-                }}
-              >
-                <div className="font-body text-sm" style={{ color: "hsla(0,0%,100%,0.85)" }}>
-                  {p}
-                </div>
+      {/* PROBLEM */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 py-16 border-t border-white/5">
+        <Reveal>
+          <SectionLabel>01 — PROBLEM</SectionLabel>
+          <H2>The existing ERP held students back.</H2>
+          <p className="text-white/60 max-w-2xl mb-10">Built years ago and rarely updated, the portal failed at the basics — navigation, hierarchy, mobile usability, and accessibility.</p>
+        </Reveal>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[
+            ["Outdated Interface", "Visual language stuck in legacy patterns with no modern affordances."],
+            ["Difficult Navigation", "Important modules buried behind multiple unclear clicks."],
+            ["Poor Hierarchy", "Equal visual weight on everything — nothing stood out."],
+            ["Inconsistent Design", "Mixed components, colors, and typography across pages."],
+            ["Weak Mobile Experience", "Layouts broke on phones despite being the primary device."],
+            ["Poor Accessibility", "Low contrast, small targets, and no dark mode support."],
+          ].map(([t, d], i) => (
+            <Reveal key={t} delay={i * 0.04}>
+              <div className={`${card} p-5 h-full`}>
+                <h3 className="text-white font-semibold mb-1.5">{t}</h3>
+                <p className="text-white/55 text-sm leading-relaxed">{d}</p>
               </div>
-            ))}
-          </div>
+            </Reveal>
+          ))}
         </div>
       </section>
 
-      {/* USER STORIES */}
-      <section className="relative py-20 px-4 z-10">
-        <div className="max-w-6xl mx-auto">
-          <SectionHeading kicker="03 — USER STORIES" title="REAL STUDENTS, REAL STRUGGLES" />
-          <div className="grid md:grid-cols-2 gap-6">
-            {stories.map((s, i) => (
-              <GlowCard key={s.name} accent={i % 2 === 0 ? "cyan" : "pink"}>
-                <div className="flex items-start gap-4 mb-4">
-                  <div
-                    className="w-14 h-14 rounded-full flex items-center justify-center text-3xl flex-shrink-0"
-                    style={{
-                      background: "hsla(187,100%,50%,0.1)",
-                      border: `2px solid ${i % 2 === 0 ? CYAN : PINK}`,
-                      boxShadow: `0 0 20px ${i % 2 === 0 ? CYAN : PINK}80`,
-                    }}
-                  >
-                    {s.avatar}
+      {/* RESEARCH */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 py-16 border-t border-white/5">
+        <Reveal>
+          <SectionLabel>02 — RESEARCH</SectionLabel>
+          <H2>Research Findings</H2>
+          <p className="text-white/60 max-w-2xl mb-10">Survey of 80+ students across years and devices, supplemented by contextual interviews.</p>
+        </Reveal>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {research.map((r, i) => (
+            <Reveal key={r.value} delay={i * 0.05}>
+              <div className={`${card} p-5 h-full`}>
+                <div className="font-sans font-bold text-white mb-2" style={{ fontSize: "clamp(28px, 3vw, 36px)", color: CYAN, textShadow: "0 0 10px hsla(187,100%,50%,0.25)" }}>
+                  {r.value}
+                </div>
+                <p className="text-white/60 text-sm leading-snug">{r.label}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* PERSONAS */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 py-16 border-t border-white/5">
+        <Reveal>
+          <SectionLabel>03 — USERS</SectionLabel>
+          <H2>User Personas</H2>
+          <p className="text-white/60 max-w-2xl mb-10">Three representative personas synthesized from research, guiding every design decision.</p>
+        </Reveal>
+        <div className="grid md:grid-cols-3 gap-5">
+          {personas.map((p, i) => (
+            <Reveal key={p.name} delay={i * 0.08}>
+              <div className={`${card} p-6 h-full flex flex-col`}>
+                <div className="flex items-center gap-4 mb-5 pb-5 border-b border-white/10">
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center font-sans font-semibold text-lg shrink-0"
+                    style={{ background: `linear-gradient(135deg, ${p.color}, ${p.color === CYAN ? "hsl(187,80%,35%)" : "hsl(342,80%,40%)"})`, color: "white" }}>
+                    {p.initials}
                   </div>
                   <div>
-                    <h4 className="font-pixel text-[12px] mb-1" style={{ color: CYAN, textShadow: `0 0 8px ${CYAN}` }}>
-                      {s.name}
-                    </h4>
-                    <p className="font-body text-xs" style={{ color: "hsla(0,0%,100%,0.6)" }}>
-                      {s.role}
-                    </p>
+                    <div className="text-white font-semibold">{p.name}</div>
+                    <div className="text-white/50 text-xs">Age {p.age} · {p.role}</div>
                   </div>
                 </div>
-                <p className="font-body text-sm mb-4 leading-relaxed" style={{ color: "hsla(0,0%,100%,0.78)" }}>
-                  {s.story}
-                </p>
-                <div className="space-y-2">
-                  <div className="rounded p-2.5" style={{ background: "hsla(342,100%,59%,0.08)", border: "1px solid hsla(342,100%,59%,0.3)" }}>
-                    <span className="font-pixel text-[8px] tracking-widest mr-2" style={{ color: PINK }}>PAIN POINT:</span>
-                    <span className="font-body text-xs" style={{ color: "hsla(0,0%,100%,0.85)" }}>{s.pain}</span>
+
+                {([
+                  ["GOALS", p.goals], ["FRUSTRATIONS", p.frustrations], ["NEEDS", p.needs],
+                ] as const).map(([label, items]) => (
+                  <div key={label} className="mb-4">
+                    <div className="font-pixel text-[8px] tracking-widest text-white/40 mb-2">{label}</div>
+                    <ul className="space-y-1">
+                      {items.map(it => (
+                        <li key={it} className="text-white/70 text-sm flex gap-2">
+                          <span className="text-cyan-400/60 mt-1.5">·</span>{it}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <div className="rounded p-2.5" style={{ background: "hsla(187,100%,50%,0.08)", border: "1px solid hsla(187,100%,50%,0.3)" }}>
-                    <span className="font-pixel text-[8px] tracking-widest mr-2" style={{ color: CYAN }}>IMPROVEMENT:</span>
-                    <span className="font-body text-xs" style={{ color: "hsla(0,0%,100%,0.85)" }}>{s.fix}</span>
+                ))}
+
+                <div className="mt-auto pt-4 border-t border-white/10 flex gap-2 text-white/65 text-sm italic">
+                  <Quote size={14} className="shrink-0 mt-1" style={{ color: p.color }} />
+                  <span>"{p.quote}"</span>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* HEURISTIC */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 py-16 border-t border-white/5">
+        <Reveal>
+          <SectionLabel>04 — EVALUATION</SectionLabel>
+          <H2>Heuristic Evaluation</H2>
+          <p className="text-white/60 max-w-2xl mb-10">Scored the existing portal against Nielsen's 10 usability heuristics. Every dimension scored below 60%.</p>
+        </Reveal>
+        <div className={`${card} p-6`}>
+          <div className="grid md:grid-cols-2 gap-x-10 gap-y-4">
+            {heuristics.map((h, i) => (
+              <Reveal key={h.name} delay={i * 0.03}>
+                <div>
+                  <div className="flex justify-between items-baseline mb-1.5">
+                    <span className="text-white/85 text-sm font-medium">{h.name}</span>
+                    <span className="font-pixel text-[10px]" style={{ color: h.score < 40 ? PINK : CYAN }}>{h.score}%</span>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
+                    <div className="h-full rounded-full transition-all" style={{
+                      width: `${h.score}%`,
+                      background: h.score < 40
+                        ? "linear-gradient(90deg, hsla(342,100%,59%,0.7), hsla(342,100%,59%,0.4))"
+                        : "linear-gradient(90deg, hsla(187,100%,50%,0.7), hsla(187,100%,50%,0.4))",
+                      boxShadow: `0 0 8px ${h.score < 40 ? "hsla(342,100%,59%,0.3)" : "hsla(187,100%,50%,0.3)"}`,
+                    }} />
                   </div>
                 </div>
-              </GlowCard>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* HEURISTIC EVALUATION */}
-      <section className="relative py-20 px-4 z-10">
-        <div className="max-w-6xl mx-auto">
-          <SectionHeading kicker="04 — HEURISTIC EVALUATION" title="NIELSEN'S 10 PRINCIPLES" />
-          <GlowCard className="!p-8">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-              {heuristics.map((h) => (
-                <Ring key={h.name} score={h.score} label={h.name} />
-              ))}
-            </div>
-            <div
-              className="mt-8 pt-6 text-center font-body text-sm"
-              style={{ borderTop: "1px solid hsla(187,100%,50%,0.2)", color: "hsla(0,0%,100%,0.7)" }}
-            >
-              Average baseline score:{" "}
-              <span className="font-pixel text-[12px]" style={{ color: CYAN, textShadow: `0 0 8px ${CYAN}` }}>
-                53.4 / 100
-              </span>{" "}
-              — major opportunity for redesign.
-            </div>
-          </GlowCard>
-        </div>
-      </section>
-
-      {/* USER FLOW */}
-      <section className="relative py-20 px-4 z-10">
-        <div className="max-w-5xl mx-auto">
-          <SectionHeading kicker="05 — USER FLOW" title="THE NEW JOURNEY" />
-          <div className="relative">
-            <div
-              className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 md:block hidden"
-              style={{
-                background: `linear-gradient(180deg, transparent, ${CYAN}, transparent)`,
-                boxShadow: `0 0 10px ${CYAN}`,
-              }}
-            />
-            <div className="space-y-6">
-              {userFlow.map((step, i) => {
-                const left = i % 2 === 0;
+      {/* PROCESS */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 py-16 border-t border-white/5">
+        <Reveal>
+          <SectionLabel>05 — PROCESS</SectionLabel>
+          <H2>Design Process</H2>
+        </Reveal>
+        <Reveal delay={0.05}>
+          <div className="relative mt-8">
+            <div className="hidden md:block absolute top-7 left-[8%] right-[8%] h-px" style={{
+              background: "linear-gradient(90deg, transparent, hsla(187,100%,50%,0.3), hsla(342,100%,59%,0.3), transparent)"
+            }} />
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+              {process.map((s, i) => {
+                const Icon = s.icon;
                 return (
-                  <div key={step} className="relative md:grid md:grid-cols-[1fr_auto_1fr] md:items-center gap-4">
-                    {left ? (
-                      <>
-                        <GlowCard className="md:!p-4">
-                          <div className="font-pixel text-[10px] mb-1" style={{ color: PINK }}>STEP {String(i + 1).padStart(2, "0")}</div>
-                          <div className="font-body text-sm" style={{ color: "hsla(0,0%,100%,0.9)" }}>{step}</div>
-                        </GlowCard>
-                        <div className="hidden md:flex w-4 h-4 rounded-full mx-auto" style={{ background: CYAN, boxShadow: `0 0 16px ${CYAN}` }} />
-                        <div />
-                      </>
-                    ) : (
-                      <>
-                        <div />
-                        <div className="hidden md:flex w-4 h-4 rounded-full mx-auto" style={{ background: CYAN, boxShadow: `0 0 16px ${CYAN}` }} />
-                        <GlowCard className="md:!p-4">
-                          <div className="font-pixel text-[10px] mb-1" style={{ color: PINK }}>STEP {String(i + 1).padStart(2, "0")}</div>
-                          <div className="font-body text-sm" style={{ color: "hsla(0,0%,100%,0.9)" }}>{step}</div>
-                        </GlowCard>
-                      </>
-                    )}
+                  <div key={s.label} className="flex flex-col items-center text-center relative z-10">
+                    <div className="w-14 h-14 rounded-full flex items-center justify-center mb-3"
+                      style={{
+                        background: "hsla(0,0%,4%,0.9)",
+                        border: `1px solid ${i % 2 === 0 ? "hsla(187,100%,50%,0.4)" : "hsla(342,100%,59%,0.4)"}`,
+                        boxShadow: `0 0 12px ${i % 2 === 0 ? "hsla(187,100%,50%,0.15)" : "hsla(342,100%,59%,0.15)"}`,
+                      }}>
+                      <Icon size={20} style={{ color: i % 2 === 0 ? CYAN : PINK }} />
+                    </div>
+                    <div className="font-pixel text-[9px] tracking-widest text-white/40 mb-1">0{i + 1}</div>
+                    <div className="text-white/85 text-sm font-medium">{s.label}</div>
                   </div>
                 );
               })}
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
-      {/* BEFORE / AFTER SHOWCASE */}
-      <section className="relative py-20 px-4 z-10">
-        <div className="max-w-6xl mx-auto">
-          <SectionHeading kicker="06 — BEFORE vs AFTER" title="THE TRANSFORMATION" />
-          <div className="space-y-24">
-            {showcases.map((s) => (
-              <ShowcaseRow key={s.num} {...s} />
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* SHOWCASE */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 py-16 border-t border-white/5">
+        <Reveal>
+          <SectionLabel>06 — TRANSFORMATION</SectionLabel>
+          <H2>Before &amp; After</H2>
+          <p className="text-white/60 max-w-2xl mb-12">Five core screens redesigned end-to-end. The originals are shown on the left, the redesigned mobile-first experience on the right.</p>
+        </Reveal>
 
-      {/* FEATURES */}
-      <section className="relative py-20 px-4 z-10">
-        <div className="max-w-6xl mx-auto">
-          <SectionHeading kicker="07 — FEATURES ADDED" title="WHAT'S NEW" />
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            {features.map((f, i) => (
-              <div
-                key={f}
-                className="rounded-lg p-4 text-center transition-all hover:-translate-y-1 hover:scale-105"
-                style={{
-                  background: "hsla(0,0%,4%,0.7)",
-                  border: `1px solid ${i % 2 === 0 ? "hsla(187,100%,50%,0.4)" : "hsla(342,100%,59%,0.4)"}`,
-                  boxShadow: `0 0 20px ${i % 2 === 0 ? "hsla(187,100%,50%,0.15)" : "hsla(342,100%,59%,0.15)"}`,
-                }}
-              >
-                <div
-                  className="font-pixel text-[9px] tracking-wider"
-                  style={{
-                    color: i % 2 === 0 ? CYAN : PINK,
-                    textShadow: `0 0 8px ${i % 2 === 0 ? CYAN : PINK}`,
-                  }}
-                >
-                  {f}
+        <div className="space-y-20">
+          {showcases.map((s, i) => (
+            <Reveal key={s.title} delay={i * 0.05}>
+              <div>
+                <div className="flex items-baseline gap-3 mb-6">
+                  <span className="font-pixel text-[10px] tracking-widest text-white/30">0{i + 1}</span>
+                  <h3 className="font-sans font-semibold text-white text-xl md:text-2xl">{s.title}</h3>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* DESIGN SYSTEM */}
-      <section className="relative py-20 px-4 z-10">
-        <div className="max-w-6xl mx-auto">
-          <SectionHeading kicker="08 — DESIGN SYSTEM" title="THE NEON LANGUAGE" />
-          <div className="grid md:grid-cols-2 gap-6">
-            <GlowCard>
-              <h4 className="font-pixel text-[11px] mb-4" style={{ color: CYAN }}>▸ COLOR PALETTE</h4>
-              <div className="space-y-3">
-                {palette.map((c) => (
-                  <div key={c.name} className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded"
-                      style={{
-                        background: c.color,
-                        border: "1px solid hsla(255,255,255,0.15)",
-                        boxShadow: c.name.includes("Cyan") || c.name.includes("Pink") ? `0 0 16px ${c.color}` : "none",
-                      }}
-                    />
-                    <div className="flex-1">
-                      <div className="font-pixel text-[10px]" style={{ color: "hsla(0,0%,100%,0.9)" }}>{c.name}</div>
-                      <div className="font-body text-xs" style={{ color: "hsla(0,0%,100%,0.5)" }}>{c.hex}</div>
+                <div className="grid md:grid-cols-2 gap-6 mb-8">
+                  {([["BEFORE", s.before, PINK], ["AFTER", s.after, CYAN]] as const).map(([label, src, color]) => (
+                    <div key={label} className="group">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className={tag} style={{
+                          color, border: `1px solid ${color === CYAN ? "hsla(187,100%,50%,0.35)" : "hsla(342,100%,59%,0.35)"}`,
+                          background: color === CYAN ? "hsla(187,100%,50%,0.06)" : "hsla(342,100%,59%,0.06)",
+                        }}>{label}</span>
+                      </div>
+                      <div className="rounded-2xl overflow-hidden border border-white/10 bg-black/30 flex items-center justify-center p-4 transition-all duration-500 group-hover:border-white/20"
+                        style={{ minHeight: 480, boxShadow: `0 10px 40px rgba(0,0,0,0.4)` }}>
+                        <img src={src} alt={`${s.title} ${label}`} loading="lazy"
+                          className="max-h-[520px] w-auto object-contain transition-transform duration-500 group-hover:scale-[1.02]" />
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </GlowCard>
-            <GlowCard accent="pink">
-              <h4 className="font-pixel text-[11px] mb-4" style={{ color: PINK }}>▸ TYPOGRAPHY</h4>
-              <div className="space-y-4">
-                <div>
-                  <div className="font-pixel text-[8px] mb-1 tracking-widest" style={{ color: "hsla(0,0%,100%,0.5)" }}>HEADINGS — Press Start 2P</div>
-                  <div className="font-pixel text-base" style={{ color: CYAN, textShadow: `0 0 10px ${CYAN}` }}>HEADING SAMPLE</div>
+                  ))}
                 </div>
-                <div>
-                  <div className="font-pixel text-[8px] mb-1 tracking-widest" style={{ color: "hsla(0,0%,100%,0.5)" }}>BODY — Quicksand</div>
-                  <div className="font-body text-sm" style={{ color: "hsla(0,0%,100%,0.85)" }}>
-                    The quick brown fox jumps over the lazy dog. Clean, geometric, and highly legible across screens.
-                  </div>
+
+                <div className="grid md:grid-cols-3 gap-4">
+                  {([
+                    ["Challenge", s.challenge, PINK],
+                    ["Design Decision", s.decision, CYAN],
+                    ["Impact", s.impact, CYAN],
+                  ] as const).map(([label, text, color]) => (
+                    <div key={label} className={`${card} p-5`}>
+                      <div className="font-pixel text-[9px] tracking-widest mb-2" style={{ color }}>{label.toUpperCase()}</div>
+                      <p className="text-white/70 text-sm leading-relaxed">{text}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <h4 className="font-pixel text-[11px] mt-6 mb-3" style={{ color: PINK }}>▸ BUTTONS</h4>
-              <div className="flex flex-wrap gap-2">
-                <span className="font-pixel text-[9px] px-4 py-2 rounded-lg" style={{ background: CYAN, color: "hsl(0,0%,0%)", boxShadow: `0 0 16px ${CYAN}` }}>PRIMARY</span>
-                <span className="font-pixel text-[9px] px-4 py-2 rounded-lg" style={{ color: CYAN, border: `1px solid ${CYAN}` }}>OUTLINE</span>
-                <span className="font-pixel text-[9px] px-4 py-2 rounded-lg" style={{ color: PINK, border: `1px solid ${PINK}`, boxShadow: `0 0 12px ${PINK}40` }}>ACCENT</span>
-              </div>
-            </GlowCard>
-          </div>
+            </Reveal>
+          ))}
         </div>
       </section>
 
-      {/* IMPACT */}
-      <section className="relative py-24 px-4 z-10">
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse 60% 50% at 50% 50%, hsla(187,100%,50%,0.12), transparent 70%)",
-          }}
-        />
-        <div className="relative max-w-5xl mx-auto text-center">
-          <SectionHeading kicker="09 — IMPACT" title="THE OUTCOME" />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-            {[
-              { v: 92, l: "Usability Score" },
-              { v: 87, l: "Task Success Rate" },
-              { v: 74, l: "Faster Navigation" },
-              { v: 96, l: "Mobile Satisfaction" },
-            ].map((m) => (
-              <div key={m.l}>
-                <div
-                  className="font-pixel mb-2"
-                  style={{
-                    fontSize: "clamp(28px, 4vw, 44px)",
-                    color: CYAN,
-                    textShadow: `0 0 22px ${CYAN}, 0 0 44px hsla(187,100%,50%,0.3)`,
-                  }}
-                >
-                  <Counter to={m.v} />
-                </div>
-                <div className="font-body text-xs tracking-wider" style={{ color: "hsla(0,0%,100%,0.7)" }}>
-                  {m.l}
-                </div>
+      {/* OUTCOMES */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 py-16 border-t border-white/5">
+        <Reveal>
+          <SectionLabel>07 — OUTCOMES</SectionLabel>
+          <H2>Key Outcomes</H2>
+        </Reveal>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-8">
+          {outcomes.map((o, i) => (
+            <Reveal key={o} delay={i * 0.04}>
+              <div className={`${card} px-4 py-4 flex items-center gap-3 h-full`}>
+                <CheckCircle2 size={18} style={{ color: CYAN }} className="shrink-0" />
+                <span className="text-white/85 text-sm font-medium">{o}</span>
               </div>
-            ))}
-          </div>
-          <div
-            className="h-px mx-auto max-w-xl mb-8"
-            style={{ background: `linear-gradient(90deg, transparent, ${CYAN}, transparent)`, boxShadow: `0 0 12px ${CYAN}` }}
-          />
-          <p
-            className="font-body text-base md:text-lg max-w-2xl mx-auto"
-            style={{ color: "hsla(0,0%,100%,0.8)" }}
-          >
-            The redesigned ERP portal delivered better usability, cleaner navigation, improved accessibility, and a fully responsive student experience — modernizing the entire academic workflow system.
-          </p>
+            </Reveal>
+          ))}
         </div>
       </section>
 
-      {/* FINAL CTA */}
-      <section className="relative py-20 px-4 z-10">
-        <div className="max-w-3xl mx-auto text-center">
-          <h3
-            className="font-pixel mb-8 tracking-widest"
-            style={{
-              fontSize: "clamp(18px, 2.6vw, 28px)",
-              color: PINK,
-              textShadow: `0 0 22px ${PINK}, 0 0 44px hsla(342,100%,59%,0.3)`,
-            }}
-          >
-            LIKE WHAT YOU SEE?
-          </h3>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <a
-              href="#"
-              onClick={(e) => e.preventDefault()}
-              className="font-pixel text-[10px] tracking-widest px-6 py-3 rounded-lg inline-flex items-center gap-2 transition-all hover:-translate-y-0.5"
-              style={{
-                color: "hsl(0,0%,0%)",
-                background: CYAN,
-                boxShadow: `0 0 24px ${CYAN}, 0 0 50px hsla(187,100%,50%,0.4)`,
-              }}
-            >
-              <Figma size={14} /> VIEW FIGMA PROTOTYPE <ExternalLink size={12} />
-            </a>
-            <a
-              href="/#projects"
-              className="font-pixel text-[10px] tracking-widest px-6 py-3 rounded-lg inline-flex items-center gap-2 transition-all hover:-translate-y-0.5"
-              style={{
-                color: PINK,
-                background: "hsla(0,0%,4%,0.6)",
-                border: `1px solid ${PINK}`,
-                boxShadow: `0 0 18px hsla(342,100%,59%,0.3)`,
-              }}
-            >
-              <ArrowLeft size={14} /> BACK TO PROJECTS
+      {/* REFLECTION */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 py-16 border-t border-white/5">
+        <Reveal>
+          <SectionLabel>08 — REFLECTION</SectionLabel>
+          <H2>Lessons Learned</H2>
+        </Reveal>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+          {reflections.map((r, i) => (
+            <Reveal key={r.title} delay={i * 0.05}>
+              <div className={`${card} p-5 h-full`}>
+                <h3 className="text-white font-semibold mb-2">{r.title}</h3>
+                <p className="text-white/60 text-sm leading-relaxed">{r.body}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="relative z-10 max-w-6xl mx-auto px-6 py-16 border-t border-white/5">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div>
+            <div className="font-pixel text-[10px] tracking-widest text-white/40 mb-2">CASE STUDY · 2025</div>
+            <div className="text-white/80 font-semibold">ERP Portal Redesign</div>
+          </div>
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate("/#projects")}
+              className="px-5 py-2.5 rounded-lg border border-white/15 text-white/80 text-sm hover:bg-white/5 transition-colors inline-flex items-center gap-2">
+              <ArrowLeft size={14} /> Back to Projects
+            </button>
+            <a href="#" onClick={(e) => e.preventDefault()}
+              className="px-5 py-2.5 rounded-lg text-sm font-medium inline-flex items-center gap-2 transition-all hover:scale-[1.02]"
+              style={{ background: `linear-gradient(135deg, ${CYAN}, hsl(187,80%,45%))`, color: "hsl(0,0%,4%)" }}>
+              <Figma size={14} /> View on Figma
             </a>
           </div>
         </div>
-      </section>
-
-      <div className="h-12" />
+      </footer>
     </div>
   );
 }
