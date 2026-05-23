@@ -165,12 +165,11 @@ export default function ErpRedesign() {
 
   return (
     <div className="min-h-screen bg-background text-white font-body relative overflow-x-hidden">
-      <Particles />
-
-      {/* Subtle ambient glow */}
+      {/* Static ambient glow (reduced intensity) */}
       <div className="fixed inset-0 pointer-events-none -z-10" style={{
-        background: "radial-gradient(ellipse 60% 40% at 20% 10%, hsla(187,100%,50%,0.06), transparent 60%), radial-gradient(ellipse 50% 40% at 80% 80%, hsla(342,100%,59%,0.05), transparent 60%)"
+        background: "radial-gradient(ellipse 60% 40% at 20% 10%, hsla(187,100%,50%,0.025), transparent 60%), radial-gradient(ellipse 50% 40% at 80% 80%, hsla(342,100%,59%,0.02), transparent 60%)"
       }} />
+
 
       {/* Back nav */}
       <div className="relative z-20 max-w-6xl mx-auto px-6 pt-8">
