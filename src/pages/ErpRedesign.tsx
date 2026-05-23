@@ -238,12 +238,12 @@ export default function ErpRedesign() {
             ["Weak Mobile Experience", "Layouts broke on phones despite being the primary device."],
             ["Poor Accessibility", "Low contrast, small targets, and no dark mode support."],
           ].map(([t, d], i) => (
-            <Reveal key={t} delay={i * 0.04}>
+            <div key={t}>
               <div className={`${card} p-5 h-full`}>
                 <h3 className="text-white font-semibold mb-1.5">{t}</h3>
                 <p className="text-white/55 text-sm leading-relaxed">{d}</p>
               </div>
-            </Reveal>
+            </div>
           ))}
         </div>
       </section>
@@ -257,14 +257,14 @@ export default function ErpRedesign() {
         </Reveal>
         <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {research.map((r, i) => (
-            <Reveal key={r.value} delay={i * 0.05}>
+            <div key={r.value}>
               <div className={`${card} p-5 h-full`}>
                 <div className="font-sans font-bold text-white mb-2" style={{ fontSize: "clamp(28px, 3vw, 36px)", color: CYAN, textShadow: "0 0 10px hsla(187,100%,50%,0.25)" }}>
                   {r.value}
                 </div>
                 <p className="text-white/60 text-sm leading-snug">{r.label}</p>
               </div>
-            </Reveal>
+            </div>
           ))}
         </div>
       </section>
@@ -278,7 +278,7 @@ export default function ErpRedesign() {
         </Reveal>
         <div className="grid md:grid-cols-3 gap-5">
           {personas.map((p, i) => (
-            <Reveal key={p.name} delay={i * 0.08}>
+            <div key={p.name}>
               <div className={`${card} p-6 h-full flex flex-col`}>
                 <div className="flex items-center gap-4 mb-5 pb-5 border-b border-white/10">
                   <div className="w-14 h-14 rounded-full flex items-center justify-center font-sans font-semibold text-lg shrink-0"
@@ -311,7 +311,7 @@ export default function ErpRedesign() {
                   <span>"{p.quote}"</span>
                 </div>
               </div>
-            </Reveal>
+            </div>
           ))}
         </div>
       </section>
@@ -326,7 +326,7 @@ export default function ErpRedesign() {
         <div className={`${card} p-6`}>
           <div className="grid md:grid-cols-2 gap-x-10 gap-y-4">
             {heuristics.map((h, i) => (
-              <Reveal key={h.name} delay={i * 0.03}>
+              <div key={h.name}>
                 <div>
                   <div className="flex justify-between items-baseline mb-1.5">
                     <span className="text-white/85 text-sm font-medium">{h.name}</span>
@@ -342,7 +342,7 @@ export default function ErpRedesign() {
                     }} />
                   </div>
                 </div>
-              </Reveal>
+              </div>
             ))}
           </div>
         </div>
@@ -443,12 +443,12 @@ export default function ErpRedesign() {
         </Reveal>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-8">
           {outcomes.map((o, i) => (
-            <Reveal key={o} delay={i * 0.04}>
+            <div key={o}>
               <div className={`${card} px-4 py-4 flex items-center gap-3 h-full`}>
                 <CheckCircle2 size={18} style={{ color: CYAN }} className="shrink-0" />
                 <span className="text-white/85 text-sm font-medium">{o}</span>
               </div>
-            </Reveal>
+            </div>
           ))}
         </div>
       </section>
@@ -461,12 +461,12 @@ export default function ErpRedesign() {
         </Reveal>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
           {reflections.map((r, i) => (
-            <Reveal key={r.title} delay={i * 0.05}>
+            <div key={r.title}>
               <div className={`${card} p-5 h-full`}>
                 <h3 className="text-white font-semibold mb-2">{r.title}</h3>
                 <p className="text-white/60 text-sm leading-relaxed">{r.body}</p>
               </div>
-            </Reveal>
+            </div>
           ))}
         </div>
       </section>
