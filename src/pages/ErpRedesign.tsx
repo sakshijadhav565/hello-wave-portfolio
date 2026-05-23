@@ -208,13 +208,13 @@ export default function ErpRedesign() {
           {/* Floating collage */}
           <Reveal delay={0.15}>
             <div className="relative h-[420px] md:h-[480px]">
-              <img src={loginAfter} alt="Login redesign mockup" loading="lazy"
+              <img src={loginAfter} alt="Login redesign mockup" loading="lazy" decoding="async"
                 className="absolute top-0 left-4 w-[46%] rounded-2xl border border-white/10 shadow-2xl"
                 style={{ transform: "rotate(-6deg)", boxShadow: "0 20px 60px rgba(0,0,0,0.5), 0 0 30px hsla(187,100%,50%,0.12)" }} />
-              <img src={homeAfter} alt="Home redesign mockup" loading="lazy"
+              <img src={homeAfter} alt="Home redesign mockup" loading="lazy" decoding="async"
                 className="absolute top-10 right-0 w-[46%] rounded-2xl border border-white/10 shadow-2xl"
                 style={{ transform: "rotate(4deg)", boxShadow: "0 20px 60px rgba(0,0,0,0.5), 0 0 30px hsla(342,100%,59%,0.12)" }} />
-              <img src={attAfter} alt="Attendance redesign mockup" loading="lazy"
+              <img src={attAfter} alt="Attendance redesign mockup" loading="lazy" decoding="async"
                 className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[46%] rounded-2xl border border-white/10 shadow-2xl"
                 style={{ transform: "rotate(-2deg)", boxShadow: "0 20px 60px rgba(0,0,0,0.5), 0 0 30px hsla(187,100%,50%,0.12)" }} />
             </div>
@@ -410,7 +410,7 @@ export default function ErpRedesign() {
                       </div>
                       <div className="rounded-2xl overflow-hidden border border-white/10 bg-black/30 flex items-center justify-center p-4 transition-all duration-500 group-hover:border-white/20"
                         style={{ minHeight: 480, boxShadow: `0 10px 40px rgba(0,0,0,0.4)` }}>
-                        <img src={src} alt={`${s.title} ${label}`} loading="lazy"
+                        <img src={src} alt={`${s.title} ${label}`} loading="lazy" decoding="async"
                           className="max-h-[520px] w-auto object-contain transition-transform duration-500 group-hover:scale-[1.02]" />
                       </div>
                     </div>
