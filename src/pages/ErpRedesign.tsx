@@ -567,9 +567,3 @@ export default function ErpRedesign() {
     </div>
   );
 }
-
-/* Academics screen uses existing grade assets (renamed conceptually) */
-import gradeBefore from "@/assets/erp-grade-before.png";
-import gradeAfter from "@/assets/erp-grade-after.png";
-function gradeBeforePlaceholder() { return gradeBefore; }
-function gradeAfterPlaceholder() { return gradeAfter; }
