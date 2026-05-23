@@ -16,52 +16,7 @@ import gradeAfter from "@/assets/erp-grade-after.png";
 const CYAN = "hsl(187, 100%, 50%)";
 const PINK = "hsl(342, 100%, 59%)";
 
-/* ── Subtle particles (reduced) ── */
-function Particles() {
-  const ref = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    let raf = 0;
-    const resize = () => {
-      canvas.width = canvas.offsetWidth * 2;
-      canvas.height = canvas.offsetHeight * 2;
-      ctx.setTransform(2, 0, 0, 2, 0, 0);
-    };
-    resize();
-    window.addEventListener("resize", resize);
-    const parts = Array.from({ length: 28 }, () => ({
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      r: Math.random() * 1.4 + 0.3,
-      sx: (Math.random() - 0.5) * 0.04,
-      sy: (Math.random() - 0.5) * 0.04,
-      o: Math.random() * 0.25 + 0.08,
-      pink: Math.random() > 0.8,
-    }));
-    const tick = () => {
-      const w = canvas.offsetWidth, h = canvas.offsetHeight;
-      ctx.clearRect(0, 0, w, h);
-      parts.forEach(p => {
-        ctx.beginPath();
-        ctx.arc((p.x/100)*w, (p.y/100)*h, p.r, 0, Math.PI*2);
-        ctx.fillStyle = p.pink ? `hsla(342,100%,59%,${p.o})` : `hsla(187,100%,50%,${p.o})`;
-        ctx.fill();
-        p.x += p.sx; p.y += p.sy;
-        if (p.x < 0 || p.x > 100) p.sx *= -1;
-        if (p.y < 0 || p.y > 100) p.sy *= -1;
-      });
-      raf = requestAnimationFrame(tick);
-    };
-    tick();
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
-  }, []);
-  return <canvas ref={ref} className="absolute inset-0 w-full h-full pointer-events-none opacity-60" aria-hidden />;
-}
-
-/* ── Reveal on scroll ── */
+/* ── Reveal on scroll (used sparingly for hero + showcases) ── */
 function useReveal(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
   const [v, setV] = useState(false);
@@ -78,14 +33,19 @@ function Reveal({ children, delay = 0, className = "" }: { children: React.React
   return (
     <div ref={ref} className={className} style={{
       opacity: v ? 1 : 0,
-      transform: v ? "translateY(0)" : "translateY(16px)",
-      transition: `opacity 0.7s ease-out ${delay}s, transform 0.7s ease-out ${delay}s`,
+      transform: v ? "translateY(0)" : "translateY(12px)",
+      transition: `opacity 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
     }}>{children}</div>
   );
 }
 
-/* ── Reusable bits ── */
-const card = "rounded-xl border border-white/10 bg-white/[0.025] backdrop-blur-sm";
+/* ── Static (no-animation) wrapper to keep markup uniform ── */
+function Static({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <div className={className}>{children}</div>;
+}
+
+/* ── Reusable bits — no backdrop blur for perf ── */
+const card = "rounded-xl border border-white/10 bg-white/[0.025]";
 const tag = "inline-block font-pixel text-[9px] tracking-widest px-2.5 py-1 rounded-full";
 
 function SectionLabel({ children, color = CYAN }: { children: React.ReactNode; color?: string }) {
