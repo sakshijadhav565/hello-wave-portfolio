@@ -226,7 +226,7 @@ export default function ErpRedesign() {
       challenge: "Cluttered layout made important modules hard to find.",
       decision: "Reorganized modules into clean cards with clear hierarchy.",
       impact: "Faster access to core academic functions." },
-    { title: "Academics Page", before: gradeBeforePlaceholder(), after: gradeAfterPlaceholder(),
+    { title: "Academics Page", before: gradeBefore, after: gradeAfter,
       challenge: "Academic data felt dense and hard to interpret.",
       decision: "Refined typography, spacing, and grouping for clarity.",
       impact: "A clearer and more accessible academic overview." },
