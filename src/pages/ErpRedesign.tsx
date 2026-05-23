@@ -16,52 +16,7 @@ import gradeAfter from "@/assets/erp-grade-after.png";
 const CYAN = "hsl(187, 100%, 50%)";
 const PINK = "hsl(342, 100%, 59%)";
 
-/* ── Subtle particles (reduced) ── */
-function Particles() {
-  const ref = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    let raf = 0;
-    const resize = () => {
-      canvas.width = canvas.offsetWidth * 2;
-      canvas.height = canvas.offsetHeight * 2;
-      ctx.setTransform(2, 0, 0, 2, 0, 0);
-    };
-    resize();
-    window.addEventListener("resize", resize);
-    const parts = Array.from({ length: 28 }, () => ({
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      r: Math.random() * 1.4 + 0.3,
-      sx: (Math.random() - 0.5) * 0.04,
-      sy: (Math.random() - 0.5) * 0.04,
-      o: Math.random() * 0.25 + 0.08,
-      pink: Math.random() > 0.8,
-    }));
-    const tick = () => {
-      const w = canvas.offsetWidth, h = canvas.offsetHeight;
-      ctx.clearRect(0, 0, w, h);
-      parts.forEach(p => {
-        ctx.beginPath();
-        ctx.arc((p.x/100)*w, (p.y/100)*h, p.r, 0, Math.PI*2);
-        ctx.fillStyle = p.pink ? `hsla(342,100%,59%,${p.o})` : `hsla(187,100%,50%,${p.o})`;
-        ctx.fill();
-        p.x += p.sx; p.y += p.sy;
-        if (p.x < 0 || p.x > 100) p.sx *= -1;
-        if (p.y < 0 || p.y > 100) p.sy *= -1;
-      });
-      raf = requestAnimationFrame(tick);
-    };
-    tick();
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
-  }, []);
-  return <canvas ref={ref} className="absolute inset-0 w-full h-full pointer-events-none opacity-60" aria-hidden />;
-}
-
-/* ── Reveal on scroll ── */
+/* ── Reveal on scroll (used sparingly for hero + showcases) ── */
 function useReveal(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
   const [v, setV] = useState(false);
@@ -78,14 +33,19 @@ function Reveal({ children, delay = 0, className = "" }: { children: React.React
   return (
     <div ref={ref} className={className} style={{
       opacity: v ? 1 : 0,
-      transform: v ? "translateY(0)" : "translateY(16px)",
-      transition: `opacity 0.7s ease-out ${delay}s, transform 0.7s ease-out ${delay}s`,
+      transform: v ? "translateY(0)" : "translateY(12px)",
+      transition: `opacity 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
     }}>{children}</div>
   );
 }
 
-/* ── Reusable bits ── */
-const card = "rounded-xl border border-white/10 bg-white/[0.025] backdrop-blur-sm";
+/* ── Static (no-animation) wrapper to keep markup uniform ── */
+function Static({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <div className={className}>{children}</div>;
+}
+
+/* ── Reusable bits — no backdrop blur for perf ── */
+const card = "rounded-xl border border-white/10 bg-white/[0.025]";
 const tag = "inline-block font-pixel text-[9px] tracking-widest px-2.5 py-1 rounded-full";
 
 function SectionLabel({ children, color = CYAN }: { children: React.ReactNode; color?: string }) {
@@ -205,12 +165,11 @@ export default function ErpRedesign() {
 
   return (
     <div className="min-h-screen bg-background text-white font-body relative overflow-x-hidden">
-      <Particles />
-
-      {/* Subtle ambient glow */}
+      {/* Static ambient glow (reduced intensity) */}
       <div className="fixed inset-0 pointer-events-none -z-10" style={{
-        background: "radial-gradient(ellipse 60% 40% at 20% 10%, hsla(187,100%,50%,0.06), transparent 60%), radial-gradient(ellipse 50% 40% at 80% 80%, hsla(342,100%,59%,0.05), transparent 60%)"
+        background: "radial-gradient(ellipse 60% 40% at 20% 10%, hsla(187,100%,50%,0.025), transparent 60%), radial-gradient(ellipse 50% 40% at 80% 80%, hsla(342,100%,59%,0.02), transparent 60%)"
       }} />
+
 
       {/* Back nav */}
       <div className="relative z-20 max-w-6xl mx-auto px-6 pt-8">
@@ -249,13 +208,13 @@ export default function ErpRedesign() {
           {/* Floating collage */}
           <Reveal delay={0.15}>
             <div className="relative h-[420px] md:h-[480px]">
-              <img src={loginAfter} alt="Login redesign mockup" loading="lazy"
+              <img src={loginAfter} alt="Login redesign mockup" loading="lazy" decoding="async"
                 className="absolute top-0 left-4 w-[46%] rounded-2xl border border-white/10 shadow-2xl"
                 style={{ transform: "rotate(-6deg)", boxShadow: "0 20px 60px rgba(0,0,0,0.5), 0 0 30px hsla(187,100%,50%,0.12)" }} />
-              <img src={homeAfter} alt="Home redesign mockup" loading="lazy"
+              <img src={homeAfter} alt="Home redesign mockup" loading="lazy" decoding="async"
                 className="absolute top-10 right-0 w-[46%] rounded-2xl border border-white/10 shadow-2xl"
                 style={{ transform: "rotate(4deg)", boxShadow: "0 20px 60px rgba(0,0,0,0.5), 0 0 30px hsla(342,100%,59%,0.12)" }} />
-              <img src={attAfter} alt="Attendance redesign mockup" loading="lazy"
+              <img src={attAfter} alt="Attendance redesign mockup" loading="lazy" decoding="async"
                 className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[46%] rounded-2xl border border-white/10 shadow-2xl"
                 style={{ transform: "rotate(-2deg)", boxShadow: "0 20px 60px rgba(0,0,0,0.5), 0 0 30px hsla(187,100%,50%,0.12)" }} />
             </div>
@@ -279,12 +238,12 @@ export default function ErpRedesign() {
             ["Weak Mobile Experience", "Layouts broke on phones despite being the primary device."],
             ["Poor Accessibility", "Low contrast, small targets, and no dark mode support."],
           ].map(([t, d], i) => (
-            <Reveal key={t} delay={i * 0.04}>
+            <div key={t}>
               <div className={`${card} p-5 h-full`}>
                 <h3 className="text-white font-semibold mb-1.5">{t}</h3>
                 <p className="text-white/55 text-sm leading-relaxed">{d}</p>
               </div>
-            </Reveal>
+            </div>
           ))}
         </div>
       </section>
@@ -298,14 +257,14 @@ export default function ErpRedesign() {
         </Reveal>
         <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {research.map((r, i) => (
-            <Reveal key={r.value} delay={i * 0.05}>
+            <div key={r.value}>
               <div className={`${card} p-5 h-full`}>
                 <div className="font-sans font-bold text-white mb-2" style={{ fontSize: "clamp(28px, 3vw, 36px)", color: CYAN, textShadow: "0 0 10px hsla(187,100%,50%,0.25)" }}>
                   {r.value}
                 </div>
                 <p className="text-white/60 text-sm leading-snug">{r.label}</p>
               </div>
-            </Reveal>
+            </div>
           ))}
         </div>
       </section>
@@ -319,7 +278,7 @@ export default function ErpRedesign() {
         </Reveal>
         <div className="grid md:grid-cols-3 gap-5">
           {personas.map((p, i) => (
-            <Reveal key={p.name} delay={i * 0.08}>
+            <div key={p.name}>
               <div className={`${card} p-6 h-full flex flex-col`}>
                 <div className="flex items-center gap-4 mb-5 pb-5 border-b border-white/10">
                   <div className="w-14 h-14 rounded-full flex items-center justify-center font-sans font-semibold text-lg shrink-0"
@@ -352,7 +311,7 @@ export default function ErpRedesign() {
                   <span>"{p.quote}"</span>
                 </div>
               </div>
-            </Reveal>
+            </div>
           ))}
         </div>
       </section>
@@ -367,7 +326,7 @@ export default function ErpRedesign() {
         <div className={`${card} p-6`}>
           <div className="grid md:grid-cols-2 gap-x-10 gap-y-4">
             {heuristics.map((h, i) => (
-              <Reveal key={h.name} delay={i * 0.03}>
+              <div key={h.name}>
                 <div>
                   <div className="flex justify-between items-baseline mb-1.5">
                     <span className="text-white/85 text-sm font-medium">{h.name}</span>
@@ -383,7 +342,7 @@ export default function ErpRedesign() {
                     }} />
                   </div>
                 </div>
-              </Reveal>
+              </div>
             ))}
           </div>
         </div>
@@ -451,7 +410,7 @@ export default function ErpRedesign() {
                       </div>
                       <div className="rounded-2xl overflow-hidden border border-white/10 bg-black/30 flex items-center justify-center p-4 transition-all duration-500 group-hover:border-white/20"
                         style={{ minHeight: 480, boxShadow: `0 10px 40px rgba(0,0,0,0.4)` }}>
-                        <img src={src} alt={`${s.title} ${label}`} loading="lazy"
+                        <img src={src} alt={`${s.title} ${label}`} loading="lazy" decoding="async"
                           className="max-h-[520px] w-auto object-contain transition-transform duration-500 group-hover:scale-[1.02]" />
                       </div>
                     </div>
@@ -484,12 +443,12 @@ export default function ErpRedesign() {
         </Reveal>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-8">
           {outcomes.map((o, i) => (
-            <Reveal key={o} delay={i * 0.04}>
+            <div key={o}>
               <div className={`${card} px-4 py-4 flex items-center gap-3 h-full`}>
                 <CheckCircle2 size={18} style={{ color: CYAN }} className="shrink-0" />
                 <span className="text-white/85 text-sm font-medium">{o}</span>
               </div>
-            </Reveal>
+            </div>
           ))}
         </div>
       </section>
@@ -502,12 +461,12 @@ export default function ErpRedesign() {
         </Reveal>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
           {reflections.map((r, i) => (
-            <Reveal key={r.title} delay={i * 0.05}>
+            <div key={r.title}>
               <div className={`${card} p-5 h-full`}>
                 <h3 className="text-white font-semibold mb-2">{r.title}</h3>
                 <p className="text-white/60 text-sm leading-relaxed">{r.body}</p>
               </div>
-            </Reveal>
+            </div>
           ))}
         </div>
       </section>
