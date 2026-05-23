@@ -10,6 +10,8 @@ import attBefore from "@/assets/erp-attendance-before.png";
 import attAfter from "@/assets/erp-attendance-after.png";
 import examBefore from "@/assets/erp-exam-before.png";
 import examAfter from "@/assets/erp-exam-after.png";
+import gradeBefore from "@/assets/erp-grade-before.png";
+import gradeAfter from "@/assets/erp-grade-after.png";
 
 const CYAN = "hsl(187, 100%, 50%)";
 const PINK = "hsl(342, 100%, 59%)";
