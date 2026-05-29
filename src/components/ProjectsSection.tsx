@@ -399,7 +399,7 @@ export default function ProjectsSection() {
                                   project={project}
                                   index={idx}
                                   visible={visible}
-                                  onClick={() => { if (project.title === "Stock Price Prediction") navigate("/projects/stock-market-prediction"); else if (project.title === "ERP Portal Redesign") navigate("/projects/erp-redesign"); else setSelectedProject(project); }}
+                                  onClick={() => { if (project.title === "Stock Price Prediction") navigate("/projects/stock-market-prediction"); else if (project.title === "ERP Portal Redesign") navigate("/projects/erp-redesign"); else if (project.title === "Movies Time") navigate("/projects/movies-time"); else setSelectedProject(project); }}
                                 />
                               </div>
                               <TimelineNode active={visible} />
@@ -414,7 +414,7 @@ export default function ProjectsSection() {
                                   project={project}
                                   index={idx}
                                   visible={visible}
-                                  onClick={() => { if (project.title === "Stock Price Prediction") navigate("/projects/stock-market-prediction"); else if (project.title === "ERP Portal Redesign") navigate("/projects/erp-redesign"); else setSelectedProject(project); }}
+                                  onClick={() => { if (project.title === "Stock Price Prediction") navigate("/projects/stock-market-prediction"); else if (project.title === "ERP Portal Redesign") navigate("/projects/erp-redesign"); else if (project.title === "Movies Time") navigate("/projects/movies-time"); else setSelectedProject(project); }}
                                 />
                               </div>
                             </>
@@ -431,7 +431,7 @@ export default function ProjectsSection() {
                               project={project}
                               index={idx}
                               visible={visible}
-                              onClick={() => { if (project.title === "Stock Price Prediction") navigate("/projects/stock-market-prediction"); else if (project.title === "ERP Portal Redesign") navigate("/projects/erp-redesign"); else setSelectedProject(project); }}
+                              onClick={() => { if (project.title === "Stock Price Prediction") navigate("/projects/stock-market-prediction"); else if (project.title === "ERP Portal Redesign") navigate("/projects/erp-redesign"); else if (project.title === "Movies Time") navigate("/projects/movies-time"); else setSelectedProject(project); }}
                             />
                           </div>
                         </div>
