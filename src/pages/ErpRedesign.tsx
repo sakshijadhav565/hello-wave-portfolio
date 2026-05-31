@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft, Figma, Search, BarChart3, PenTool, Palette, MousePointer2,
   CheckCircle2, Quote, AlertTriangle, Target, Lightbulb, ArrowRight,
-  MessageSquare, Layers, Type, Grid3x3, ShieldCheck, Sparkles,
+  MessageSquare, Layers, Type, Sparkles, ExternalLink,
 } from "lucide-react";
 
 import loginBefore from "@/assets/erp-login-before.png";
@@ -20,14 +20,16 @@ import dashboardImg from "@/assets/erp-dashboard.png";
 import gradeCardImg from "@/assets/erp-gradecard.png";
 import testScoreImg from "@/assets/erp-testscore.png";
 import academicsImg from "@/assets/erp-academics.png";
+import prototypeVideo from "@/assets/erp-prototype.mov";
 
 import personaAarohi from "@/assets/persona-aarohi.jpg";
 import personaNeha from "@/assets/persona-neha.jpg";
 
 const CYAN = "hsl(187, 100%, 50%)";
 const PINK = "hsl(342, 100%, 59%)";
+const GREEN = "hsl(150, 90%, 55%)";
 
-/* ── Lightweight floating particles ── */
+/* ── Particles ── */
 function Particles() {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
@@ -60,9 +62,7 @@ function Particles() {
         if (p.y < 0 || p.y > 1) p.sy *= -1;
         ctx.beginPath();
         ctx.arc(p.x * w, p.y * h, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = p.pink
-          ? `hsla(342,100%,59%,${p.o})`
-          : `hsla(187,100%,50%,${p.o})`;
+        ctx.fillStyle = p.pink ? `hsla(342,100%,59%,${p.o})` : `hsla(187,100%,50%,${p.o})`;
         ctx.fill();
       }
       raf = requestAnimationFrame(draw);
@@ -71,6 +71,131 @@ function Particles() {
     return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
   }, []);
   return <canvas ref={ref} className="fixed inset-0 w-full h-full pointer-events-none -z-10 opacity-70" />;
+}
+
+/* ── Custom cursor (cyan trailing dot) ── */
+function CursorDot() {
+  const dotRef = useRef<HTMLDivElement>(null);
+  const trailRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    let tx = mx, ty = my;
+    let raf = 0;
+    const onMove = (e: MouseEvent) => { mx = e.clientX; my = e.clientY; };
+    window.addEventListener("mousemove", onMove);
+    const loop = () => {
+      tx += (mx - tx) * 0.18; ty += (my - ty) * 0.18;
+      if (dotRef.current) dotRef.current.style.transform = `translate3d(${mx - 4}px, ${my - 4}px, 0)`;
+      if (trailRef.current) trailRef.current.style.transform = `translate3d(${tx - 14}px, ${ty - 14}px, 0)`;
+      raf = requestAnimationFrame(loop);
+    };
+    loop();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("mousemove", onMove); };
+  }, []);
+  return (
+    <>
+      <div ref={trailRef} className="fixed top-0 left-0 w-7 h-7 rounded-full pointer-events-none z-[100] hidden md:block"
+        style={{ border: "1px solid hsla(187,100%,50%,0.4)", background: "hsla(187,100%,50%,0.04)", mixBlendMode: "screen" }} />
+      <div ref={dotRef} className="fixed top-0 left-0 w-2 h-2 rounded-full pointer-events-none z-[101] hidden md:block"
+        style={{ background: CYAN, boxShadow: "0 0 12px hsla(187,100%,50%,0.9)" }} />
+    </>
+  );
+}
+
+/* ── Scroll progress bar ── */
+function ScrollProgress() {
+  const [p, setP] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      setP(h > 0 ? (window.scrollY / h) * 100 : 0);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return (
+    <div className="fixed top-0 left-0 right-0 h-[2px] z-[99] bg-transparent">
+      <div className="h-full" style={{ width: `${p}%`, background: `linear-gradient(90deg, ${CYAN}, hsl(210,100%,60%))`, boxShadow: "0 0 8px hsla(187,100%,50%,0.7)" }} />
+    </div>
+  );
+}
+
+/* ── Sticky floating nav ── */
+const NAV_SECTIONS = [
+  ["problem", "Problem"], ["research", "Research"], ["personas", "Personas"],
+  ["evaluation", "Evaluation"], ["flow", "Flow"], ["prototype", "Prototype"],
+  ["transformation", "Before/After"], ["outcomes", "Outcomes"],
+];
+function StickyNav() {
+  const [show, setShow] = useState(false);
+  const [active, setActive] = useState(NAV_SECTIONS[0][0]);
+  useEffect(() => {
+    const onScroll = () => {
+      setShow(window.scrollY > 600);
+      const y = window.scrollY + 200;
+      for (let i = NAV_SECTIONS.length - 1; i >= 0; i--) {
+        const el = document.getElementById(NAV_SECTIONS[i][0]);
+        if (el && el.offsetTop <= y) { setActive(NAV_SECTIONS[i][0]); return; }
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return (
+    <div className={`fixed left-1/2 -translate-x-1/2 z-50 transition-all duration-500 hidden md:flex ${show ? "top-4 opacity-100" : "-top-16 opacity-0"}`}>
+      <div className="flex items-center gap-1 px-2 py-1.5 rounded-full"
+        style={{ background: "hsla(0,0%,4%,0.7)", backdropFilter: "blur(12px)", border: "1px solid hsla(187,100%,50%,0.25)", boxShadow: "0 8px 30px rgba(0,0,0,0.5), 0 0 20px hsla(187,100%,50%,0.1)" }}>
+        {NAV_SECTIONS.map(([id, label]) => (
+          <button key={id} onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            className={`px-3 py-1.5 rounded-full text-[11px] font-mono tracking-wide transition-all ${active === id ? "text-black" : "text-white/60 hover:text-white"}`}
+            style={active === id ? { background: CYAN, boxShadow: `0 0 14px hsla(187,100%,50%,0.5)` } : {}}>
+            {label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Glowing rocket ── */
+function Rocket() {
+  const [hover, setHover] = useState(false);
+  return (
+    <>
+      <div className={`fixed pointer-events-none z-0 ${hover ? "erp-rocket-fast" : "erp-rocket-slow"}`}
+        style={{ opacity: hover ? 1 : 0.35, transition: "opacity 0.4s" }}>
+        <div className="erp-rocket-wobble pointer-events-auto" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+          style={{ width: 50, height: 50, transform: "rotate(-45deg)", filter: "drop-shadow(0 0 12px #22d3ee) drop-shadow(0 0 24px #f43f5e)" }}>
+          <svg viewBox="0 0 24 24" fill="none" stroke={CYAN} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
+            <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+            <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+            <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+            <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+          </svg>
+          <div className="absolute -bottom-2 -left-2 w-1.5 h-1.5 rounded-full bg-cyan-300 erp-particle-1" />
+          <div className="absolute -bottom-1 -left-3 w-1 h-1 rounded-full bg-cyan-300 erp-particle-2" />
+          <div className="absolute -bottom-3 -left-1 w-1 h-1 rounded-full bg-cyan-300 erp-particle-3" />
+        </div>
+      </div>
+      <style>{`
+        @keyframes erp-rocket-path {
+          0%   { transform: translate(-10vw, 95vh); }
+          50%  { transform: translate(60vw, 30vh); }
+          100% { transform: translate(110vw, -10vh); }
+        }
+        @keyframes erp-rocket-wobble { 0%,100% { transform: rotate(-50deg);} 50% { transform: rotate(-40deg);} }
+        .erp-rocket-slow { animation: erp-rocket-path 28s linear infinite; }
+        .erp-rocket-fast { animation: erp-rocket-path 12s linear infinite; }
+        .erp-rocket-wobble { animation: erp-rocket-wobble 2.5s ease-in-out infinite; }
+        @keyframes erp-particle { 0% { opacity: 0.9; transform: translate(0,0) scale(1);} 100% { opacity: 0; transform: translate(-18px, 18px) scale(0.3);} }
+        .erp-particle-1 { animation: erp-particle 1.2s ease-out infinite; box-shadow: 0 0 6px #22d3ee; }
+        .erp-particle-2 { animation: erp-particle 1.2s ease-out infinite 0.4s; box-shadow: 0 0 6px #22d3ee; }
+        .erp-particle-3 { animation: erp-particle 1.2s ease-out infinite 0.8s; box-shadow: 0 0 6px #22d3ee; }
+      `}</style>
+    </>
+  );
 }
 
 /* ── Reveal on scroll ── */
@@ -90,14 +215,14 @@ function Reveal({ children, delay = 0, className = "" }: { children: React.React
   return (
     <div ref={ref} className={className} style={{
       opacity: v ? 1 : 0,
-      transform: v ? "translateY(0)" : "translateY(14px)",
-      transition: `opacity 0.55s ease-out ${delay}s, transform 0.55s ease-out ${delay}s`,
+      transform: v ? "translateY(0)" : "translateY(24px)",
+      transition: `opacity 0.7s ease-out ${delay}s, transform 0.7s cubic-bezier(0.2,0.8,0.2,1) ${delay}s`,
       willChange: "opacity, transform",
     }}>{children}</div>
   );
 }
 
-/* ── Animated count-up number ── */
+/* ── Animated count-up ── */
 function CountUp({ value, duration = 1600 }: { value: string; duration?: number }) {
   const { ref, v } = useReveal(0.3);
   const [n, setN] = useState(0);
@@ -124,21 +249,58 @@ function CountUp({ value, duration = 1600 }: { value: string; duration?: number 
   );
 }
 
-const card = "rounded-xl border border-white/10 bg-white/[0.025]";
-const tag = "inline-block font-pixel text-[9px] tracking-widest px-2.5 py-1 rounded-full";
+/* ── Animated heuristic bar ── */
+function HeuristicBar({ score, color }: { score: number; color: string }) {
+  const { ref, v } = useReveal(0.3);
+  return (
+    <div ref={ref as any} className="h-1.5 rounded-full bg-white/5 overflow-hidden mb-1.5">
+      <div className="h-full rounded-full" style={{
+        width: v ? `${score}%` : "0%",
+        background: color === PINK
+          ? "linear-gradient(90deg, hsla(342,100%,59%,0.8), hsla(342,100%,59%,0.4))"
+          : "linear-gradient(90deg, hsla(187,100%,50%,0.8), hsla(187,100%,50%,0.4))",
+        transition: "width 1.2s cubic-bezier(0.2,0.8,0.2,1)",
+      }} />
+    </div>
+  );
+}
+
+/* ── Magnetic card ── */
+function MagneticCard({ children, className = "", style = {} }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const onMove = (e: React.MouseEvent) => {
+    const el = ref.current; if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left - r.width / 2) / r.width;
+    const y = (e.clientY - r.top - r.height / 2) / r.height;
+    el.style.transform = `perspective(700px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg) translateY(-2px)`;
+  };
+  const onLeave = () => { if (ref.current) ref.current.style.transform = ""; };
+  return (
+    <div ref={ref} onMouseMove={onMove} onMouseLeave={onLeave} className={className}
+      style={{ transition: "transform 0.3s ease-out", ...style }}>
+      {children}
+    </div>
+  );
+}
+
+const card = "rounded-xl border border-white/10 bg-white/[0.025] erp-card";
 
 function SectionLabel({ children, color = CYAN }: { children: React.ReactNode; color?: string }) {
+  const isCyan = color === CYAN;
   return (
-    <span className={tag} style={{
-      color, border: `1px solid ${color === CYAN ? "hsla(187,100%,50%,0.35)" : "hsla(342,100%,59%,0.35)"}`,
-      background: color === CYAN ? "hsla(187,100%,50%,0.06)" : "hsla(342,100%,59%,0.06)",
-    }}>{children}</span>
+    <span className="inline-block font-mono text-[10px] font-medium tracking-[0.2em] px-3 py-1.5 rounded-full erp-pulse-pill"
+      style={{
+        color, border: `1px solid ${isCyan ? "hsla(187,100%,50%,0.5)" : "hsla(342,100%,59%,0.5)"}`,
+        background: isCyan ? "hsla(187,100%,50%,0.08)" : "hsla(342,100%,59%,0.08)",
+        boxShadow: isCyan ? "0 0 16px hsla(187,100%,50%,0.25)" : "0 0 16px hsla(342,100%,59%,0.25)",
+      }}>{children}</span>
   );
 }
 
 function H2({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="font-sans font-semibold tracking-tight text-white mb-3" style={{ fontSize: "clamp(24px, 3vw, 32px)" }}>
+    <h2 className="font-heading font-semibold tracking-tight text-white mb-3" style={{ fontSize: "clamp(26px, 3.2vw, 36px)" }}>
       {children}
     </h2>
   );
@@ -153,8 +315,65 @@ function SeverityBadge({ level }: { level: "Critical" | "Major" | "Moderate" | "
   } as const;
   const { c, bg } = map[level];
   return (
-    <span className="font-pixel text-[8px] tracking-widest px-2 py-0.5 rounded-full"
+    <span className="font-mono text-[9px] font-medium tracking-widest px-2 py-0.5 rounded-full"
       style={{ color: c, background: bg, border: `1px solid ${c}40` }}>{level.toUpperCase()}</span>
+  );
+}
+
+/* ── Before/After comparison row (alternating) ── */
+function BAComparison({ s, i, reverse }: { s: any; i: number; reverse: boolean }) {
+  const mockups = (
+    <div className="flex justify-center gap-4 md:gap-6">
+      {[["BEFORE", s.before, "hsl(0,85%,60%)"], ["AFTER", s.after, CYAN]].map(([label, src, color]) => (
+        <div key={label as string} className="flex flex-col items-center">
+          <span className="font-mono text-[9px] tracking-[0.2em] px-2.5 py-1 rounded-full mb-3"
+            style={{
+              color: color as string,
+              border: `1px solid ${label === "AFTER" ? "hsla(187,100%,50%,0.45)" : "hsla(0,85%,60%,0.45)"}`,
+              background: label === "AFTER" ? "hsla(187,100%,50%,0.08)" : "hsla(0,85%,60%,0.08)",
+            }}>{label as string}</span>
+          <div className="rounded-[28px] p-1.5 transition-transform duration-500 hover:scale-[1.04]"
+            style={{
+              background: "linear-gradient(180deg, hsla(0,0%,10%,0.9), hsla(0,0%,3%,0.9))",
+              border: "1px solid hsla(0,0%,100%,0.08)",
+              boxShadow: `0 18px 50px rgba(0,0,0,0.6), 0 0 20px ${label === "AFTER" ? "hsla(187,100%,50%,0.15)" : "hsla(0,85%,60%,0.1)"}`,
+            }}>
+            <img src={src as string} alt={`${s.title} ${label}`} loading="lazy" decoding="async"
+              className="w-full max-w-[230px] h-auto rounded-[22px]" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+  const text = (
+    <div className="space-y-4">
+      {[
+        ["RESEARCH INSIGHT", s.insight, PINK],
+        ["DESIGN DECISION", s.decision, CYAN],
+        ["OUTCOME", s.outcome, GREEN],
+      ].map(([label, body, color]) => (
+        <div key={label as string} className="rounded-xl p-4 border border-white/10 bg-white/[0.02] erp-card">
+          <div className="font-mono text-[10px] tracking-[0.2em] mb-2 font-medium" style={{ color: color as string, textShadow: `0 0 10px ${color}40` }}>
+            {label as string}
+          </div>
+          <p className="text-white/75 text-sm leading-[1.75]">{body as string}</p>
+        </div>
+      ))}
+    </div>
+  );
+  return (
+    <Reveal>
+      <div className="py-6">
+        <div className="flex items-baseline gap-3 mb-6">
+          <span className="font-mono text-[10px] tracking-[0.2em] text-white/35">0{i + 1}</span>
+          <h3 className="font-heading font-semibold text-white text-lg md:text-2xl">{s.title}</h3>
+        </div>
+        <div className={`grid md:grid-cols-2 gap-8 md:gap-12 items-center ${reverse ? "" : ""}`}>
+          <div className={reverse ? "md:order-2" : ""}>{mockups}</div>
+          <div className={reverse ? "md:order-1" : ""}>{text}</div>
+        </div>
+      </div>
+    </Reveal>
   );
 }
 
@@ -176,31 +395,11 @@ export default function ErpRedesign() {
   ];
 
   const research = [
-    {
-      value: "56%", title: "Disliked Visual Design",
-      desc: "Students described the interface as outdated and visually cluttered.",
-      why: "Poor visual design erodes daily-use confidence and engagement.",
-    },
-    {
-      value: "57%", title: "Struggled With Navigation",
-      desc: "Users couldn't reliably locate academic modules without trial and error.",
-      why: "Hidden navigation slows critical academic workflows.",
-    },
-    {
-      value: "93%", title: "Reported Bugs",
-      desc: "Nearly every respondent encountered functional issues regularly.",
-      why: "Frequent bugs reduced trust and damaged the overall experience.",
-    },
-    {
-      value: "86%", title: "Found Grievance Hard",
-      desc: "The complaint flow was perceived as confusing and unhelpful.",
-      why: "A broken support loop leaves issues unresolved and users frustrated.",
-    },
-    {
-      value: "79.5%", title: "Requested Dark Mode",
-      desc: "A strong majority asked for an accessibility-oriented dark theme.",
-      why: "Comfort and accessibility directly impact long study sessions.",
-    },
+    { value: "56%", title: "Disliked Visual Design", desc: "Students described the interface as outdated and visually cluttered.", why: "Poor visual design erodes daily-use confidence and engagement." },
+    { value: "57%", title: "Struggled With Navigation", desc: "Users couldn't reliably locate academic modules without trial and error.", why: "Hidden navigation slows critical academic workflows." },
+    { value: "93%", title: "Reported Bugs", desc: "Nearly every respondent encountered functional issues regularly.", why: "Frequent bugs reduced trust and damaged the overall experience." },
+    { value: "86%", title: "Found Grievance Hard", desc: "The complaint flow was perceived as confusing and unhelpful.", why: "A broken support loop leaves issues unresolved and users frustrated." },
+    { value: "79.5%", title: "Requested Dark Mode", desc: "A strong majority asked for an accessibility-oriented dark theme.", why: "Comfort and accessibility directly impact long study sessions." },
   ];
 
   const voices = [
@@ -213,20 +412,12 @@ export default function ErpRedesign() {
   ];
 
   const expectations = [
-    "Easy, predictable navigation",
-    "Mobile-friendly experience",
-    "Clear attendance visibility",
-    "Timely, useful notifications",
-    "Faster academic workflows",
-    "Transparent academic information",
+    "Easy, predictable navigation", "Mobile-friendly experience", "Clear attendance visibility",
+    "Timely, useful notifications", "Faster academic workflows", "Transparent academic information",
   ];
   const gaps = [
-    "Poor responsiveness across devices",
-    "Complex, multi-level navigation",
-    "Critical information hidden",
-    "Weak or missing notification system",
-    "Cluttered, friction-heavy workflows",
-    "Flat hierarchy with no emphasis",
+    "Poor responsiveness across devices", "Complex, multi-level navigation", "Critical information hidden",
+    "Weak or missing notification system", "Cluttered, friction-heavy workflows", "Flat hierarchy with no emphasis",
   ];
 
   const personas = [
@@ -263,35 +454,15 @@ export default function ErpRedesign() {
     { name: "Help & Documentation", score: 28, severity: "Critical", desc: "No in-product guidance, tooltips, or help center." },
   ];
 
-  const userFlow = [
-    "Login", "Home", "Dashboard", "Academics", "Attendance", "Examination", "Grade Card", "Accounts",
-  ];
+  const userFlow = ["Login", "Home", "Dashboard", "Academics", "Attendance", "Examination", "Grade Card", "Accounts"];
 
   const process = [
-    {
-      icon: Search, label: "Research",
-      items: ["Survey of 80+ students", "Contextual interviews", "Pain point synthesis"],
-    },
-    {
-      icon: BarChart3, label: "Analysis",
-      items: ["UX audit of legacy portal", "Heuristic evaluation", "Expectations vs gap analysis"],
-    },
-    {
-      icon: PenTool, label: "Wireframing",
-      items: ["Information architecture", "Low-fidelity concepts", "Mobile-first layouts"],
-    },
-    {
-      icon: Palette, label: "Visual Design",
-      items: ["Design system definition", "UI component refinement", "Dark theme exploration"],
-    },
-    {
-      icon: MousePointer2, label: "Prototype",
-      items: ["High-fidelity Figma flows", "Interaction states", "Stakeholder review rounds"],
-    },
-    {
-      icon: CheckCircle2, label: "Final Solution",
-      items: ["Cohesive ERP redesign", "8+ redesigned screens", "Mobile-first delivery"],
-    },
+    { icon: Search, label: "Research", items: ["Survey of 80+ students", "Contextual interviews", "Pain point synthesis"] },
+    { icon: BarChart3, label: "Analysis", items: ["UX audit of legacy portal", "Heuristic evaluation", "Expectations vs gap analysis"] },
+    { icon: PenTool, label: "Wireframing", items: ["Information architecture", "Low-fidelity concepts", "Mobile-first layouts"] },
+    { icon: Palette, label: "Visual Design", items: ["Design system definition", "UI component refinement", "Dark theme exploration"] },
+    { icon: MousePointer2, label: "Prototype", items: ["High-fidelity Figma flows", "Interaction states", "Stakeholder review rounds"] },
+    { icon: CheckCircle2, label: "Final Solution", items: ["Cohesive ERP redesign", "8+ redesigned screens", "Mobile-first delivery"] },
   ];
 
   const showcases = [
@@ -311,10 +482,10 @@ export default function ErpRedesign() {
       insight: "Attendance status across subjects was hard to monitor at a glance.",
       decision: "Subject cards with visual percentage indicators and risk flags.",
       outcome: "Students assess attendance health in seconds, not minutes." },
-    { title: "Examination Page", before: examBefore, after: examAfter,
-      insight: "Exam actions and deadlines lacked visibility and surfacing.",
-      decision: "Structured sections surfacing deadlines, schedules, and entry actions.",
-      outcome: "Reduced cognitive load for time-sensitive exam workflows." },
+    { title: "Grade Card Page", before: examBefore, after: examAfter,
+      insight: "Grade and exam data lacked structure and surfacing of deadlines.",
+      decision: "Structured sections, clear typography, and prominent key actions.",
+      outcome: "Reduced cognitive load for time-sensitive grade workflows." },
   ];
 
   const additionalScreens = [
@@ -325,37 +496,68 @@ export default function ErpRedesign() {
   ];
 
   const lessons = [
-    { icon: Search, title: "Research Validates Assumptions",
-      text: "Direct student input replaced guesswork and reshaped early design directions." },
-    { icon: MousePointer2, title: "Mobile-First Improves Access",
-      text: "Designing for phones first forced clarity and exposed every weak hierarchy." },
-    { icon: Layers, title: "Design Systems Build Consistency",
-      text: "Tokens and reusable components removed visual drift across modules." },
-    { icon: Type, title: "Academic Tools Need Clear Hierarchy",
-      text: "Students scan, not read. Typography and grouping carry the experience." },
-    { icon: Sparkles, title: "Small UX Wins Compound",
-      text: "Micro-improvements in spacing, labels, and feedback radically lift usability." },
+    { icon: Search, title: "Research Validates Assumptions", text: "Direct student input replaced guesswork and reshaped early design directions." },
+    { icon: MousePointer2, title: "Mobile-First Improves Access", text: "Designing for phones first forced clarity and exposed every weak hierarchy." },
+    { icon: Layers, title: "Design Systems Build Consistency", text: "Tokens and reusable components removed visual drift across modules." },
+    { icon: Type, title: "Academic Tools Need Clear Hierarchy", text: "Students scan, not read. Typography and grouping carry the experience." },
+    { icon: Sparkles, title: "Small UX Wins Compound", text: "Micro-improvements in spacing, labels, and feedback radically lift usability." },
   ];
 
   const outcomes = [
-    { title: "Simplified Navigation",
-      text: "Students reach key academic functions with fewer taps and improved discoverability." },
-    { title: "Better Information Hierarchy",
-      text: "Critical data is surfaced through typography, spacing, and grouping decisions." },
-    { title: "Mobile-First Experience",
-      text: "Every screen was redesigned around how students actually use the portal — on phones." },
-    { title: "Faster Academic Workflows",
-      text: "Common journeys like attendance and exam checks now take a fraction of the time." },
-    { title: "Improved Readability",
-      text: "Refined typography and dark theme reduce strain across long academic sessions." },
-    { title: "Modern Visual Identity",
-      text: "A cohesive component system replaces the previous fragmented, dated UI." },
+    { title: "Simplified Navigation", text: "Students reach key academic functions with fewer taps and improved discoverability." },
+    { title: "Better Information Hierarchy", text: "Critical data is surfaced through typography, spacing, and grouping decisions." },
+    { title: "Mobile-First Experience", text: "Every screen was redesigned around how students actually use the portal — on phones." },
+    { title: "Faster Academic Workflows", text: "Common journeys like attendance and exam checks now take a fraction of the time." },
+    { title: "Improved Readability", text: "Refined typography and dark theme reduce strain across long academic sessions." },
+    { title: "Modern Visual Identity", text: "A cohesive component system replaces the previous fragmented, dated UI." },
   ];
 
   const heroOffset = scrollY * 0.08;
 
   return (
-    <div className="min-h-screen bg-background text-white font-body relative overflow-x-hidden">
+    <div className="min-h-screen bg-background text-white relative overflow-x-hidden erp-page">
+      <style>{`
+        .erp-page { font-family: 'Inter', 'Quicksand', sans-serif; line-height: 1.75; }
+        .erp-page .font-heading { font-family: 'Space Grotesk', 'Inter', sans-serif; }
+        .erp-page .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+        .erp-card { transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-color 0.3s ease-out; }
+        .erp-card:hover { transform: translateY(-2px); border-color: hsla(187,100%,50%,0.25); box-shadow: 0 0 20px rgba(34,211,238,0.15); }
+        @keyframes erp-pulse-glow {
+          0%,100% { box-shadow: 0 0 12px hsla(187,100%,50%,0.2); }
+          50% { box-shadow: 0 0 22px hsla(187,100%,50%,0.45); }
+        }
+        .erp-pulse-pill { animation: erp-pulse-glow 3s ease-in-out infinite; }
+        @keyframes erp-underline-flow {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 200% 50%; }
+        }
+        .erp-anim-underline {
+          background-image: linear-gradient(90deg, ${CYAN}, hsl(210,100%,60%), ${CYAN});
+          background-size: 200% 100%;
+          background-repeat: repeat-x;
+          background-position: 0 100%;
+          background-size: 200% 3px;
+          padding-bottom: 4px;
+          animation: erp-underline-flow 3s linear infinite;
+          background-clip: padding-box;
+        }
+        @keyframes erp-dot-drift { from { background-position: 0 0; } to { background-position: 40px 40px; } }
+        .erp-dot-grid {
+          background-image: radial-gradient(hsla(187,100%,50%,0.18) 1px, transparent 1px);
+          background-size: 22px 22px;
+          animation: erp-dot-drift 25s linear infinite;
+          mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 80%);
+        }
+        @keyframes erpFloatA { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-12px) rotate(-2deg)} }
+        @keyframes erpFloatB { 0%,100%{transform:translateY(0) rotate(2deg)} 50%{transform:translateY(-16px) rotate(3deg)} }
+        .erp-float-a { animation: erpFloatA 5.5s ease-in-out infinite; }
+        .erp-float-b { animation: erpFloatB 6.5s ease-in-out infinite; animation-delay: 0.6s; }
+      `}</style>
+
+      <ScrollProgress />
+      <CursorDot />
+      <StickyNav />
+      <Rocket />
       <Particles />
       <div className="fixed inset-0 pointer-events-none -z-10" style={{
         background: "radial-gradient(ellipse 60% 40% at 20% 10%, hsla(187,100%,50%,0.04), transparent 60%), radial-gradient(ellipse 50% 40% at 80% 80%, hsla(342,100%,59%,0.03), transparent 60%)"
@@ -364,20 +566,26 @@ export default function ErpRedesign() {
       {/* Back nav */}
       <div className="relative z-20 max-w-6xl mx-auto px-6 pt-8">
         <button onClick={() => navigate("/#projects")}
-          className="inline-flex items-center gap-2 font-pixel text-[10px] tracking-widest text-white/60 hover:text-cyan-300 transition-colors">
+          className="inline-flex items-center gap-2 font-mono text-[11px] tracking-widest text-white/60 hover:text-cyan-300 transition-colors">
           <ArrowLeft size={14} /> BACK TO PROJECTS
         </button>
       </div>
 
       {/* HERO */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-10 pb-16">
+      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-10 pb-24" style={{ minHeight: "90vh" }}>
+        <div className="absolute inset-0 erp-dot-grid -z-10" />
         <div className="grid md:grid-cols-2 gap-10 items-center">
           <Reveal>
             <SectionLabel color={PINK}>UI / UX CASE STUDY</SectionLabel>
-            <h1 className="font-sans font-bold tracking-tight text-white mt-4 mb-4" style={{ fontSize: "clamp(36px, 5vw, 56px)", lineHeight: 1.05 }}>
-              ERP Portal <span style={{ color: CYAN }}>Redesign</span>
+            <h1 className="font-heading font-bold tracking-tight text-white mt-5 mb-5" style={{ fontSize: "clamp(40px, 5.5vw, 64px)", lineHeight: 1.05 }}>
+              ERP Portal <span className="erp-anim-underline" style={{
+                color: "transparent",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}>Redesign</span>
             </h1>
-            <p className="text-white/70 text-base md:text-lg leading-relaxed max-w-xl mb-8">
+            <p className="text-white/70 text-base md:text-lg leading-[1.75] max-w-xl mb-8">
               A research-driven redesign of an outdated student ERP into a modern,
               mobile-first, accessible academic experience.
             </p>
@@ -389,7 +597,7 @@ export default function ErpRedesign() {
                 ["Tools", "Figma, FigJam"],
               ].map(([k, v]) => (
                 <div key={k} className={`${card} px-4 py-3`}>
-                  <dt className="font-pixel text-[9px] tracking-widest text-white/40 mb-1">{k.toUpperCase()}</dt>
+                  <dt className="font-mono text-[10px] tracking-widest text-white/40 mb-1">{k.toUpperCase()}</dt>
                   <dd className="text-white/90 font-medium">{v}</dd>
                 </div>
               ))}
@@ -409,36 +617,30 @@ export default function ErpRedesign() {
                   style={{ boxShadow: "0 22px 60px rgba(0,0,0,0.6), 0 0 26px hsla(342,100%,59%,0.10)" }} />
               </div>
             </div>
-            <style>{`
-              @keyframes erpFloatA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-              @keyframes erpFloatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
-              .erp-float-a { animation: erpFloatA 5s ease-in-out infinite; }
-              .erp-float-b { animation: erpFloatB 6s ease-in-out infinite; animation-delay: 0.6s; }
-            `}</style>
           </Reveal>
         </div>
 
-        {/* Hero metrics row */}
+        {/* Hero metrics row — magnetic */}
         <Reveal delay={0.25}>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-12">
-            {heroMetrics.map((m) => (
-              <div key={m.label} className={`${card} p-4 text-center transition-transform duration-300 hover:-translate-y-0.5`}>
-                <div className="font-sans font-bold mb-1" style={{ fontSize: "clamp(22px, 2.6vw, 30px)", color: CYAN, textShadow: "0 0 10px hsla(187,100%,50%,0.18)" }}>
-                  {m.value}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-14">
+            {heroMetrics.map((m, i) => (
+              <MagneticCard key={m.label} className={`${card} p-5 text-center`} style={{ transitionDelay: `${i * 80}ms` }}>
+                <div className="font-heading font-bold mb-1" style={{ fontSize: "clamp(24px, 2.8vw, 32px)", color: CYAN, textShadow: "0 0 12px hsla(187,100%,50%,0.3)" }}>
+                  <CountUp value={m.value} />
                 </div>
-                <div className="text-white/55 text-xs md:text-sm leading-snug">{m.label}</div>
-              </div>
+                <div className="text-white/55 text-xs md:text-sm leading-snug font-mono tracking-wide">{m.label}</div>
+              </MagneticCard>
             ))}
           </div>
         </Reveal>
       </section>
 
       {/* PROBLEM */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-14 border-t border-white/5">
+      <section id="problem" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
         <Reveal>
           <SectionLabel>01 — PROBLEM</SectionLabel>
-          <H2>The existing ERP held students back.</H2>
-          <p className="text-white/60 max-w-2xl mb-8">Built years ago and rarely updated, the portal failed at the basics — navigation, hierarchy, mobile usability, and accessibility.</p>
+          <H2 >The existing ERP held students back.</H2>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Built years ago and rarely updated, the portal failed at the basics — navigation, hierarchy, mobile usability, and accessibility.</p>
         </Reveal>
         <Reveal delay={0.05}>
           <div className="rounded-2xl p-6 md:p-8 mb-6 relative overflow-hidden"
@@ -450,8 +652,8 @@ export default function ErpRedesign() {
             <div className="flex items-start gap-4">
               <AlertTriangle size={28} style={{ color: PINK }} className="shrink-0 mt-1" />
               <div>
-                <div className="font-pixel text-[10px] tracking-widest mb-2" style={{ color: PINK }}>PROBLEM STATEMENT</div>
-                <p className="text-white/85 text-base md:text-lg leading-relaxed">
+                <div className="font-mono text-[11px] tracking-widest mb-2" style={{ color: PINK }}>PROBLEM STATEMENT</div>
+                <p className="text-white/85 text-base md:text-lg leading-[1.75]">
                   The existing ERP portal suffered from <span className="text-white font-semibold">confusing navigation</span>,
                   poor information hierarchy, inconsistent visual design, accessibility issues,
                   frequent usability frustrations, and missing academic support features —
@@ -469,17 +671,19 @@ export default function ErpRedesign() {
             ["Inconsistent Design", "Mixed components, colors, and typography across pages."],
             ["Weak Mobile Experience", "Layouts broke on phones despite being the primary device."],
             ["Missing Academic Support", "Key academic helpers absent from the experience."],
-          ].map(([t, d]) => (
-            <div key={t} className={`${card} p-5 transition-transform duration-300 hover:-translate-y-0.5`}>
-              <h3 className="text-white font-semibold mb-1.5">{t}</h3>
-              <p className="text-white/55 text-sm leading-relaxed">{d}</p>
-            </div>
+          ].map(([t, d], i) => (
+            <Reveal key={t} delay={i * 0.05}>
+              <div className={`${card} p-5 h-full`}>
+                <h3 className="text-white font-semibold mb-1.5 font-heading">{t}</h3>
+                <p className="text-white/55 text-sm leading-[1.75]">{d}</p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
       {/* GOAL */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-14 border-t border-white/5">
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
         <Reveal>
           <SectionLabel>02 — GOAL</SectionLabel>
           <H2>The redesign objective.</H2>
@@ -494,8 +698,8 @@ export default function ErpRedesign() {
             <div className="flex items-start gap-4">
               <Target size={28} style={{ color: CYAN }} className="shrink-0 mt-1" />
               <div>
-                <div className="font-pixel text-[10px] tracking-widest mb-2" style={{ color: CYAN }}>GOAL STATEMENT</div>
-                <p className="text-white/85 text-base md:text-lg leading-relaxed">
+                <div className="font-mono text-[11px] tracking-widest mb-2" style={{ color: CYAN }}>GOAL STATEMENT</div>
+                <p className="text-white/85 text-base md:text-lg leading-[1.75]">
                   Redesign the ERP portal into a <span className="text-white font-semibold">mobile-first, accessible, and intuitive</span> platform that
                   improves navigation, surfaces academic information clearly, enhances overall usability,
                   and meaningfully lifts student satisfaction across daily academic workflows.
@@ -507,24 +711,24 @@ export default function ErpRedesign() {
       </section>
 
       {/* RESEARCH */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-14 border-t border-white/5">
+      <section id="research" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
         <Reveal>
           <SectionLabel>03 — RESEARCH</SectionLabel>
           <H2>Research Findings</H2>
-          <p className="text-white/60 max-w-2xl mb-8">Survey of 80+ students across years and devices, supplemented by contextual interviews.</p>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Survey of 80+ students across years and devices, supplemented by contextual interviews.</p>
         </Reveal>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {research.map((r, i) => (
-            <Reveal key={r.value} delay={i * 0.05}>
-              <div className={`${card} p-5 h-full transition-transform duration-300 hover:-translate-y-0.5`}>
-                <div className="font-sans font-bold mb-2" style={{ fontSize: "clamp(28px, 3vw, 36px)", color: CYAN, textShadow: "0 0 8px hsla(187,100%,50%,0.18)" }}>
+            <Reveal key={r.value} delay={i * 0.08}>
+              <div className={`${card} p-5 h-full`}>
+                <div className="font-heading font-bold mb-2" style={{ fontSize: "clamp(30px, 3.2vw, 38px)", color: CYAN, textShadow: "0 0 12px hsla(187,100%,50%,0.25)" }}>
                   <CountUp value={r.value} />
                 </div>
-                <div className="text-white font-semibold mb-1.5">{r.title}</div>
-                <p className="text-white/60 text-sm leading-relaxed mb-3">{r.desc}</p>
+                <div className="text-white font-semibold mb-1.5 font-heading">{r.title}</div>
+                <p className="text-white/60 text-sm leading-[1.75] mb-3">{r.desc}</p>
                 <div className="pt-3 border-t border-white/10">
-                  <div className="font-pixel text-[8px] tracking-widest text-white/40 mb-1">WHY IT MATTERS</div>
-                  <p className="text-white/70 text-sm leading-relaxed">{r.why}</p>
+                  <div className="font-mono text-[10px] tracking-widest text-white/40 mb-1">WHY IT MATTERS</div>
+                  <p className="text-white/70 text-sm leading-[1.75]">{r.why}</p>
                 </div>
               </div>
             </Reveal>
@@ -533,21 +737,21 @@ export default function ErpRedesign() {
       </section>
 
       {/* VOICE OF STUDENTS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-14 border-t border-white/5">
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
         <Reveal>
           <SectionLabel color={PINK}>04 — VOICE OF STUDENTS</SectionLabel>
           <H2>In their own words.</H2>
-          <p className="text-white/60 max-w-2xl mb-8">Direct feedback collected during research — the friction students live with every day.</p>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Direct feedback collected during research — the friction students live with every day.</p>
         </Reveal>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {voices.map((v, i) => (
-            <Reveal key={v.theme} delay={i * 0.04}>
-              <div className={`${card} p-5 h-full transition-transform duration-300 hover:-translate-y-0.5`}>
+            <Reveal key={v.theme} delay={i * 0.06}>
+              <div className={`${card} p-5 h-full`}>
                 <div className="flex items-center gap-2 mb-3">
                   <MessageSquare size={14} style={{ color: PINK }} />
-                  <span className="font-pixel text-[9px] tracking-widest" style={{ color: PINK }}>{v.theme.toUpperCase()}</span>
+                  <span className="font-mono text-[10px] tracking-widest" style={{ color: PINK }}>{v.theme.toUpperCase()}</span>
                 </div>
-                <p className="text-white/80 text-[15px] leading-relaxed italic">"{v.text}"</p>
+                <p className="text-white/80 text-[15px] leading-[1.75] italic">"{v.text}"</p>
               </div>
             </Reveal>
           ))}
@@ -555,19 +759,19 @@ export default function ErpRedesign() {
       </section>
 
       {/* EXPECTATIONS VS GAPS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-14 border-t border-white/5">
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
         <Reveal>
           <SectionLabel>05 — GAP ANALYSIS</SectionLabel>
           <H2>Expectations vs Platform Gaps</H2>
-          <p className="text-white/60 max-w-2xl mb-8">Bridging what students wanted with what the legacy platform actually delivered — the design brief in two columns.</p>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Bridging what students wanted with what the legacy platform actually delivered — the design brief in two columns.</p>
         </Reveal>
         <div className="grid md:grid-cols-[1fr_auto_1fr] gap-4 md:gap-6 items-stretch">
-          <div className="rounded-2xl p-5 md:p-6"
+          <div className="rounded-2xl p-5 md:p-6 erp-card"
             style={{ background: "linear-gradient(135deg, hsla(187,100%,50%,0.05), hsla(0,0%,4%,0.5))", border: "1px solid hsla(187,100%,50%,0.22)" }}>
-            <div className="font-pixel text-[10px] tracking-widest mb-4" style={{ color: CYAN }}>USER EXPECTATIONS</div>
+            <div className="font-mono text-[11px] tracking-widest mb-4" style={{ color: CYAN }}>USER EXPECTATIONS</div>
             <ul className="space-y-3">
               {expectations.map((e) => (
-                <li key={e} className="flex items-start gap-3 text-white/85 text-sm">
+                <li key={e} className="flex items-start gap-3 text-white/85 text-sm leading-[1.75]">
                   <CheckCircle2 size={16} style={{ color: CYAN }} className="mt-0.5 shrink-0" />
                   <span>{e}</span>
                 </li>
@@ -577,12 +781,12 @@ export default function ErpRedesign() {
           <div className="hidden md:flex items-center justify-center">
             <ArrowRight size={28} className="text-white/30" />
           </div>
-          <div className="rounded-2xl p-5 md:p-6"
+          <div className="rounded-2xl p-5 md:p-6 erp-card"
             style={{ background: "linear-gradient(135deg, hsla(342,100%,59%,0.05), hsla(0,0%,4%,0.5))", border: "1px solid hsla(342,100%,59%,0.22)" }}>
-            <div className="font-pixel text-[10px] tracking-widest mb-4" style={{ color: PINK }}>CURRENT PLATFORM GAPS</div>
+            <div className="font-mono text-[11px] tracking-widest mb-4" style={{ color: PINK }}>CURRENT PLATFORM GAPS</div>
             <ul className="space-y-3">
               {gaps.map((g) => (
-                <li key={g} className="flex items-start gap-3 text-white/85 text-sm">
+                <li key={g} className="flex items-start gap-3 text-white/85 text-sm leading-[1.75]">
                   <AlertTriangle size={16} style={{ color: PINK }} className="mt-0.5 shrink-0" />
                   <span>{g}</span>
                 </li>
@@ -593,17 +797,16 @@ export default function ErpRedesign() {
       </section>
 
       {/* PERSONAS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-14 border-t border-white/5">
+      <section id="personas" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
         <Reveal>
           <SectionLabel>06 — USERS</SectionLabel>
           <H2>User Personas</H2>
-          <p className="text-white/60 max-w-2xl mb-8">Two representative engineering students synthesized from research, guiding every design decision.</p>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Two representative engineering students synthesized from research, guiding every design decision.</p>
         </Reveal>
         <div className="grid md:grid-cols-2 gap-5">
           {personas.map((p, idx) => (
-            <Reveal key={p.name} delay={idx * 0.08}>
-              <div className={`${card} p-6 h-full transition-all duration-300 hover:-translate-y-1 hover:border-white/20 group`}
-                style={{ boxShadow: `0 0 0 1px transparent` }}>
+            <Reveal key={p.name} delay={idx * 0.1}>
+              <div className={`${card} p-6 h-full group`}>
                 <div className="grid md:grid-cols-[140px,1fr] gap-5">
                   <div className="flex md:flex-col items-center md:items-start gap-4">
                     <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl overflow-hidden shrink-0 transition-transform duration-500 group-hover:scale-[1.03]"
@@ -611,27 +814,24 @@ export default function ErpRedesign() {
                         border: `1px solid ${p.color === CYAN ? "hsla(187,100%,50%,0.35)" : "hsla(342,100%,59%,0.35)"}`,
                         boxShadow: `0 0 28px ${p.color === CYAN ? "hsla(187,100%,50%,0.20)" : "hsla(342,100%,59%,0.20)"}`,
                       }}>
-                      <img src={p.img} alt={p.name} loading="lazy" decoding="async"
-                        className="w-full h-full object-cover" />
+                      <img src={p.img} alt={p.name} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                     </div>
                     <div>
-                      <div className="text-white font-semibold text-lg leading-tight">{p.name}</div>
+                      <div className="text-white font-semibold text-lg leading-tight font-heading">{p.name}</div>
                       <div className="text-white/55 text-sm">Age {p.age} · {p.year}</div>
                       <div className="text-white/45 text-xs mt-1">{p.program}</div>
                     </div>
                   </div>
                   <div>
                     {([
-                      ["GOALS", p.goals],
-                      ["BEHAVIORS", p.behaviors],
-                      ["FRUSTRATIONS", p.frustrations],
-                      ["NEEDS", p.needs],
+                      ["GOALS", p.goals], ["BEHAVIORS", p.behaviors],
+                      ["FRUSTRATIONS", p.frustrations], ["NEEDS", p.needs],
                     ] as const).map(([label, items]) => (
                       <div key={label} className="mb-3">
-                        <div className="font-pixel text-[8px] tracking-widest text-white/40 mb-1.5">{label}</div>
+                        <div className="font-mono text-[10px] tracking-widest text-white/40 mb-1.5">{label}</div>
                         <ul className="space-y-1">
                           {items.map((it) => (
-                            <li key={it} className="text-white/75 text-sm flex gap-2">
+                            <li key={it} className="text-white/75 text-sm flex gap-2 leading-[1.75]">
                               <span style={{ color: p.color }} className="mt-1">·</span>{it}
                             </li>
                           ))}
@@ -651,11 +851,11 @@ export default function ErpRedesign() {
       </section>
 
       {/* HEURISTIC */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-14 border-t border-white/5">
+      <section id="evaluation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
         <Reveal>
           <SectionLabel>07 — EVALUATION</SectionLabel>
           <H2>Heuristic Evaluation</H2>
-          <p className="text-white/60 max-w-2xl mb-8">Scored against Nielsen's 10 usability heuristics with severity tags — every dimension scored below 60%.</p>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Scored against Nielsen's 10 usability heuristics with severity tags — every dimension scored below 60%.</p>
         </Reveal>
         <div className={`${card} p-6`}>
           <div className="grid md:grid-cols-2 gap-x-10 gap-y-5">
@@ -665,18 +865,11 @@ export default function ErpRedesign() {
                   <span className="text-white/85 text-sm font-medium">{h.name}</span>
                   <div className="flex items-center gap-2 shrink-0">
                     <SeverityBadge level={h.severity} />
-                    <span className="font-pixel text-[10px]" style={{ color: h.score < 40 ? PINK : CYAN }}>{h.score}%</span>
+                    <span className="font-mono text-[11px] font-medium" style={{ color: h.score < 40 ? PINK : CYAN }}>{h.score}%</span>
                   </div>
                 </div>
-                <div className="h-1.5 rounded-full bg-white/5 overflow-hidden mb-1.5">
-                  <div className="h-full rounded-full" style={{
-                    width: `${h.score}%`,
-                    background: h.score < 40
-                      ? "linear-gradient(90deg, hsla(342,100%,59%,0.7), hsla(342,100%,59%,0.4))"
-                      : "linear-gradient(90deg, hsla(187,100%,50%,0.7), hsla(187,100%,50%,0.4))",
-                  }} />
-                </div>
-                <p className="text-white/55 text-xs leading-relaxed">{h.desc}</p>
+                <HeuristicBar score={h.score} color={h.score < 40 ? PINK : CYAN} />
+                <p className="text-white/55 text-xs leading-[1.75]">{h.desc}</p>
               </div>
             ))}
           </div>
@@ -684,11 +877,11 @@ export default function ErpRedesign() {
       </section>
 
       {/* USER FLOW */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-14 border-t border-white/5">
+      <section id="flow" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
         <Reveal>
           <SectionLabel>08 — USER FLOW</SectionLabel>
           <H2>Redesigned User Flow</H2>
-          <p className="text-white/60 max-w-2xl mb-8">A linear, mobile-friendly flow that surfaces the most-used academic journeys first and removes hidden detours.</p>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">A linear, mobile-friendly flow that surfaces the most-used academic journeys first and removes hidden detours.</p>
         </Reveal>
         <div className={`${card} p-6 md:p-8`}>
           <div className="flex flex-wrap items-center gap-2 md:gap-3 justify-center">
@@ -710,9 +903,9 @@ export default function ErpRedesign() {
               ["Pain Points Addressed", "Hidden academics, weak attendance access, scattered exam information."],
               ["Navigation Simplified", "Flattened structure, predictable order, and shortcut surfacing on Home."],
             ].map(([t, d]) => (
-              <div key={t} className="rounded-lg p-4 border border-white/10 bg-white/[0.02]">
-                <div className="font-pixel text-[8px] tracking-widest text-white/40 mb-2">{t.toUpperCase()}</div>
-                <p className="text-white/70 text-sm leading-relaxed">{d}</p>
+              <div key={t} className="rounded-lg p-4 border border-white/10 bg-white/[0.02] erp-card">
+                <div className="font-mono text-[10px] tracking-widest text-white/40 mb-2">{t.toUpperCase()}</div>
+                <p className="text-white/70 text-sm leading-[1.75]">{d}</p>
               </div>
             ))}
           </div>
@@ -720,32 +913,32 @@ export default function ErpRedesign() {
       </section>
 
       {/* PROCESS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-14 border-t border-white/5">
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
         <Reveal>
           <SectionLabel>09 — PROCESS</SectionLabel>
           <H2>Design Process</H2>
-          <p className="text-white/60 max-w-2xl mb-8">Six structured stages, from raw research to a delivered redesign.</p>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Six structured stages, from raw research to a delivered redesign.</p>
         </Reveal>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {process.map((s, i) => {
             const Icon = s.icon;
             const color = i % 2 === 0 ? CYAN : PINK;
             return (
-              <Reveal key={s.label} delay={i * 0.04}>
-                <div className={`${card} p-5 h-full transition-transform duration-300 hover:-translate-y-0.5`}>
+              <Reveal key={s.label} delay={i * 0.06}>
+                <div className={`${card} p-5 h-full`}>
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 rounded-lg flex items-center justify-center"
                       style={{ background: "hsla(0,0%,4%,0.9)", border: `1px solid ${color}55` }}>
                       <Icon size={18} style={{ color }} />
                     </div>
                     <div>
-                      <div className="font-pixel text-[8px] tracking-widest text-white/40">0{i + 1}</div>
-                      <div className="text-white font-semibold text-sm">{s.label}</div>
+                      <div className="font-mono text-[10px] tracking-widest text-white/40">0{i + 1}</div>
+                      <div className="text-white font-semibold text-sm font-heading">{s.label}</div>
                     </div>
                   </div>
                   <ul className="space-y-1.5">
                     {s.items.map((it) => (
-                      <li key={it} className="text-white/65 text-sm flex gap-2">
+                      <li key={it} className="text-white/65 text-sm flex gap-2 leading-[1.75]">
                         <span style={{ color }} className="mt-1">·</span>{it}
                       </li>
                     ))}
@@ -757,175 +950,88 @@ export default function ErpRedesign() {
         </div>
       </section>
 
-      {/* DESIGN SYSTEM */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-14 border-t border-white/5">
+      {/* PROTOTYPE */}
+      <section id="prototype" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
         <Reveal>
-          <SectionLabel>10 — DESIGN SYSTEM</SectionLabel>
-          <H2>Design System</H2>
-          <p className="text-white/60 max-w-2xl mb-8">A small, opinionated system that powers every redesigned screen.</p>
+          <SectionLabel>10 — PROTOTYPE</SectionLabel>
+          <H2>See It In Motion.</H2>
+          <p className="text-white/60 max-w-2xl mb-10 leading-[1.75]">
+            High-fidelity prototype built in Figma — interactions, transitions, and real academic flows.
+          </p>
         </Reveal>
-        <div className="grid md:grid-cols-2 gap-4">
-          {/* Color palette */}
-          <div className={`${card} p-5`}>
-            <div className="flex items-center gap-2 mb-4">
-              <Palette size={16} style={{ color: CYAN }} />
-              <span className="font-pixel text-[9px] tracking-widest text-white/50">COLOR PALETTE</span>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                ["Primary Blue", "#2563eb"],
-                ["Accent Cyan", "#22d3ee"],
-                ["Dark Background", "#0a0a0a"],
-                ["Neutral Gray", "#9ca3af"],
-              ].map(([name, hex]) => (
-                <div key={hex} className="flex items-center gap-3 p-2 rounded-lg border border-white/10 bg-white/[0.02]">
-                  <div className="w-8 h-8 rounded-md border border-white/15 shrink-0" style={{ background: hex }} />
-                  <div className="min-w-0">
-                    <div className="text-white/85 text-sm font-medium truncate">{name}</div>
-                    <div className="font-pixel text-[9px] text-white/40">{hex}</div>
-                  </div>
-                </div>
-              ))}
+        <Reveal delay={0.1}>
+          <div className="rounded-[28px] p-3 md:p-4 relative overflow-hidden"
+            style={{
+              background: "linear-gradient(180deg, hsla(0,0%,7%,0.95), hsla(0,0%,3%,0.95))",
+              border: "1px solid hsla(187,100%,50%,0.35)",
+              boxShadow: "0 30px 80px rgba(0,0,0,0.7), 0 0 40px hsla(187,100%,50%,0.18), inset 0 0 0 1px hsla(0,0%,100%,0.04)",
+            }}>
+            <div className="rounded-[20px] overflow-hidden bg-black">
+              <video
+                src={prototypeVideo}
+                autoPlay loop muted playsInline controls
+                preload="metadata"
+                className="w-full h-auto block"
+              />
             </div>
           </div>
-
-          {/* Typography */}
-          <div className={`${card} p-5`}>
-            <div className="flex items-center gap-2 mb-4">
-              <Type size={16} style={{ color: PINK }} />
-              <span className="font-pixel text-[9px] tracking-widest text-white/50">TYPOGRAPHY</span>
-            </div>
-            <div className="space-y-3">
-              <div className="p-3 rounded-lg border border-white/10 bg-white/[0.02]">
-                <div className="text-white text-2xl font-bold leading-tight">Heading</div>
-                <div className="font-pixel text-[9px] text-white/40 mt-1">Sans · Bold · 32 / 24 / 20</div>
-              </div>
-              <div className="p-3 rounded-lg border border-white/10 bg-white/[0.02]">
-                <div className="text-white/85 text-sm">Body text — clear, scannable, optimized for academic content.</div>
-                <div className="font-pixel text-[9px] text-white/40 mt-1">Sans · Regular · 16 / 14</div>
-              </div>
-              <div className="p-3 rounded-lg border border-white/10 bg-white/[0.02]">
-                <div className="font-pixel text-[10px] tracking-widest text-white/60">LABEL / CAPTION</div>
-                <div className="font-pixel text-[9px] text-white/40 mt-1">Pixel · 10 / 9</div>
-              </div>
-            </div>
+        </Reveal>
+        <Reveal delay={0.18}>
+          <div className="flex justify-center mt-8">
+            <a href="https://www.figma.com" target="_blank" rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 px-6 py-3 rounded-full font-mono text-sm font-medium transition-all duration-300 relative overflow-hidden"
+              style={{
+                color: CYAN,
+                border: `1px solid hsla(187,100%,50%,0.5)`,
+                background: "hsla(187,100%,50%,0.05)",
+                boxShadow: "0 0 20px hsla(187,100%,50%,0.18)",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = CYAN; e.currentTarget.style.color = "hsl(0,0%,4%)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "hsla(187,100%,50%,0.05)"; e.currentTarget.style.color = CYAN; }}>
+              View Full Prototype in Figma
+              <ExternalLink size={14} />
+            </a>
           </div>
-
-          {/* Components */}
-          <div className={`${card} p-5`}>
-            <div className="flex items-center gap-2 mb-4">
-              <Grid3x3 size={16} style={{ color: CYAN }} />
-              <span className="font-pixel text-[9px] tracking-widest text-white/50">COMPONENTS</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {["Buttons", "Cards", "Navigation", "Input Fields", "Status Chips", "Tabs", "Modals", "Lists"].map((c) => (
-                <span key={c} className="px-3 py-1.5 rounded-full text-xs text-white/80 border border-white/15 bg-white/[0.03]">
-                  {c}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Principles */}
-          <div className={`${card} p-5`}>
-            <div className="flex items-center gap-2 mb-4">
-              <ShieldCheck size={16} style={{ color: PINK }} />
-              <span className="font-pixel text-[9px] tracking-widest text-white/50">PRINCIPLES</span>
-            </div>
-            <ul className="space-y-2">
-              {[
-                ["Consistency", "One pattern across every module."],
-                ["Accessibility", "Contrast, touch targets, dark mode."],
-                ["Clarity", "Strong hierarchy and plain language."],
-                ["Mobile-First", "Designed for phones, scaled up."],
-              ].map(([t, d]) => (
-                <li key={t} className="flex items-start gap-3">
-                  <CheckCircle2 size={14} style={{ color: CYAN }} className="mt-1 shrink-0" />
-                  <div>
-                    <span className="text-white/90 text-sm font-medium">{t}</span>
-                    <span className="text-white/55 text-sm"> — {d}</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        </Reveal>
       </section>
 
-      {/* SHOWCASE — compact comparison */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-14 border-t border-white/5">
+      {/* BEFORE & AFTER — alternating */}
+      <section id="transformation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
         <Reveal>
           <SectionLabel>11 — TRANSFORMATION</SectionLabel>
           <H2>Before &amp; After</H2>
-          <p className="text-white/60 max-w-2xl mb-12">Five core screens redesigned end-to-end. Each pairs research insight, design decision, and outcome.</p>
+          <p className="text-white/60 max-w-2xl mb-12 leading-[1.75]">Five core screens redesigned end-to-end. Each pairs research insight, design decision, and outcome.</p>
         </Reveal>
 
-        <div className="space-y-16">
+        <div>
           {showcases.map((s, i) => (
-            <Reveal key={s.title}>
-              <div>
-                <div className="flex items-baseline gap-3 mb-5">
-                  <span className="font-pixel text-[10px] tracking-widest text-white/30">0{i + 1}</span>
-                  <h3 className="font-sans font-semibold text-white text-lg md:text-xl">{s.title}</h3>
-                </div>
-
-                {/* Compact comparison */}
-                <div className="grid md:grid-cols-2 gap-5 md:gap-6 mb-5">
-                  {([["BEFORE", s.before, PINK], ["AFTER", s.after, CYAN]] as const).map(([label, src, color]) => (
-                    <div key={label} className="flex flex-col items-center">
-                      <span className={`${tag} mb-3 self-start`} style={{
-                        color, border: `1px solid ${color === CYAN ? "hsla(187,100%,50%,0.35)" : "hsla(342,100%,59%,0.35)"}`,
-                        background: color === CYAN ? "hsla(187,100%,50%,0.06)" : "hsla(342,100%,59%,0.06)",
-                      }}>{label}</span>
-                      <img
-                        src={src}
-                        alt={`${s.title} ${label}`}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full max-w-[280px] h-auto rounded-[22px] transition-transform duration-500 hover:-translate-y-1"
-                        style={{ filter: "drop-shadow(0 14px 32px rgba(0,0,0,0.55))" }}
-                      />
-                    </div>
-                  ))}
-                </div>
-
-                <div className="grid md:grid-cols-3 gap-3">
-                  {([
-                    ["Research Insight", s.insight, PINK],
-                    ["Design Decision", s.decision, CYAN],
-                    ["Outcome", s.outcome, CYAN],
-                  ] as const).map(([label, text, color]) => (
-                    <div key={label} className={`${card} p-4`}>
-                      <div className="font-pixel text-[8px] tracking-widest mb-2" style={{ color }}>{label.toUpperCase()}</div>
-                      <p className="text-white/70 text-[13px] leading-relaxed">{text}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
+            <div key={s.title}>
+              <BAComparison s={s} i={i} reverse={i % 2 === 1} />
+              {i < showcases.length - 1 && <div className="h-px bg-gradient-to-r from-transparent via-white/15 to-transparent my-6" />}
+            </div>
           ))}
         </div>
       </section>
 
       {/* ADDITIONAL REDESIGNS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-14 border-t border-white/5">
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
         <Reveal>
           <SectionLabel color={PINK}>12 — MORE SCREENS</SectionLabel>
           <H2>Additional Redesigned Screens</H2>
-          <p className="text-white/60 max-w-2xl mb-8">Supporting screens explored as part of the broader redesign system — dashboard, grade card, accounts, and exam workflows.</p>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Supporting screens explored as part of the broader redesign system — dashboard, grade card, accounts, and exam workflows.</p>
         </Reveal>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {additionalScreens.map((a, i) => (
-            <Reveal key={a.title} delay={i * 0.05}>
-              <div className={`${card} p-4 h-full transition-transform duration-300 hover:-translate-y-0.5`}>
+            <Reveal key={a.title} delay={i * 0.06}>
+              <div className={`${card} p-4 h-full`}>
                 <div className="rounded-xl overflow-hidden mb-3 bg-black/30 border border-white/10">
                   <img src={a.img} alt={a.title} loading="lazy" decoding="async"
                     className="w-full h-44 object-cover object-top" />
                 </div>
-                <div className="font-pixel text-[9px] tracking-widest mb-1.5" style={{ color: i % 2 === 0 ? CYAN : PINK }}>
+                <div className="font-mono text-[10px] tracking-widest mb-1.5" style={{ color: i % 2 === 0 ? CYAN : PINK }}>
                   {a.title.toUpperCase()}
                 </div>
-                <p className="text-white/65 text-sm leading-relaxed">{a.note}</p>
+                <p className="text-white/65 text-sm leading-[1.75]">{a.note}</p>
               </div>
             </Reveal>
           ))}
@@ -933,25 +1039,25 @@ export default function ErpRedesign() {
       </section>
 
       {/* LESSONS LEARNED */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-14 border-t border-white/5">
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
         <Reveal>
           <SectionLabel>13 — REFLECTION</SectionLabel>
           <H2>Lessons Learned</H2>
-          <p className="text-white/60 max-w-2xl mb-8">Key takeaways from running a research-driven academic UX redesign.</p>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Key takeaways from running a research-driven academic UX redesign.</p>
         </Reveal>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {lessons.map((l, i) => {
             const Icon = l.icon;
             const color = i % 2 === 0 ? CYAN : PINK;
             return (
-              <Reveal key={l.title} delay={i * 0.04}>
-                <div className={`${card} p-5 h-full transition-transform duration-300 hover:-translate-y-0.5`}>
+              <Reveal key={l.title} delay={i * 0.05}>
+                <div className={`${card} p-5 h-full`}>
                   <div className="flex items-center gap-3 mb-3">
                     <Lightbulb size={16} style={{ color }} />
                     <Icon size={14} className="text-white/40" />
                   </div>
-                  <div className="text-white font-semibold mb-1.5">{l.title}</div>
-                  <p className="text-white/60 text-sm leading-relaxed">{l.text}</p>
+                  <div className="text-white font-semibold mb-1.5 font-heading">{l.title}</div>
+                  <p className="text-white/60 text-sm leading-[1.75]">{l.text}</p>
                 </div>
               </Reveal>
             );
@@ -960,21 +1066,21 @@ export default function ErpRedesign() {
       </section>
 
       {/* OUTCOMES */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-14 border-t border-white/5">
+      <section id="outcomes" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
         <Reveal>
           <SectionLabel>14 — OUTCOMES</SectionLabel>
           <H2>Key Outcomes</H2>
-          <p className="text-white/60 max-w-2xl mb-8">Qualitative improvements drawn from the redesign — focused on clarity, usability, and a modern visual identity.</p>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Qualitative improvements drawn from the redesign — focused on clarity, usability, and a modern visual identity.</p>
         </Reveal>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {outcomes.map((o, i) => (
-            <Reveal key={o.title} delay={i * 0.04}>
-              <div className={`${card} p-5 h-full transition-transform duration-300 hover:-translate-y-0.5`}>
+            <Reveal key={o.title} delay={i * 0.05}>
+              <div className={`${card} p-5 h-full`}>
                 <div className="flex items-center gap-2 mb-2">
                   <CheckCircle2 size={16} style={{ color: CYAN }} />
-                  <span className="text-white font-semibold">{o.title}</span>
+                  <span className="text-white font-semibold font-heading">{o.title}</span>
                 </div>
-                <p className="text-white/65 text-sm leading-relaxed">{o.text}</p>
+                <p className="text-white/65 text-sm leading-[1.75]">{o.text}</p>
               </div>
             </Reveal>
           ))}
@@ -985,15 +1091,15 @@ export default function ErpRedesign() {
       <footer className="relative z-10 max-w-6xl mx-auto px-6 py-16 border-t border-white/5">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
-            <div className="font-pixel text-[10px] tracking-widest text-white/40 mb-2">CASE STUDY · 2025</div>
-            <div className="text-white/80 font-semibold">ERP Portal Redesign</div>
+            <div className="font-mono text-[10px] tracking-widest text-white/40 mb-2">CASE STUDY · 2025</div>
+            <div className="text-white/80 font-semibold font-heading">ERP Portal Redesign</div>
           </div>
           <div className="flex items-center gap-3">
             <button onClick={() => navigate("/#projects")}
               className="px-5 py-2.5 rounded-lg border border-white/15 text-white/80 text-sm hover:bg-white/5 transition-colors inline-flex items-center gap-2">
               <ArrowLeft size={14} /> Back to Projects
             </button>
-            <a href="#" onClick={(e) => e.preventDefault()}
+            <a href="https://www.figma.com" target="_blank" rel="noopener noreferrer"
               className="px-5 py-2.5 rounded-lg text-sm font-medium inline-flex items-center gap-2 transition-all hover:scale-[1.02]"
               style={{ background: `linear-gradient(135deg, ${CYAN}, hsl(187,80%,45%))`, color: "hsl(0,0%,4%)" }}>
               <Figma size={14} /> View on Figma
