@@ -578,12 +578,7 @@ export default function ErpRedesign() {
           <Reveal>
             <SectionLabel color={PINK}>UI / UX CASE STUDY</SectionLabel>
             <h1 className="font-heading font-bold tracking-tight text-white mt-5 mb-5" style={{ fontSize: "clamp(40px, 5.5vw, 64px)", lineHeight: 1.05 }}>
-              ERP Portal <span className="erp-anim-underline" style={{
-                color: "transparent",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}>Redesign</span>
+              ERP Portal <span className="erp-anim-underline" style={{ color: CYAN }}>Redesign</span>
             </h1>
             <p className="text-white/70 text-base md:text-lg leading-[1.75] max-w-xl mb-8">
               A research-driven redesign of an outdated student ERP into a modern,
