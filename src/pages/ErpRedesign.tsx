@@ -697,7 +697,12 @@ export default function ErpRedesign() {
           </Reveal>
 
           <Reveal delay={0.15}>
-            <div className="relative h-[460px] md:h-[520px]" style={{ transform: `translateY(${-heroOffset}px)` }}>
+            <div className="relative h-[420px] md:h-[480px]" style={{ transform: `translateY(${-heroOffset}px)` }}>
+              {/* Orbital rings */}
+              <div className="erp-orbit" style={{ width: 380, height: 380 }} aria-hidden />
+              <div className="erp-orbit pink" style={{ width: 520, height: 520, opacity: 0.6 }} aria-hidden />
+              <div className="erp-orbit" style={{ width: 260, height: 260, opacity: 0.7, animationDuration: "30s" }} aria-hidden />
+
               <div className="absolute top-4 left-2 w-[48%] erp-float-a">
                 <img src={loginAfter} alt="Login redesign mockup" loading="lazy" decoding="async"
                   className="w-full rounded-2xl border border-white/10"
