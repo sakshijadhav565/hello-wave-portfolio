@@ -669,7 +669,7 @@ export default function ErpRedesign() {
       </div>
 
       {/* HERO */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-10 pb-24" style={{ minHeight: "90vh" }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-8 pb-16">
         <div className="absolute inset-0 erp-dot-grid -z-10" />
         <div className="grid md:grid-cols-2 gap-10 items-center">
           <Reveal>
