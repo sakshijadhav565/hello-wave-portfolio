@@ -703,31 +703,7 @@ export default function ErpRedesign() {
         <div className="absolute inset-0 erp-dot-grid -z-10" />
         <div className="grid md:grid-cols-2 gap-10 items-center">
           <Reveal>
-            <SectionLabel color={PINK}>UI / UX CASE STUDY</SectionLabel>
-            <h1 className="font-heading font-bold tracking-tight text-white mt-5 mb-5" style={{ fontSize: "clamp(40px, 5.5vw, 64px)", lineHeight: 1.05 }}>
-              ERP Portal <span className="erp-anim-underline" style={{ color: CYAN }}>Redesign</span>
-            </h1>
-            <p className="text-white/70 text-base md:text-lg leading-[1.75] max-w-xl mb-8">
-              A research-driven redesign of an outdated student ERP into a modern,
-              mobile-first, accessible academic experience.
-            </p>
-            <dl className="grid grid-cols-2 gap-4 text-sm">
-              {[
-                ["Duration", "6 Weeks"],
-                ["Role", "UI / UX Designer"],
-                ["Team", "Team Project"],
-                ["Tools", "Figma, FigJam"],
-              ].map(([k, v]) => (
-                <div key={k} className={`${card} px-4 py-3`}>
-                  <dt className="font-mono text-[10px] tracking-widest text-white/40 mb-1">{k.toUpperCase()}</dt>
-                  <dd className="text-white/90 font-medium">{v}</dd>
-                </div>
-              ))}
-            </dl>
-          </Reveal>
 
-          <Reveal delay={0.15}>
-          <Reveal>
             <SectionLabel color={PINK}>UI / UX CASE STUDY</SectionLabel>
             <h1
               className="font-heading font-bold tracking-tight text-white mt-5 mb-5 pb-2"
