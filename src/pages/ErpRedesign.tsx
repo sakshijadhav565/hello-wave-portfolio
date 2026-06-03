@@ -1124,7 +1124,7 @@ export default function ErpRedesign() {
                 autoPlay loop muted playsInline controls
                 preload="metadata"
                 className="w-full h-auto block mx-auto"
-                style={{ maxHeight: 540, objectFit: "contain" }}
+                style={{ maxHeight: 500, objectFit: "contain" }}
 
               />
             </div>
