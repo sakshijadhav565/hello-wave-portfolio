@@ -468,12 +468,38 @@ function BAComparison({ s, i, reverse }: { s: any; i: number; reverse: boolean }
 export default function ErpRedesign() {
   const navigate = useNavigate();
 
+  // Always start at top on mount; disable browser scroll restoration for this page
+  useEffect(() => {
+    const prev = window.history.scrollRestoration;
+    if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+    return () => { if ("scrollRestoration" in window.history) window.history.scrollRestoration = prev; };
+  }, []);
+
   const [scrollY, setScrollY] = useState(0);
+  const heroDevicesRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Mouse-responsive 3D tilt on hero devices
+  useEffect(() => {
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+    const el = heroDevicesRef.current; if (!el) return;
+    const onMove = (e: MouseEvent) => {
+      const r = el.getBoundingClientRect();
+      const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      const dx = (e.clientX - cx) / window.innerWidth;
+      const dy = (e.clientY - cy) / window.innerHeight;
+      el.style.setProperty("--ry", `${dx * 8}deg`);
+      el.style.setProperty("--rx", `${-dy * 6}deg`);
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
 
   const heroMetrics = [
     { value: "80+", label: "Students Surveyed" },
