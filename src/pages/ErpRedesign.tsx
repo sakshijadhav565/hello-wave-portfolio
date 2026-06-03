@@ -643,8 +643,13 @@ export default function ErpRedesign() {
       <StickyNav />
       <Rocket />
       <Particles />
+      <Starfield />
+      <MouseGlow />
       <div className="fixed inset-0 pointer-events-none -z-10" style={{
-        background: "radial-gradient(ellipse 60% 40% at 20% 10%, hsla(187,100%,50%,0.04), transparent 60%), radial-gradient(ellipse 50% 40% at 80% 80%, hsla(342,100%,59%,0.03), transparent 60%)"
+        background: "radial-gradient(ellipse 55% 40% at 18% 12%, hsla(187,100%,50%,0.10), transparent 65%), radial-gradient(ellipse 50% 40% at 82% 78%, hsla(342,100%,59%,0.09), transparent 65%), radial-gradient(ellipse 40% 30% at 50% 50%, hsla(270,80%,55%,0.05), transparent 70%)"
+      }} />
+      <div className="fixed inset-0 pointer-events-none -z-10 erp-nebula-drift" style={{
+        background: "radial-gradient(ellipse 30% 25% at 30% 70%, hsla(187,100%,50%,0.06), transparent 70%), radial-gradient(ellipse 30% 25% at 70% 30%, hsla(342,100%,59%,0.06), transparent 70%)"
       }} />
 
       {/* Back nav */}
