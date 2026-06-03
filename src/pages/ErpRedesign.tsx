@@ -727,21 +727,71 @@ export default function ErpRedesign() {
           </Reveal>
 
           <Reveal delay={0.15}>
-            <div className="relative h-[420px] md:h-[480px]" style={{ transform: `translateY(${-heroOffset}px)` }}>
+          <Reveal>
+            <SectionLabel color={PINK}>UI / UX CASE STUDY</SectionLabel>
+            <h1
+              className="font-heading font-bold tracking-tight text-white mt-5 mb-5 pb-2"
+              style={{ fontSize: "clamp(40px, 5.5vw, 64px)", lineHeight: 1.15, overflow: "visible" }}
+            >
+              ERP Portal{" "}
+              <span className="erp-anim-underline inline-block pb-1" style={{ color: CYAN, lineHeight: 1.2 }}>
+                Redesign
+              </span>
+            </h1>
+            <p className="text-white/70 text-base md:text-lg leading-[1.75] max-w-xl mb-8">
+              A research-driven redesign of an outdated student ERP into a modern,
+              mobile-first, accessible academic experience.
+            </p>
+            <dl className="grid grid-cols-2 gap-4 text-sm">
+              {[
+                ["Duration", "6 Weeks"],
+                ["Role", "UI / UX Designer"],
+                ["Team", "Team Project"],
+                ["Tools", "Figma, FigJam"],
+              ].map(([k, v]) => (
+                <div key={k} className={`${card} px-4 py-3`}>
+                  <dt className="font-mono text-[10px] tracking-widest text-white/40 mb-1">{k.toUpperCase()}</dt>
+                  <dd className="text-white/90 font-medium">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
+
+          <Reveal delay={0.15}>
+            <div
+              ref={heroDevicesRef}
+              className="relative h-[420px] md:h-[480px]"
+              style={{
+                transform: `translateY(${-heroOffset}px)`,
+                perspective: "1200px",
+              }}
+            >
+              {/* Premium cyan glow behind phones */}
+              <div className="absolute inset-0 pointer-events-none" style={{
+                background: "radial-gradient(ellipse 60% 55% at 50% 55%, hsla(187,100%,50%,0.22), transparent 70%)",
+                filter: "blur(20px)",
+              }} aria-hidden />
+
               {/* Orbital rings */}
               <div className="erp-orbit" style={{ width: 380, height: 380 }} aria-hidden />
               <div className="erp-orbit pink" style={{ width: 520, height: 520, opacity: 0.6 }} aria-hidden />
               <div className="erp-orbit" style={{ width: 260, height: 260, opacity: 0.7, animationDuration: "30s" }} aria-hidden />
 
-              <div className="absolute top-4 left-2 w-[48%] erp-float-a">
+              <div
+                className="absolute top-4 left-2 w-[48%] erp-float-a"
+                style={{ transform: "rotateY(var(--ry,0)) rotateX(var(--rx,0))", transformStyle: "preserve-3d", transition: "transform 0.25s ease-out" }}
+              >
                 <img src={loginAfter} alt="Login redesign mockup" loading="lazy" decoding="async"
                   className="w-full rounded-2xl border border-white/10"
-                  style={{ boxShadow: "0 18px 50px rgba(0,0,0,0.55), 0 0 22px hsla(187,100%,50%,0.10)" }} />
+                  style={{ boxShadow: "0 18px 50px rgba(0,0,0,0.55), 0 0 40px hsla(187,100%,50%,0.28)" }} />
               </div>
-              <div className="absolute bottom-0 right-0 w-[55%] erp-float-b">
+              <div
+                className="absolute bottom-0 right-0 w-[55%] erp-float-b"
+                style={{ transform: "rotateY(calc(var(--ry,0) * -1)) rotateX(var(--rx,0))", transformStyle: "preserve-3d", transition: "transform 0.25s ease-out" }}
+              >
                 <img src={homeAfter} alt="Home redesign mockup" loading="lazy" decoding="async"
                   className="w-full rounded-2xl border border-white/10"
-                  style={{ boxShadow: "0 22px 60px rgba(0,0,0,0.6), 0 0 26px hsla(342,100%,59%,0.10)" }} />
+                  style={{ boxShadow: "0 22px 60px rgba(0,0,0,0.6), 0 0 44px hsla(187,100%,50%,0.22), 0 0 30px hsla(342,100%,59%,0.14)" }} />
               </div>
             </div>
           </Reveal>
@@ -749,7 +799,8 @@ export default function ErpRedesign() {
 
         {/* Hero metrics row — magnetic */}
         <Reveal delay={0.25}>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-14">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-10">
+
             {heroMetrics.map((m, i) => (
               <MagneticCard key={m.label} className={`${card} p-5 text-center`} style={{ transitionDelay: `${i * 80}ms` }}>
                 <div className="font-heading font-bold mb-1" style={{ fontSize: "clamp(24px, 2.8vw, 32px)", color: CYAN, textShadow: "0 0 12px hsla(187,100%,50%,0.3)" }}>
