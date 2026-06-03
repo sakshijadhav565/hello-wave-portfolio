@@ -1068,7 +1068,9 @@ export default function ErpRedesign() {
                 src={prototypeVideo}
                 autoPlay loop muted playsInline controls
                 preload="metadata"
-                className="w-full h-auto block"
+                className="w-full h-auto block mx-auto"
+                style={{ maxHeight: 540, objectFit: "contain" }}
+
               />
             </div>
           </div>
