@@ -297,7 +297,7 @@ function ProjectCard({
 export default function ProjectsSection() {
   const navigate = useNavigate();
   const { ref: titleRef, visible: titleVisible } = useScrollReveal(0.3);
-  const cardRefs = projects.map(() => useScrollReveal(0.15));
+  const cardRefs = [useScrollReveal(0.15), useScrollReveal(0.15), useScrollReveal(0.15)];
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const phases = [...new Set(projects.map((p) => p.phase))];
