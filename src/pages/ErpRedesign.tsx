@@ -159,42 +159,126 @@ function StickyNav() {
   );
 }
 
-/* ── Glowing rocket ── */
+/* ── Illustrated cartoon rocket with trail ── */
+function BigRocket({ size = 110, accent = CYAN, trailColor = "#22d3ee" }: { size?: number; accent?: string; trailColor?: string }) {
+  return (
+    <div style={{ width: size, height: size, position: "relative" }}>
+      {/* trail */}
+      <div className="erp-rocket-trail" style={{
+        position: "absolute", right: "100%", top: "50%", width: size * 2.4, height: 6,
+        transform: "translateY(-50%)",
+        background: `linear-gradient(90deg, transparent, ${trailColor}66, ${trailColor})`,
+        filter: `blur(4px) drop-shadow(0 0 8px ${trailColor})`,
+        borderRadius: 999, opacity: 0.7,
+      }} />
+      <svg viewBox="0 0 120 120" width={size} height={size} style={{ filter: `drop-shadow(0 0 14px ${accent}) drop-shadow(0 0 28px ${accent}55)` }}>
+        {/* flame */}
+        <ellipse cx="28" cy="60" rx="18" ry="6" fill="url(#flameG)" className="erp-rocket-flame"/>
+        <defs>
+          <linearGradient id="flameG" x1="0" x2="1">
+            <stop offset="0%" stopColor={trailColor} stopOpacity="0"/>
+            <stop offset="60%" stopColor={trailColor} stopOpacity="0.9"/>
+            <stop offset="100%" stopColor="#fff" stopOpacity="1"/>
+          </linearGradient>
+          <linearGradient id="bodyG" x1="0" x2="1">
+            <stop offset="0%" stopColor="#1a2840"/>
+            <stop offset="100%" stopColor="#0a1525"/>
+          </linearGradient>
+        </defs>
+        {/* body */}
+        <path d="M50 50 Q80 38 104 60 Q80 82 50 70 Z" fill="url(#bodyG)" stroke={accent} strokeWidth="2"/>
+        {/* nose tip */}
+        <path d="M100 56 L112 60 L100 64 Z" fill={accent} opacity="0.85"/>
+        {/* window */}
+        <circle cx="78" cy="60" r="6" fill="#0a1525" stroke={accent} strokeWidth="2"/>
+        <circle cx="80" cy="58" r="2" fill={accent} opacity="0.6"/>
+        {/* fins */}
+        <path d="M58 50 L48 36 L60 50 Z" fill={accent} opacity="0.85"/>
+        <path d="M58 70 L48 84 L60 70 Z" fill={accent} opacity="0.85"/>
+      </svg>
+    </div>
+  );
+}
+
 function Rocket() {
-  const [hover, setHover] = useState(false);
   return (
     <>
-      <div className={`fixed pointer-events-none z-0 ${hover ? "erp-rocket-fast" : "erp-rocket-slow"}`}
-        style={{ opacity: hover ? 1 : 0.35, transition: "opacity 0.4s" }}>
-        <div className="erp-rocket-wobble pointer-events-auto" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
-          style={{ width: 50, height: 50, transform: "rotate(-45deg)", filter: "drop-shadow(0 0 12px #22d3ee) drop-shadow(0 0 24px #f43f5e)" }}>
-          <svg viewBox="0 0 24 24" fill="none" stroke={CYAN} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
-            <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
-            <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
-            <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
-            <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
-          </svg>
-          <div className="absolute -bottom-2 -left-2 w-1.5 h-1.5 rounded-full bg-cyan-300 erp-particle-1" />
-          <div className="absolute -bottom-1 -left-3 w-1 h-1 rounded-full bg-cyan-300 erp-particle-2" />
-          <div className="absolute -bottom-3 -left-1 w-1 h-1 rounded-full bg-cyan-300 erp-particle-3" />
-        </div>
+      <div className="fixed pointer-events-none z-0 erp-rocket-a" style={{ opacity: 0.55 }}>
+        <BigRocket size={120} accent={CYAN} trailColor="#22d3ee" />
+      </div>
+      <div className="fixed pointer-events-none z-0 erp-rocket-b" style={{ opacity: 0.45 }}>
+        <BigRocket size={90} accent={PINK} trailColor="#f472b6" />
       </div>
       <style>{`
-        @keyframes erp-rocket-path {
-          0%   { transform: translate(-10vw, 95vh); }
-          50%  { transform: translate(60vw, 30vh); }
-          100% { transform: translate(110vw, -10vh); }
+        @keyframes erp-rocket-path-a {
+          0%   { transform: translate(-15vw, 80vh) rotate(-18deg); }
+          50%  { transform: translate(55vw, 25vh) rotate(-22deg); }
+          100% { transform: translate(115vw, -10vh) rotate(-18deg); }
         }
-        @keyframes erp-rocket-wobble { 0%,100% { transform: rotate(-50deg);} 50% { transform: rotate(-40deg);} }
-        .erp-rocket-slow { animation: erp-rocket-path 28s linear infinite; }
-        .erp-rocket-fast { animation: erp-rocket-path 12s linear infinite; }
-        .erp-rocket-wobble { animation: erp-rocket-wobble 2.5s ease-in-out infinite; }
-        @keyframes erp-particle { 0% { opacity: 0.9; transform: translate(0,0) scale(1);} 100% { opacity: 0; transform: translate(-18px, 18px) scale(0.3);} }
-        .erp-particle-1 { animation: erp-particle 1.2s ease-out infinite; box-shadow: 0 0 6px #22d3ee; }
-        .erp-particle-2 { animation: erp-particle 1.2s ease-out infinite 0.4s; box-shadow: 0 0 6px #22d3ee; }
-        .erp-particle-3 { animation: erp-particle 1.2s ease-out infinite 0.8s; box-shadow: 0 0 6px #22d3ee; }
+        @keyframes erp-rocket-path-b {
+          0%   { transform: translate(110vw, 15vh) rotate(160deg); }
+          50%  { transform: translate(45vw, 65vh) rotate(165deg); }
+          100% { transform: translate(-20vw, 105vh) rotate(160deg); }
+        }
+        .erp-rocket-a { animation: erp-rocket-path-a 55s linear infinite; }
+        .erp-rocket-b { animation: erp-rocket-path-b 70s linear infinite; animation-delay: -25s; }
+        @keyframes erp-flame-flicker { 0%,100% { opacity: 0.7; transform: scaleX(1);} 50% { opacity: 1; transform: scaleX(1.15);} }
+        .erp-rocket-flame { transform-origin: 46px 60px; animation: erp-flame-flicker 0.25s ease-in-out infinite; }
+        .erp-rocket-trail { animation: erp-flame-flicker 0.4s ease-in-out infinite; }
       `}</style>
     </>
+  );
+}
+
+/* ── Starfield + Nebula background ── */
+function Starfield() {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const c = ref.current; if (!c) return;
+    const ctx = c.getContext("2d"); if (!ctx) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const resize = () => { c.width = c.offsetWidth * dpr; c.height = c.offsetHeight * dpr; ctx.setTransform(dpr,0,0,dpr,0,0); };
+    resize(); window.addEventListener("resize", resize);
+    const stars = Array.from({ length: 90 }, () => ({
+      x: Math.random(), y: Math.random(),
+      r: Math.random() * 1.1 + 0.2,
+      tw: Math.random() * Math.PI * 2,
+      sp: Math.random() * 0.02 + 0.005,
+    }));
+    let raf = 0;
+    const draw = () => {
+      const w = c.offsetWidth, h = c.offsetHeight;
+      ctx.clearRect(0,0,w,h);
+      for (const s of stars) {
+        s.tw += s.sp;
+        const o = 0.3 + Math.abs(Math.sin(s.tw)) * 0.6;
+        ctx.beginPath();
+        ctx.arc(s.x*w, s.y*h, s.r, 0, Math.PI*2);
+        ctx.fillStyle = `hsla(0,0%,100%,${o})`;
+        ctx.fill();
+      }
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
+  }, []);
+  return <canvas ref={ref} className="fixed inset-0 w-full h-full pointer-events-none -z-10" />;
+}
+
+/* ── Mouse-follow glow ── */
+function MouseGlow() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+    const onMove = (e: MouseEvent) => {
+      if (ref.current) ref.current.style.transform = `translate3d(${e.clientX - 300}px, ${e.clientY - 300}px, 0)`;
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+  return (
+    <div ref={ref} className="fixed top-0 left-0 w-[600px] h-[600px] pointer-events-none -z-10 hidden md:block"
+      style={{ background: "radial-gradient(circle, hsla(187,100%,50%,0.07) 0%, transparent 60%)", transition: "transform 0.2s ease-out" }} />
   );
 }
 
@@ -552,15 +636,28 @@ export default function ErpRedesign() {
         @keyframes erpFloatB { 0%,100%{transform:translateY(0) rotate(2deg)} 50%{transform:translateY(-16px) rotate(3deg)} }
         .erp-float-a { animation: erpFloatA 5.5s ease-in-out infinite; }
         .erp-float-b { animation: erpFloatB 6.5s ease-in-out infinite; animation-delay: 0.6s; }
+        @keyframes erp-nebula-drift { 0%,100% { transform: translate3d(0,0,0);} 50% { transform: translate3d(-2%, 2%, 0);} }
+        .erp-nebula-drift { animation: erp-nebula-drift 22s ease-in-out infinite; }
+        @keyframes erp-orbit-rot { from { transform: translate(-50%,-50%) rotate(0deg);} to { transform: translate(-50%,-50%) rotate(360deg);} }
+        .erp-orbit { position: absolute; left: 50%; top: 50%; border-radius: 50%; border: 1px solid hsla(187,100%,50%,0.18); animation: erp-orbit-rot 40s linear infinite; pointer-events: none; }
+        .erp-orbit::before { content: ''; position: absolute; width: 6px; height: 6px; border-radius: 50%; background: ${CYAN}; box-shadow: 0 0 12px ${CYAN}; top: -3px; left: 50%; transform: translateX(-50%); }
+        .erp-orbit.pink { border-color: hsla(342,100%,59%,0.15); animation-duration: 55s; animation-direction: reverse; }
+        .erp-orbit.pink::before { background: ${PINK}; box-shadow: 0 0 12px ${PINK}; }
       `}</style>
+
 
       <ScrollProgress />
       <CursorDot />
       <StickyNav />
       <Rocket />
       <Particles />
+      <Starfield />
+      <MouseGlow />
       <div className="fixed inset-0 pointer-events-none -z-10" style={{
-        background: "radial-gradient(ellipse 60% 40% at 20% 10%, hsla(187,100%,50%,0.04), transparent 60%), radial-gradient(ellipse 50% 40% at 80% 80%, hsla(342,100%,59%,0.03), transparent 60%)"
+        background: "radial-gradient(ellipse 55% 40% at 18% 12%, hsla(187,100%,50%,0.10), transparent 65%), radial-gradient(ellipse 50% 40% at 82% 78%, hsla(342,100%,59%,0.09), transparent 65%), radial-gradient(ellipse 40% 30% at 50% 50%, hsla(270,80%,55%,0.05), transparent 70%)"
+      }} />
+      <div className="fixed inset-0 pointer-events-none -z-10 erp-nebula-drift" style={{
+        background: "radial-gradient(ellipse 30% 25% at 30% 70%, hsla(187,100%,50%,0.06), transparent 70%), radial-gradient(ellipse 30% 25% at 70% 30%, hsla(342,100%,59%,0.06), transparent 70%)"
       }} />
 
       {/* Back nav */}
@@ -572,7 +669,7 @@ export default function ErpRedesign() {
       </div>
 
       {/* HERO */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-10 pb-24" style={{ minHeight: "90vh" }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-8 pb-16">
         <div className="absolute inset-0 erp-dot-grid -z-10" />
         <div className="grid md:grid-cols-2 gap-10 items-center">
           <Reveal>
@@ -600,7 +697,12 @@ export default function ErpRedesign() {
           </Reveal>
 
           <Reveal delay={0.15}>
-            <div className="relative h-[460px] md:h-[520px]" style={{ transform: `translateY(${-heroOffset}px)` }}>
+            <div className="relative h-[420px] md:h-[480px]" style={{ transform: `translateY(${-heroOffset}px)` }}>
+              {/* Orbital rings */}
+              <div className="erp-orbit" style={{ width: 380, height: 380 }} aria-hidden />
+              <div className="erp-orbit pink" style={{ width: 520, height: 520, opacity: 0.6 }} aria-hidden />
+              <div className="erp-orbit" style={{ width: 260, height: 260, opacity: 0.7, animationDuration: "30s" }} aria-hidden />
+
               <div className="absolute top-4 left-2 w-[48%] erp-float-a">
                 <img src={loginAfter} alt="Login redesign mockup" loading="lazy" decoding="async"
                   className="w-full rounded-2xl border border-white/10"
@@ -631,7 +733,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* PROBLEM */}
-      <section id="problem" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="problem" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>01 — PROBLEM</SectionLabel>
           <H2 >The existing ERP held students back.</H2>
@@ -678,7 +780,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* GOAL */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>02 — GOAL</SectionLabel>
           <H2>The redesign objective.</H2>
@@ -706,7 +808,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* RESEARCH */}
-      <section id="research" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="research" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>03 — RESEARCH</SectionLabel>
           <H2>Research Findings</H2>
@@ -732,7 +834,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* VOICE OF STUDENTS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel color={PINK}>04 — VOICE OF STUDENTS</SectionLabel>
           <H2>In their own words.</H2>
@@ -754,7 +856,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* EXPECTATIONS VS GAPS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>05 — GAP ANALYSIS</SectionLabel>
           <H2>Expectations vs Platform Gaps</H2>
@@ -792,7 +894,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* PERSONAS */}
-      <section id="personas" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="personas" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>06 — USERS</SectionLabel>
           <H2>User Personas</H2>
@@ -846,7 +948,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* HEURISTIC */}
-      <section id="evaluation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="evaluation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>07 — EVALUATION</SectionLabel>
           <H2>Heuristic Evaluation</H2>
@@ -872,7 +974,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* USER FLOW */}
-      <section id="flow" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="flow" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>08 — USER FLOW</SectionLabel>
           <H2>Redesigned User Flow</H2>
@@ -908,7 +1010,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* PROCESS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>09 — PROCESS</SectionLabel>
           <H2>Design Process</H2>
@@ -946,7 +1048,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* PROTOTYPE */}
-      <section id="prototype" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="prototype" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>10 — PROTOTYPE</SectionLabel>
           <H2>See It In Motion.</H2>
@@ -966,7 +1068,9 @@ export default function ErpRedesign() {
                 src={prototypeVideo}
                 autoPlay loop muted playsInline controls
                 preload="metadata"
-                className="w-full h-auto block"
+                className="w-full h-auto block mx-auto"
+                style={{ maxHeight: 540, objectFit: "contain" }}
+
               />
             </div>
           </div>
@@ -991,7 +1095,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* BEFORE & AFTER — alternating */}
-      <section id="transformation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="transformation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>11 — TRANSFORMATION</SectionLabel>
           <H2>Before &amp; After</H2>
@@ -1009,7 +1113,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* ADDITIONAL REDESIGNS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel color={PINK}>12 — MORE SCREENS</SectionLabel>
           <H2>Additional Redesigned Screens</H2>
@@ -1034,7 +1138,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* LESSONS LEARNED */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>13 — REFLECTION</SectionLabel>
           <H2>Lessons Learned</H2>
@@ -1061,7 +1165,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* OUTCOMES */}
-      <section id="outcomes" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="outcomes" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>14 — OUTCOMES</SectionLabel>
           <H2>Key Outcomes</H2>
