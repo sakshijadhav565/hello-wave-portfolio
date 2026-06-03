@@ -165,11 +165,11 @@ function BigRocket({ size = 110, accent = CYAN, trailColor = "#22d3ee" }: { size
     <div style={{ width: size, height: size, position: "relative" }}>
       {/* trail */}
       <div className="erp-rocket-trail" style={{
-        position: "absolute", right: "100%", top: "50%", width: size * 2.4, height: 6,
+        position: "absolute", right: "100%", top: "50%", width: size * 2.6, height: 4,
         transform: "translateY(-50%)",
-        background: `linear-gradient(90deg, transparent, ${trailColor}66, ${trailColor})`,
-        filter: `blur(4px) drop-shadow(0 0 8px ${trailColor})`,
-        borderRadius: 999, opacity: 0.7,
+        background: `linear-gradient(90deg, transparent, ${trailColor}33, ${trailColor}99)`,
+        filter: `blur(6px) drop-shadow(0 0 10px ${trailColor}88)`,
+        borderRadius: 999, opacity: 0.35,
       }} />
       <svg viewBox="0 0 120 120" width={size} height={size} style={{ filter: `drop-shadow(0 0 14px ${accent}) drop-shadow(0 0 28px ${accent}55)` }}>
         {/* flame */}
@@ -203,28 +203,32 @@ function BigRocket({ size = 110, accent = CYAN, trailColor = "#22d3ee" }: { size
 function Rocket() {
   return (
     <>
-      <div className="fixed pointer-events-none z-0 erp-rocket-a" style={{ opacity: 0.55 }}>
-        <BigRocket size={120} accent={CYAN} trailColor="#22d3ee" />
+      <div className="fixed pointer-events-none z-0 erp-rocket-a" style={{ opacity: 0.4 }}>
+        <BigRocket size={90} accent={CYAN} trailColor="#22d3ee" />
       </div>
-      <div className="fixed pointer-events-none z-0 erp-rocket-b" style={{ opacity: 0.45 }}>
-        <BigRocket size={90} accent={PINK} trailColor="#f472b6" />
+      <div className="fixed pointer-events-none z-0 erp-rocket-b" style={{ opacity: 0.3 }}>
+        <BigRocket size={70} accent={PINK} trailColor="#f472b6" />
       </div>
       <style>{`
         @keyframes erp-rocket-path-a {
-          0%   { transform: translate(-15vw, 80vh) rotate(-18deg); }
-          50%  { transform: translate(55vw, 25vh) rotate(-22deg); }
-          100% { transform: translate(115vw, -10vh) rotate(-18deg); }
+          0%   { transform: translate(-12vw, 92vh) rotate(-30deg); }
+          25%  { transform: translate(-8vw, 60vh) rotate(-15deg); }
+          50%  { transform: translate(-6vw, 30vh) rotate(0deg); }
+          75%  { transform: translate(-4vw, 10vh) rotate(15deg); }
+          100% { transform: translate(-2vw, -12vh) rotate(30deg); }
         }
         @keyframes erp-rocket-path-b {
-          0%   { transform: translate(110vw, 15vh) rotate(160deg); }
-          50%  { transform: translate(45vw, 65vh) rotate(165deg); }
-          100% { transform: translate(-20vw, 105vh) rotate(160deg); }
+          0%   { transform: translate(102vw, -8vh) rotate(150deg); }
+          25%  { transform: translate(100vw, 25vh) rotate(165deg); }
+          50%  { transform: translate(98vw, 55vh) rotate(180deg); }
+          75%  { transform: translate(100vw, 80vh) rotate(195deg); }
+          100% { transform: translate(102vw, 108vh) rotate(210deg); }
         }
-        .erp-rocket-a { animation: erp-rocket-path-a 55s linear infinite; }
-        .erp-rocket-b { animation: erp-rocket-path-b 70s linear infinite; animation-delay: -25s; }
+        .erp-rocket-a { animation: erp-rocket-path-a 70s ease-in-out infinite; }
+        .erp-rocket-b { animation: erp-rocket-path-b 85s ease-in-out infinite; animation-delay: -30s; }
         @keyframes erp-flame-flicker { 0%,100% { opacity: 0.7; transform: scaleX(1);} 50% { opacity: 1; transform: scaleX(1.15);} }
         .erp-rocket-flame { transform-origin: 46px 60px; animation: erp-flame-flicker 0.25s ease-in-out infinite; }
-        .erp-rocket-trail { animation: erp-flame-flicker 0.4s ease-in-out infinite; }
+        .erp-rocket-trail { animation: erp-flame-flicker 0.6s ease-in-out infinite; }
       `}</style>
     </>
   );
@@ -464,12 +468,38 @@ function BAComparison({ s, i, reverse }: { s: any; i: number; reverse: boolean }
 export default function ErpRedesign() {
   const navigate = useNavigate();
 
+  // Always start at top on mount; disable browser scroll restoration for this page
+  useEffect(() => {
+    const prev = window.history.scrollRestoration;
+    if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+    return () => { if ("scrollRestoration" in window.history) window.history.scrollRestoration = prev; };
+  }, []);
+
   const [scrollY, setScrollY] = useState(0);
+  const heroDevicesRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Mouse-responsive 3D tilt on hero devices
+  useEffect(() => {
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+    const el = heroDevicesRef.current; if (!el) return;
+    const onMove = (e: MouseEvent) => {
+      const r = el.getBoundingClientRect();
+      const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      const dx = (e.clientX - cx) / window.innerWidth;
+      const dy = (e.clientY - cy) / window.innerHeight;
+      el.style.setProperty("--ry", `${dx * 8}deg`);
+      el.style.setProperty("--rx", `${-dy * 6}deg`);
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
 
   const heroMetrics = [
     { value: "80+", label: "Students Surveyed" },
@@ -617,13 +647,11 @@ export default function ErpRedesign() {
         }
         .erp-anim-underline {
           background-image: linear-gradient(90deg, ${CYAN}, hsl(210,100%,60%), ${CYAN});
-          background-size: 200% 100%;
-          background-repeat: repeat-x;
+          background-size: 200% 2px;
+          background-repeat: no-repeat;
           background-position: 0 100%;
-          background-size: 200% 3px;
-          padding-bottom: 4px;
+          padding-bottom: 6px;
           animation: erp-underline-flow 3s linear infinite;
-          background-clip: padding-box;
         }
         @keyframes erp-dot-drift { from { background-position: 0 0; } to { background-position: 40px 40px; } }
         .erp-dot-grid {
@@ -669,13 +697,20 @@ export default function ErpRedesign() {
       </div>
 
       {/* HERO */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-8 pb-16">
+      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-6 pb-10">
         <div className="absolute inset-0 erp-dot-grid -z-10" />
         <div className="grid md:grid-cols-2 gap-10 items-center">
           <Reveal>
+
             <SectionLabel color={PINK}>UI / UX CASE STUDY</SectionLabel>
-            <h1 className="font-heading font-bold tracking-tight text-white mt-5 mb-5" style={{ fontSize: "clamp(40px, 5.5vw, 64px)", lineHeight: 1.05 }}>
-              ERP Portal <span className="erp-anim-underline" style={{ color: CYAN }}>Redesign</span>
+            <h1
+              className="font-heading font-bold tracking-tight text-white mt-5 mb-5 pb-2"
+              style={{ fontSize: "clamp(40px, 5.5vw, 64px)", lineHeight: 1.15, overflow: "visible" }}
+            >
+              ERP Portal{" "}
+              <span className="erp-anim-underline inline-block pb-1" style={{ color: CYAN, lineHeight: 1.2 }}>
+                Redesign
+              </span>
             </h1>
             <p className="text-white/70 text-base md:text-lg leading-[1.75] max-w-xl mb-8">
               A research-driven redesign of an outdated student ERP into a modern,
@@ -697,21 +732,40 @@ export default function ErpRedesign() {
           </Reveal>
 
           <Reveal delay={0.15}>
-            <div className="relative h-[420px] md:h-[480px]" style={{ transform: `translateY(${-heroOffset}px)` }}>
+            <div
+              ref={heroDevicesRef}
+              className="relative h-[420px] md:h-[480px]"
+              style={{
+                transform: `translateY(${-heroOffset}px)`,
+                perspective: "1200px",
+              }}
+            >
+              {/* Premium cyan glow behind phones */}
+              <div className="absolute inset-0 pointer-events-none" style={{
+                background: "radial-gradient(ellipse 60% 55% at 50% 55%, hsla(187,100%,50%,0.22), transparent 70%)",
+                filter: "blur(20px)",
+              }} aria-hidden />
+
               {/* Orbital rings */}
               <div className="erp-orbit" style={{ width: 380, height: 380 }} aria-hidden />
               <div className="erp-orbit pink" style={{ width: 520, height: 520, opacity: 0.6 }} aria-hidden />
               <div className="erp-orbit" style={{ width: 260, height: 260, opacity: 0.7, animationDuration: "30s" }} aria-hidden />
 
-              <div className="absolute top-4 left-2 w-[48%] erp-float-a">
+              <div
+                className="absolute top-4 left-2 w-[48%] erp-float-a"
+                style={{ transform: "rotateY(var(--ry,0)) rotateX(var(--rx,0))", transformStyle: "preserve-3d", transition: "transform 0.25s ease-out" }}
+              >
                 <img src={loginAfter} alt="Login redesign mockup" loading="lazy" decoding="async"
                   className="w-full rounded-2xl border border-white/10"
-                  style={{ boxShadow: "0 18px 50px rgba(0,0,0,0.55), 0 0 22px hsla(187,100%,50%,0.10)" }} />
+                  style={{ boxShadow: "0 18px 50px rgba(0,0,0,0.55), 0 0 40px hsla(187,100%,50%,0.28)" }} />
               </div>
-              <div className="absolute bottom-0 right-0 w-[55%] erp-float-b">
+              <div
+                className="absolute bottom-0 right-0 w-[55%] erp-float-b"
+                style={{ transform: "rotateY(calc(var(--ry,0) * -1)) rotateX(var(--rx,0))", transformStyle: "preserve-3d", transition: "transform 0.25s ease-out" }}
+              >
                 <img src={homeAfter} alt="Home redesign mockup" loading="lazy" decoding="async"
                   className="w-full rounded-2xl border border-white/10"
-                  style={{ boxShadow: "0 22px 60px rgba(0,0,0,0.6), 0 0 26px hsla(342,100%,59%,0.10)" }} />
+                  style={{ boxShadow: "0 22px 60px rgba(0,0,0,0.6), 0 0 44px hsla(187,100%,50%,0.22), 0 0 30px hsla(342,100%,59%,0.14)" }} />
               </div>
             </div>
           </Reveal>
@@ -719,7 +773,8 @@ export default function ErpRedesign() {
 
         {/* Hero metrics row — magnetic */}
         <Reveal delay={0.25}>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-14">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-10">
+
             {heroMetrics.map((m, i) => (
               <MagneticCard key={m.label} className={`${card} p-5 text-center`} style={{ transitionDelay: `${i * 80}ms` }}>
                 <div className="font-heading font-bold mb-1" style={{ fontSize: "clamp(24px, 2.8vw, 32px)", color: CYAN, textShadow: "0 0 12px hsla(187,100%,50%,0.3)" }}>
@@ -733,7 +788,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* PROBLEM */}
-      <section id="problem" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
+      <section id="problem" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>01 — PROBLEM</SectionLabel>
           <H2 >The existing ERP held students back.</H2>
@@ -780,7 +835,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* GOAL */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>02 — GOAL</SectionLabel>
           <H2>The redesign objective.</H2>
@@ -808,7 +863,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* RESEARCH */}
-      <section id="research" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
+      <section id="research" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>03 — RESEARCH</SectionLabel>
           <H2>Research Findings</H2>
@@ -834,7 +889,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* VOICE OF STUDENTS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel color={PINK}>04 — VOICE OF STUDENTS</SectionLabel>
           <H2>In their own words.</H2>
@@ -856,7 +911,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* EXPECTATIONS VS GAPS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>05 — GAP ANALYSIS</SectionLabel>
           <H2>Expectations vs Platform Gaps</H2>
@@ -894,7 +949,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* PERSONAS */}
-      <section id="personas" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
+      <section id="personas" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>06 — USERS</SectionLabel>
           <H2>User Personas</H2>
@@ -948,7 +1003,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* HEURISTIC */}
-      <section id="evaluation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
+      <section id="evaluation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>07 — EVALUATION</SectionLabel>
           <H2>Heuristic Evaluation</H2>
@@ -974,7 +1029,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* USER FLOW */}
-      <section id="flow" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
+      <section id="flow" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>08 — USER FLOW</SectionLabel>
           <H2>Redesigned User Flow</H2>
@@ -1010,7 +1065,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* PROCESS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>09 — PROCESS</SectionLabel>
           <H2>Design Process</H2>
@@ -1048,7 +1103,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* PROTOTYPE */}
-      <section id="prototype" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
+      <section id="prototype" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>10 — PROTOTYPE</SectionLabel>
           <H2>See It In Motion.</H2>
@@ -1069,7 +1124,7 @@ export default function ErpRedesign() {
                 autoPlay loop muted playsInline controls
                 preload="metadata"
                 className="w-full h-auto block mx-auto"
-                style={{ maxHeight: 540, objectFit: "contain" }}
+                style={{ maxHeight: 500, objectFit: "contain" }}
 
               />
             </div>
@@ -1095,7 +1150,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* BEFORE & AFTER — alternating */}
-      <section id="transformation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
+      <section id="transformation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>11 — TRANSFORMATION</SectionLabel>
           <H2>Before &amp; After</H2>
@@ -1113,7 +1168,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* ADDITIONAL REDESIGNS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel color={PINK}>12 — MORE SCREENS</SectionLabel>
           <H2>Additional Redesigned Screens</H2>
@@ -1138,7 +1193,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* LESSONS LEARNED */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>13 — REFLECTION</SectionLabel>
           <H2>Lessons Learned</H2>
@@ -1165,7 +1220,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* OUTCOMES */}
-      <section id="outcomes" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
+      <section id="outcomes" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>14 — OUTCOMES</SectionLabel>
           <H2>Key Outcomes</H2>
