@@ -203,28 +203,32 @@ function BigRocket({ size = 110, accent = CYAN, trailColor = "#22d3ee" }: { size
 function Rocket() {
   return (
     <>
-      <div className="fixed pointer-events-none z-0 erp-rocket-a" style={{ opacity: 0.55 }}>
-        <BigRocket size={120} accent={CYAN} trailColor="#22d3ee" />
+      <div className="fixed pointer-events-none z-0 erp-rocket-a" style={{ opacity: 0.4 }}>
+        <BigRocket size={90} accent={CYAN} trailColor="#22d3ee" />
       </div>
-      <div className="fixed pointer-events-none z-0 erp-rocket-b" style={{ opacity: 0.45 }}>
-        <BigRocket size={90} accent={PINK} trailColor="#f472b6" />
+      <div className="fixed pointer-events-none z-0 erp-rocket-b" style={{ opacity: 0.3 }}>
+        <BigRocket size={70} accent={PINK} trailColor="#f472b6" />
       </div>
       <style>{`
         @keyframes erp-rocket-path-a {
-          0%   { transform: translate(-15vw, 80vh) rotate(-18deg); }
-          50%  { transform: translate(55vw, 25vh) rotate(-22deg); }
-          100% { transform: translate(115vw, -10vh) rotate(-18deg); }
+          0%   { transform: translate(-12vw, 92vh) rotate(-30deg); }
+          25%  { transform: translate(-8vw, 60vh) rotate(-15deg); }
+          50%  { transform: translate(-6vw, 30vh) rotate(0deg); }
+          75%  { transform: translate(-4vw, 10vh) rotate(15deg); }
+          100% { transform: translate(-2vw, -12vh) rotate(30deg); }
         }
         @keyframes erp-rocket-path-b {
-          0%   { transform: translate(110vw, 15vh) rotate(160deg); }
-          50%  { transform: translate(45vw, 65vh) rotate(165deg); }
-          100% { transform: translate(-20vw, 105vh) rotate(160deg); }
+          0%   { transform: translate(102vw, -8vh) rotate(150deg); }
+          25%  { transform: translate(100vw, 25vh) rotate(165deg); }
+          50%  { transform: translate(98vw, 55vh) rotate(180deg); }
+          75%  { transform: translate(100vw, 80vh) rotate(195deg); }
+          100% { transform: translate(102vw, 108vh) rotate(210deg); }
         }
-        .erp-rocket-a { animation: erp-rocket-path-a 55s linear infinite; }
-        .erp-rocket-b { animation: erp-rocket-path-b 70s linear infinite; animation-delay: -25s; }
+        .erp-rocket-a { animation: erp-rocket-path-a 70s ease-in-out infinite; }
+        .erp-rocket-b { animation: erp-rocket-path-b 85s ease-in-out infinite; animation-delay: -30s; }
         @keyframes erp-flame-flicker { 0%,100% { opacity: 0.7; transform: scaleX(1);} 50% { opacity: 1; transform: scaleX(1.15);} }
         .erp-rocket-flame { transform-origin: 46px 60px; animation: erp-flame-flicker 0.25s ease-in-out infinite; }
-        .erp-rocket-trail { animation: erp-flame-flicker 0.4s ease-in-out infinite; }
+        .erp-rocket-trail { animation: erp-flame-flicker 0.6s ease-in-out infinite; }
       `}</style>
     </>
   );
