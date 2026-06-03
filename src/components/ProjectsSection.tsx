@@ -21,13 +21,13 @@ interface Project {
 
 const projects: Project[] = [
   {
-    title: "Stock Price Prediction",
-    tag: "AI / Machine Learning",
-    tagColor: "cyan",
+    title: "ERP Portal Redesign",
+    tag: "UI / UX Design",
+    tagColor: "pink",
     description:
-      "Built a stock price prediction system using LSTM (Recurrent Neural Network) trained on time-series data. The model learns patterns from historical stock data and predicts future trends using real-time API inputs.",
-    phase: "2024 – Learning Phase",
-    techStack: ["Python", "LSTM", "TensorFlow", "Pandas"],
+      "Redesigned a college ERP platform through UX research, heuristic evaluation, user testing, and mobile-first UI redesigns to improve usability, accessibility, and academic workflows.",
+    phase: "2025 – Building Phase",
+    techStack: ["Figma", "UX Research", "UI Design", "Wireframing", "Heuristic Evaluation"],
   },
   {
     title: "Movies Time",
@@ -39,33 +39,16 @@ const projects: Project[] = [
     techStack: ["React", "Framer Motion", "CSS", "MovieDB API"],
   },
   {
-    title: "Portfolio V1",
-    tag: "Web Development",
-    tagColor: "pink",
-    description:
-      "My first developer portfolio showcasing projects, skills, and interactive UI components. Focused on responsive design and clean layout.",
-    phase: "2025 – Building Phase",
-    techStack: ["React", "Tailwind", "TypeScript"],
-  },
-  {
-    title: "ERP Portal Redesign",
-    tag: "UI / UX Design",
-    tagColor: "pink",
-    description:
-      "Redesigned a college ERP platform through UX research, heuristic evaluation, user testing, and mobile-first UI redesigns to improve usability, accessibility, and academic workflows.",
-    phase: "2025 – Building Phase",
-    techStack: ["Figma", "UX Research", "UI Design", "Wireframing", "Heuristic Evaluation"],
-  },
-  {
-    title: "AI Chatbot",
-    tag: "AI / NLP",
+    title: "Stock Price Prediction",
+    tag: "AI / Machine Learning",
     tagColor: "cyan",
     description:
-      "A conversational AI chatbot capable of understanding user queries and generating intelligent responses using NLP techniques.",
-    phase: "2025 – Building Phase",
-    techStack: ["Python", "NLP", "Flask", "Transformers"],
+      "Built a stock price prediction system using LSTM (Recurrent Neural Network) trained on time-series data. The model learns patterns from historical stock data and predicts future trends using real-time API inputs.",
+    phase: "2024 – Learning Phase",
+    techStack: ["Python", "LSTM", "TensorFlow", "Pandas"],
   },
 ];
+
 
 /* ── Scroll visibility hook ── */
 function useScrollReveal(threshold = 0.2) {
