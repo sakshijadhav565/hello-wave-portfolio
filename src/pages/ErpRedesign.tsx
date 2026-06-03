@@ -636,7 +636,13 @@ export default function ErpRedesign() {
         @keyframes erpFloatB { 0%,100%{transform:translateY(0) rotate(2deg)} 50%{transform:translateY(-16px) rotate(3deg)} }
         .erp-float-a { animation: erpFloatA 5.5s ease-in-out infinite; }
         .erp-float-b { animation: erpFloatB 6.5s ease-in-out infinite; animation-delay: 0.6s; }
-      `}</style>
+        @keyframes erp-nebula-drift { 0%,100% { transform: translate3d(0,0,0);} 50% { transform: translate3d(-2%, 2%, 0);} }
+        .erp-nebula-drift { animation: erp-nebula-drift 22s ease-in-out infinite; }
+        @keyframes erp-orbit-rot { from { transform: translate(-50%,-50%) rotate(0deg);} to { transform: translate(-50%,-50%) rotate(360deg);} }
+        .erp-orbit { position: absolute; left: 50%; top: 50%; border-radius: 50%; border: 1px solid hsla(187,100%,50%,0.18); animation: erp-orbit-rot 40s linear infinite; pointer-events: none; }
+        .erp-orbit::before { content: ''; position: absolute; width: 6px; height: 6px; border-radius: 50%; background: ${CYAN}; box-shadow: 0 0 12px ${CYAN}; top: -3px; left: 50%; transform: translateX(-50%); }
+        .erp-orbit.pink { border-color: hsla(342,100%,59%,0.15); animation-duration: 55s; animation-direction: reverse; }
+        .erp-orbit.pink::before { background: ${PINK}; box-shadow: 0 0 12px ${PINK}; }
 
       <ScrollProgress />
       <CursorDot />
