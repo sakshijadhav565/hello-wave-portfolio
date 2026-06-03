@@ -165,11 +165,11 @@ function BigRocket({ size = 110, accent = CYAN, trailColor = "#22d3ee" }: { size
     <div style={{ width: size, height: size, position: "relative" }}>
       {/* trail */}
       <div className="erp-rocket-trail" style={{
-        position: "absolute", right: "100%", top: "50%", width: size * 2.4, height: 6,
+        position: "absolute", right: "100%", top: "50%", width: size * 2.6, height: 4,
         transform: "translateY(-50%)",
-        background: `linear-gradient(90deg, transparent, ${trailColor}66, ${trailColor})`,
-        filter: `blur(4px) drop-shadow(0 0 8px ${trailColor})`,
-        borderRadius: 999, opacity: 0.7,
+        background: `linear-gradient(90deg, transparent, ${trailColor}33, ${trailColor}99)`,
+        filter: `blur(6px) drop-shadow(0 0 10px ${trailColor}88)`,
+        borderRadius: 999, opacity: 0.35,
       }} />
       <svg viewBox="0 0 120 120" width={size} height={size} style={{ filter: `drop-shadow(0 0 14px ${accent}) drop-shadow(0 0 28px ${accent}55)` }}>
         {/* flame */}
