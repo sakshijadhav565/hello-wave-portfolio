@@ -631,7 +631,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* PROBLEM */}
-      <section id="problem" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="problem" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>01 — PROBLEM</SectionLabel>
           <H2 >The existing ERP held students back.</H2>
@@ -678,7 +678,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* GOAL */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>02 — GOAL</SectionLabel>
           <H2>The redesign objective.</H2>
@@ -706,7 +706,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* RESEARCH */}
-      <section id="research" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="research" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>03 — RESEARCH</SectionLabel>
           <H2>Research Findings</H2>
@@ -732,7 +732,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* VOICE OF STUDENTS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel color={PINK}>04 — VOICE OF STUDENTS</SectionLabel>
           <H2>In their own words.</H2>
@@ -754,7 +754,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* EXPECTATIONS VS GAPS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>05 — GAP ANALYSIS</SectionLabel>
           <H2>Expectations vs Platform Gaps</H2>
@@ -792,7 +792,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* PERSONAS */}
-      <section id="personas" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="personas" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>06 — USERS</SectionLabel>
           <H2>User Personas</H2>
@@ -846,7 +846,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* HEURISTIC */}
-      <section id="evaluation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="evaluation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>07 — EVALUATION</SectionLabel>
           <H2>Heuristic Evaluation</H2>
@@ -872,7 +872,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* USER FLOW */}
-      <section id="flow" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="flow" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>08 — USER FLOW</SectionLabel>
           <H2>Redesigned User Flow</H2>
@@ -908,7 +908,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* PROCESS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>09 — PROCESS</SectionLabel>
           <H2>Design Process</H2>
@@ -946,7 +946,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* PROTOTYPE */}
-      <section id="prototype" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="prototype" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>10 — PROTOTYPE</SectionLabel>
           <H2>See It In Motion.</H2>
@@ -991,7 +991,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* BEFORE & AFTER — alternating */}
-      <section id="transformation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="transformation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>11 — TRANSFORMATION</SectionLabel>
           <H2>Before &amp; After</H2>
@@ -1009,7 +1009,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* ADDITIONAL REDESIGNS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel color={PINK}>12 — MORE SCREENS</SectionLabel>
           <H2>Additional Redesigned Screens</H2>
@@ -1034,7 +1034,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* LESSONS LEARNED */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>13 — REFLECTION</SectionLabel>
           <H2>Lessons Learned</H2>
@@ -1061,7 +1061,7 @@ export default function ErpRedesign() {
       </section>
 
       {/* OUTCOMES */}
-      <section id="outcomes" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 120, paddingBottom: 120 }}>
+      <section id="outcomes" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 72, paddingBottom: 72 }}>
         <Reveal>
           <SectionLabel>14 — OUTCOMES</SectionLabel>
           <H2>Key Outcomes</H2>
