@@ -647,13 +647,11 @@ export default function ErpRedesign() {
         }
         .erp-anim-underline {
           background-image: linear-gradient(90deg, ${CYAN}, hsl(210,100%,60%), ${CYAN});
-          background-size: 200% 100%;
-          background-repeat: repeat-x;
+          background-size: 200% 2px;
+          background-repeat: no-repeat;
           background-position: 0 100%;
-          background-size: 200% 3px;
-          padding-bottom: 4px;
+          padding-bottom: 6px;
           animation: erp-underline-flow 3s linear infinite;
-          background-clip: padding-box;
         }
         @keyframes erp-dot-drift { from { background-position: 0 0; } to { background-position: 40px 40px; } }
         .erp-dot-grid {
