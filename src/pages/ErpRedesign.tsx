@@ -643,6 +643,8 @@ export default function ErpRedesign() {
         .erp-orbit::before { content: ''; position: absolute; width: 6px; height: 6px; border-radius: 50%; background: ${CYAN}; box-shadow: 0 0 12px ${CYAN}; top: -3px; left: 50%; transform: translateX(-50%); }
         .erp-orbit.pink { border-color: hsla(342,100%,59%,0.15); animation-duration: 55s; animation-direction: reverse; }
         .erp-orbit.pink::before { background: ${PINK}; box-shadow: 0 0 12px ${PINK}; }
+      `}</style>
+
 
       <ScrollProgress />
       <CursorDot />
