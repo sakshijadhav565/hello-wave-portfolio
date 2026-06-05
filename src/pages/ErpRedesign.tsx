@@ -1241,75 +1241,106 @@ export default function ErpRedesign() {
       <section id="flow" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>08 — USER FLOW</SectionLabel>
-          <H2>Redesigned User Flow</H2>
+          <H2>Previous Flow vs Redesigned Flow</H2>
           <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">A linear, mobile-friendly flow that surfaces the most-used academic journeys first and removes hidden detours.</p>
         </Reveal>
+
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
+          <Reveal>
+            <div className="rounded-2xl p-5 h-full"
+              style={{ background: "linear-gradient(135deg, hsla(0,85%,60%,0.06), hsla(0,0%,4%,0.6))", border: "1px solid hsla(0,85%,60%,0.25)" }}>
+              <div className="font-mono text-[10px] tracking-widest mb-3" style={{ color: "hsl(0,85%,60%)" }}>PREVIOUS FLOW · 7 STEPS</div>
+              <div className="flex flex-wrap items-center gap-2">
+                {["Login", "Home", "Menu", "Submenu", "Module", "Subpage", "Action"].map((s, i, arr) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <div className="px-3 py-1.5 rounded-md text-xs font-medium"
+                      style={{ background: "hsla(0,85%,60%,0.08)", border: "1px solid hsla(0,85%,60%,0.3)", color: "hsl(0,85%,60%)" }}>{s}</div>
+                    {i < arr.length - 1 && <ArrowRight size={12} className="text-white/30" />}
+                  </div>
+                ))}
+              </div>
+              <p className="text-white/55 text-xs mt-4 leading-[1.7]">Deep nesting, unclear labels, and hidden modules required trial-and-error to complete daily academic tasks.</p>
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <div className="rounded-2xl p-5 h-full relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, hsla(187,100%,50%,0.08), hsla(0,0%,4%,0.6))", border: "1px solid hsla(187,100%,50%,0.35)", boxShadow: "0 0 30px hsla(187,100%,50%,0.12)" }}>
+              <div className="font-mono text-[10px] tracking-widest mb-3" style={{ color: CYAN }}>REDESIGNED FLOW · 3 STEPS</div>
+              <div className="flex flex-wrap items-center gap-2">
+                {["Login", "Home", "Action"].map((s, i, arr) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <div className="px-3 py-1.5 rounded-md text-xs font-medium relative"
+                      style={{ background: "hsla(187,100%,50%,0.1)", border: `1px solid ${CYAN}`, color: CYAN, boxShadow: `0 0 12px ${CYAN}55` }}>{s}</div>
+                    {i < arr.length - 1 && <ArrowRight size={14} style={{ color: CYAN, filter: `drop-shadow(0 0 6px ${CYAN})` }} />}
+                  </div>
+                ))}
+              </div>
+              <p className="text-white/70 text-xs mt-4 leading-[1.7]">Flattened structure with priority cards on Home — students reach key actions in a fraction of the taps.</p>
+            </div>
+          </Reveal>
+        </div>
+
         <div className={`${card} p-6 md:p-8`}>
+          <div className="font-mono text-[10px] tracking-widest text-white/40 mb-4">FULL REDESIGNED NAVIGATION FLOW</div>
           <div className="flex flex-wrap items-center gap-2 md:gap-3 justify-center">
             {userFlow.map((step, i) => (
               <div key={step} className="flex items-center gap-2 md:gap-3">
-                <div className="px-3 md:px-4 py-2 rounded-lg text-sm font-medium"
+                <div className="px-3 md:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105"
                   style={{
                     background: i % 2 === 0 ? "hsla(187,100%,50%,0.08)" : "hsla(342,100%,59%,0.08)",
                     border: `1px solid ${i % 2 === 0 ? "hsla(187,100%,50%,0.3)" : "hsla(342,100%,59%,0.3)"}`,
                     color: i % 2 === 0 ? CYAN : PINK,
+                    boxShadow: `0 0 12px ${i % 2 === 0 ? "hsla(187,100%,50%,0.2)" : "hsla(342,100%,59%,0.2)"}`,
                   }}>{step}</div>
                 {i < userFlow.length - 1 && <ArrowRight size={14} className="text-white/30" />}
-              </div>
-            ))}
-          </div>
-          <div className="grid md:grid-cols-3 gap-4 mt-8">
-            {[
-              ["Why Redesigned", "The legacy flow forced students through deep, unclear menus to reach daily-use modules."],
-              ["Pain Points Addressed", "Hidden academics, weak attendance access, scattered exam information."],
-              ["Navigation Simplified", "Flattened structure, predictable order, and shortcut surfacing on Home."],
-            ].map(([t, d]) => (
-              <div key={t} className="rounded-lg p-4 border border-white/10 bg-white/[0.02] erp-card">
-                <div className="font-mono text-[10px] tracking-widest text-white/40 mb-2">{t.toUpperCase()}</div>
-                <p className="text-white/70 text-sm leading-[1.75]">{d}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
+      <Transition text="Six structured stages turned insights into a delivered redesign." accent={CYAN} />
+
       {/* PROCESS */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>09 — PROCESS</SectionLabel>
           <H2>Design Process</H2>
-          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Six structured stages, from raw research to a delivered redesign.</p>
+          <p className="text-white/60 max-w-2xl mb-10 leading-[1.75]">Six structured stages, from raw research to a delivered redesign.</p>
         </Reveal>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {process.map((s, i) => {
-            const Icon = s.icon;
-            const color = i % 2 === 0 ? CYAN : PINK;
-            return (
-              <Reveal key={s.label} delay={i * 0.06}>
-                <div className={`${card} p-5 h-full`}>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center"
-                      style={{ background: "hsla(0,0%,4%,0.9)", border: `1px solid ${color}55` }}>
-                      <Icon size={18} style={{ color }} />
+
+        <div className="relative">
+          <div className="hidden md:block absolute top-7 left-[8%] right-[8%] h-px"
+            style={{ background: `linear-gradient(90deg, ${CYAN}, ${PINK}, ${CYAN})`, boxShadow: `0 0 8px ${CYAN}66` }} />
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+            {process.map((s, i) => {
+              const Icon = s.icon;
+              const color = i % 2 === 0 ? CYAN : PINK;
+              return (
+                <Reveal key={s.label} delay={i * 0.08}>
+                  <div className="text-center">
+                    <div className="relative mx-auto w-14 h-14 rounded-full flex items-center justify-center mb-3 transition-transform duration-300 hover:scale-110"
+                      style={{ background: "hsla(0,0%,2%,0.95)", border: `2px solid ${color}`, boxShadow: `0 0 24px ${color}66` }}>
+                      <Icon size={20} style={{ color }} />
                     </div>
-                    <div>
-                      <div className="font-mono text-[10px] tracking-widest text-white/40">0{i + 1}</div>
-                      <div className="text-white font-semibold text-sm font-heading">{s.label}</div>
-                    </div>
+                    <div className="font-mono text-[9px] tracking-widest text-white/40 mb-1">STAGE 0{i + 1}</div>
+                    <div className="text-white font-semibold text-sm font-heading mb-2">{s.label}</div>
+                    <ul className="space-y-1 text-left">
+                      {s.items.map((it) => (
+                        <li key={it} className="text-white/60 text-xs flex gap-1.5 leading-[1.6]">
+                          <span style={{ color }} className="mt-0.5">·</span>{it}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <ul className="space-y-1.5">
-                    {s.items.map((it) => (
-                      <li key={it} className="text-white/65 text-sm flex gap-2 leading-[1.75]">
-                        <span style={{ color }} className="mt-1">·</span>{it}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Reveal>
-            );
-          })}
+                </Reveal>
+              );
+            })}
+          </div>
         </div>
       </section>
+
+      <Transition text="Now see those decisions come alive in the prototype." accent={PINK} />
 
       {/* PROTOTYPE */}
       <section id="prototype" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
