@@ -1170,31 +1170,72 @@ export default function ErpRedesign() {
         </div>
       </section>
 
+      <Transition text="Where exactly was the system failing? A heuristic audit revealed the breakdown points." accent={CYAN} />
+
       {/* HEURISTIC */}
       <section id="evaluation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>07 — EVALUATION</SectionLabel>
           <H2>Heuristic Evaluation</H2>
-          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Scored against Nielsen's 10 usability heuristics with severity tags — every dimension scored below 60%.</p>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Scored against Nielsen's 10 usability heuristics, grouped by severity. Every dimension scored below 60%.</p>
         </Reveal>
-        <div className={`${card} p-6`}>
-          <div className="grid md:grid-cols-2 gap-x-10 gap-y-5">
-            {heuristics.map((h) => (
-              <div key={h.name}>
-                <div className="flex justify-between items-baseline mb-1.5 gap-3">
-                  <span className="text-white/85 text-sm font-medium">{h.name}</span>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <SeverityBadge level={h.severity} />
-                    <span className="font-mono text-[11px] font-medium" style={{ color: h.score < 40 ? PINK : CYAN }}>{h.score}%</span>
-                  </div>
+
+        {/* Top 3 UX problems */}
+        <Reveal delay={0.05}>
+          <div className="mb-6 rounded-2xl p-6 relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, hsla(0,90%,62%,0.08), hsla(0,0%,4%,0.6))",
+              border: "1px solid hsla(0,90%,62%,0.3)",
+              boxShadow: "0 10px 40px hsla(0,90%,62%,0.1)",
+            }}>
+            <div className="flex items-center gap-2 mb-4">
+              <AlertTriangle size={18} style={{ color: "hsl(0,90%,62%)" }} />
+              <div className="font-mono text-[11px] tracking-widest" style={{ color: "hsl(0,90%,62%)" }}>TOP 3 UX PROBLEMS DISCOVERED</div>
+            </div>
+            <div className="grid md:grid-cols-3 gap-4">
+              {heuristics.filter(h => h.severity === "Critical").slice(0, 3).map((h, i) => (
+                <div key={h.name} className="rounded-xl p-4 bg-black/30 border border-white/10">
+                  <div className="font-heading font-bold mb-2" style={{ fontSize: 32, color: "hsl(0,90%,62%)", textShadow: "0 0 14px hsla(0,90%,62%,0.5)" }}>#{i + 1}</div>
+                  <div className="text-white font-semibold mb-1 text-sm font-heading">{h.name}</div>
+                  <p className="text-white/60 text-xs leading-[1.7]">{h.desc}</p>
                 </div>
-                <HeuristicBar score={h.score} color={h.score < 40 ? PINK : CYAN} />
-                <p className="text-white/55 text-xs leading-[1.75]">{h.desc}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        </Reveal>
+
+        {/* Grouped severity heatmap */}
+        {(["Critical", "Major", "Moderate"] as const).map((group) => {
+          const items = heuristics.filter(h => h.severity === group);
+          if (!items.length) return null;
+          const groupColor = group === "Critical" ? "hsl(0,90%,62%)" : group === "Major" ? PINK : "hsl(38,100%,60%)";
+          return (
+            <Reveal key={group} delay={0.08}>
+              <div className="mb-4">
+                <div className="flex items-center gap-3 mb-3 px-2">
+                  <SeverityBadge level={group} />
+                  <div className="h-px flex-1" style={{ background: `linear-gradient(90deg, ${groupColor}66, transparent)` }} />
+                  <span className="font-mono text-[10px] text-white/40">{items.length} ISSUE{items.length > 1 ? "S" : ""}</span>
+                </div>
+                <div className="grid md:grid-cols-2 gap-3">
+                  {items.map((h) => (
+                    <div key={h.name} className={`${card} p-4`}>
+                      <div className="flex justify-between items-baseline mb-1.5 gap-3">
+                        <span className="text-white/90 text-sm font-medium">{h.name}</span>
+                        <span className="font-mono text-[11px] font-medium" style={{ color: groupColor }}>{h.score}%</span>
+                      </div>
+                      <HeuristicBar score={h.score} color={h.score < 40 ? PINK : CYAN} />
+                      <p className="text-white/55 text-xs leading-[1.7]">{h.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+          );
+        })}
       </section>
+
+      <Transition text="Knowing the breakdown points, we reimagined how students actually move through the portal." accent={PINK} />
 
       {/* USER FLOW */}
       <section id="flow" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
