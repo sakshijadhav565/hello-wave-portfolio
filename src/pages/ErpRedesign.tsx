@@ -1394,7 +1394,28 @@ export default function ErpRedesign() {
         <Reveal>
           <SectionLabel>11 — TRANSFORMATION</SectionLabel>
           <H2>Before &amp; After</H2>
-          <p className="text-white/60 max-w-2xl mb-12 leading-[1.75]">Five core screens redesigned end-to-end. Each pairs research insight, design decision, and outcome.</p>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Five core screens redesigned end-to-end. Drag the slider on the featured screen to compare — each pairs research insight, design decision, and outcome.</p>
+        </Reveal>
+
+        {/* Featured interactive slider */}
+        <Reveal delay={0.05}>
+          <div className="mb-10 rounded-3xl p-6 md:p-8 relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, hsla(187,100%,50%,0.05), hsla(0,0%,3%,0.7))",
+              border: "1px solid hsla(187,100%,50%,0.25)",
+              boxShadow: "0 24px 60px rgba(0,0,0,0.5), 0 0 30px hsla(187,100%,50%,0.1)",
+            }}>
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <span className="inline-block font-mono text-[9px] tracking-[0.2em] px-2.5 py-1 rounded-full mb-3"
+                  style={{ color: CYAN, border: `1px solid ${CYAN}66`, background: "hsla(187,100%,50%,0.08)" }}>FEATURED · INTERACTIVE</span>
+                <h3 className="font-heading font-semibold text-white text-xl md:text-2xl mb-3">{showcases[1].title}</h3>
+                <p className="text-white/70 text-sm leading-[1.75] mb-3">{showcases[1].insight}</p>
+                <p className="text-white/60 text-xs leading-[1.7]"><span className="font-mono tracking-widest" style={{ color: CYAN }}>OUTCOME · </span>{showcases[1].outcome}</p>
+              </div>
+              <BASlider before={showcases[1].before} after={showcases[1].after} title={showcases[1].title} />
+            </div>
+          </div>
         </Reveal>
 
         <div>
@@ -1459,19 +1480,42 @@ export default function ErpRedesign() {
         </div>
       </section>
 
+      {/* PROJECT AT A GLANCE */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 56, paddingBottom: 56 }}>
+        <Reveal>
+          <div className="text-center mb-8">
+            <SectionLabel>SNAPSHOT</SectionLabel>
+            <H2>Project At a Glance</H2>
+          </div>
+        </Reveal>
+        <ImpactDashboard />
+      </section>
+
+      <Transition text="The numbers behind the transformation." accent={CYAN} />
+
       {/* OUTCOMES */}
-      <section id="outcomes" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
+      <section id="outcomes" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 56 }}>
         <Reveal>
           <SectionLabel>14 — OUTCOMES</SectionLabel>
-          <H2>Key Outcomes</H2>
-          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Qualitative improvements drawn from the redesign — focused on clarity, usability, and a modern visual identity.</p>
+          <H2>Measurable Impact</H2>
+          <p className="text-white/60 max-w-2xl mb-10 leading-[1.75]">Quantified improvements drawn from the redesign — focused on clarity, usability, and modern academic workflows.</p>
         </Reveal>
+
+        {/* Bold delta metrics */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <OutcomeMetric direction="down" value="60%" label="Navigation Complexity" color="hsl(150,90%,55%)" delay={0} />
+          <OutcomeMetric direction="up" value="45%" label="Task Completion Efficiency" color={CYAN} delay={0.08} />
+          <OutcomeMetric direction="up" value="70%" label="Mobile Usability" color={CYAN} delay={0.16} />
+          <OutcomeMetric direction="up" value="80%" label="Information Discoverability" color={PINK} delay={0.24} />
+        </div>
+
+        {/* Qualitative outcomes */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {outcomes.map((o, i) => (
             <Reveal key={o.title} delay={i * 0.05}>
               <div className={`${card} p-5 h-full`}>
                 <div className="flex items-center gap-2 mb-2">
-                  <CheckCircle2 size={16} style={{ color: CYAN }} />
+                  <Award size={16} style={{ color: CYAN }} />
                   <span className="text-white font-semibold font-heading">{o.title}</span>
                 </div>
                 <p className="text-white/65 text-sm leading-[1.75]">{o.text}</p>
@@ -1480,6 +1524,7 @@ export default function ErpRedesign() {
           ))}
         </div>
       </section>
+
 
       {/* Footer */}
       <footer className="relative z-10 max-w-6xl mx-auto px-6 py-16 border-t border-white/5">
