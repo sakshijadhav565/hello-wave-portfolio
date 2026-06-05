@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft, Figma, Search, BarChart3, PenTool, Palette, MousePointer2,
   CheckCircle2, Quote, AlertTriangle, Target, Lightbulb, ArrowRight,
-  MessageSquare, Layers, Type, Sparkles, ExternalLink,
+  MessageSquare, Layers, Type, Sparkles, ExternalLink, TrendingDown, TrendingUp,
+  Users, Eye, Compass, Zap, Award,
 } from "lucide-react";
 
 import loginBefore from "@/assets/erp-login-before.png";
