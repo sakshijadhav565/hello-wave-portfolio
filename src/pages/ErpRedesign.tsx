@@ -1102,6 +1102,20 @@ export default function ErpRedesign() {
         </div>
       </section>
 
+      <Transition text="What did our research reveal? Four insights that shaped every design decision." accent={CYAN} />
+
+      {/* KEY INSIGHTS */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
+        <Reveal>
+          <SectionLabel>05.5 — KEY INSIGHTS</SectionLabel>
+          <H2>From friction to focus.</H2>
+          <p className="text-white/60 max-w-2xl mb-10 leading-[1.75]">Four connected insights that bridged raw research with concrete design decisions.</p>
+        </Reveal>
+        <KeyInsights />
+      </section>
+
+      <Transition text="Who are these students, really? Meet the people behind the data." accent={PINK} />
+
       {/* PERSONAS */}
       <section id="personas" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
