@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft, Figma, Search, BarChart3, PenTool, Palette, MousePointer2,
   CheckCircle2, Quote, AlertTriangle, Target, Lightbulb, ArrowRight,
-  MessageSquare, Layers, Type, Sparkles, ExternalLink,
+  MessageSquare, Layers, Type, Sparkles, ExternalLink, TrendingDown, TrendingUp,
+  Users, Eye, Compass, Zap, Award,
 } from "lucide-react";
 
 import loginBefore from "@/assets/erp-login-before.png";
@@ -462,6 +463,159 @@ function BAComparison({ s, i, reverse }: { s: any; i: number; reverse: boolean }
         </div>
       </div>
     </Reveal>
+  );
+}
+
+/* ── Narrative transition statement between sections ── */
+function Transition({ text, accent = CYAN }: { text: string; accent?: string }) {
+  const { ref, v } = useReveal(0.3);
+  return (
+    <div ref={ref as any} className="relative max-w-4xl mx-auto px-6 py-8 text-center"
+      style={{ opacity: v ? 1 : 0, transform: v ? "translateY(0)" : "translateY(16px)", transition: "all 0.8s cubic-bezier(0.2,0.8,0.2,1)" }}>
+      <div className="mx-auto mb-4 h-px w-16" style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)`, boxShadow: `0 0 10px ${accent}` }} />
+      <p className="font-heading text-white/85 italic" style={{ fontSize: "clamp(18px, 2.2vw, 26px)", lineHeight: 1.4, textShadow: `0 0 18px ${accent}33` }}>
+        {text}
+      </p>
+      <div className="mx-auto mt-4 h-px w-16" style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)`, boxShadow: `0 0 10px ${accent}` }} />
+    </div>
+  );
+}
+
+/* ── Key Insights — connected journey ── */
+function KeyInsights() {
+  const items = [
+    { icon: Compass, title: "Navigation Problems", text: "Multi-level menus buried daily-use modules behind unclear paths." },
+    { icon: Eye, title: "Information Hidden", text: "Attendance, exams & grades were not surfaced where students looked." },
+    { icon: AlertTriangle, title: "Students Miss Deadlines", text: "Weak notifications + poor hierarchy = missed submissions." },
+    { icon: TrendingDown, title: "Reduced Academic Confidence", text: "Friction at every step lowered overall trust in the system." },
+  ];
+  return (
+    <div className="grid md:grid-cols-4 gap-4 relative">
+      <div className="hidden md:block absolute top-12 left-[12%] right-[12%] h-px"
+        style={{ background: `linear-gradient(90deg, transparent, ${CYAN}66, ${PINK}66, transparent)`, boxShadow: `0 0 10px ${CYAN}44` }} />
+      {items.map((it, i) => {
+        const Icon = it.icon;
+        const color = i < 2 ? CYAN : PINK;
+        return (
+          <Reveal key={it.title} delay={i * 0.12}>
+            <div className={`${card} p-5 h-full relative text-center`}>
+              <div className="w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center relative z-10"
+                style={{ background: "hsla(0,0%,2%,0.95)", border: `2px solid ${color}`, boxShadow: `0 0 20px ${color}66` }}>
+                <Icon size={20} style={{ color }} />
+              </div>
+              <div className="font-mono text-[9px] tracking-widest mb-1.5" style={{ color }}>STEP 0{i + 1}</div>
+              <div className="text-white font-semibold mb-2 font-heading text-sm">{it.title}</div>
+              <p className="text-white/60 text-xs leading-[1.7]">{it.text}</p>
+            </div>
+          </Reveal>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── Project At a Glance impact dashboard ── */
+function ImpactDashboard() {
+  const stats = [
+    { value: "80+", label: "Students Surveyed", icon: Users, color: CYAN },
+    { value: "12", label: "Pain Points", icon: AlertTriangle, color: PINK },
+    { value: "10", label: "Heuristics Evaluated", icon: BarChart3, color: CYAN },
+    { value: "8", label: "Screens Redesigned", icon: Layers, color: PINK },
+    { value: "6", label: "Weeks Duration", icon: Zap, color: CYAN },
+  ];
+  return (
+    <div className="relative rounded-3xl p-8 md:p-12 overflow-hidden"
+      style={{
+        background: "linear-gradient(135deg, hsla(187,100%,50%,0.06), hsla(342,100%,59%,0.04), hsla(0,0%,3%,0.85))",
+        border: "1px solid hsla(187,100%,50%,0.25)",
+        boxShadow: "0 30px 80px rgba(0,0,0,0.6), 0 0 60px hsla(187,100%,50%,0.12)",
+      }}>
+      <div className="absolute inset-0 erp-dot-grid opacity-50 pointer-events-none" />
+      <div className="relative grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-4">
+        {stats.map((s, i) => {
+          const Icon = s.icon;
+          return (
+            <Reveal key={s.label} delay={i * 0.08}>
+              <div className="text-center relative">
+                {i < stats.length - 1 && (
+                  <div className="hidden md:block absolute top-8 -right-2 w-4 h-px"
+                    style={{ background: `linear-gradient(90deg, ${s.color}88, transparent)` }} />
+                )}
+                <Icon size={20} style={{ color: s.color }} className="mx-auto mb-2" />
+                <div className="font-heading font-bold mb-1" style={{ fontSize: "clamp(32px, 4vw, 48px)", color: s.color, textShadow: `0 0 20px ${s.color}55` }}>
+                  <CountUp value={s.value} />
+                </div>
+                <div className="font-mono text-[10px] tracking-widest text-white/55">{s.label.toUpperCase()}</div>
+              </div>
+            </Reveal>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ── Animated outcome delta metric ── */
+function OutcomeMetric({ direction, value, label, color, delay = 0 }: { direction: "up" | "down"; value: string; label: string; color: string; delay?: number }) {
+  const Icon = direction === "up" ? TrendingUp : TrendingDown;
+  return (
+    <Reveal delay={delay}>
+      <div className={`${card} p-6 md:p-8 h-full text-center relative overflow-hidden`}>
+        <div className="absolute inset-0 pointer-events-none opacity-30"
+          style={{ background: `radial-gradient(ellipse 70% 60% at 50% 0%, ${color}33, transparent 70%)` }} />
+        <div className="relative">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Icon size={28} style={{ color }} />
+            <div className="font-heading font-bold" style={{ fontSize: "clamp(40px, 5vw, 64px)", color, textShadow: `0 0 24px ${color}66`, lineHeight: 1 }}>
+              <CountUp value={value} />
+            </div>
+          </div>
+          <div className="font-mono text-[10px] tracking-[0.2em] text-white/55 mt-3">{label.toUpperCase()}</div>
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
+/* ── Interactive Before/After comparison slider ── */
+function BASlider({ before, after, title }: { before: string; after: string; title: string }) {
+  const [pos, setPos] = useState(50);
+  const ref = useRef<HTMLDivElement>(null);
+  const dragging = useRef(false);
+  const onMove = (clientX: number) => {
+    const el = ref.current; if (!el) return;
+    const r = el.getBoundingClientRect();
+    const p = Math.max(0, Math.min(100, ((clientX - r.left) / r.width) * 100));
+    setPos(p);
+  };
+  return (
+    <div ref={ref}
+      className="relative w-full max-w-md mx-auto rounded-[28px] overflow-hidden select-none cursor-ew-resize"
+      style={{ border: "1px solid hsla(187,100%,50%,0.35)", boxShadow: "0 18px 50px rgba(0,0,0,0.6), 0 0 30px hsla(187,100%,50%,0.18)" }}
+      onMouseDown={(e) => { dragging.current = true; onMove(e.clientX); }}
+      onMouseMove={(e) => { if (dragging.current) onMove(e.clientX); }}
+      onMouseUp={() => { dragging.current = false; }}
+      onMouseLeave={() => { dragging.current = false; }}
+      onTouchStart={(e) => { onMove(e.touches[0].clientX); }}
+      onTouchMove={(e) => { onMove(e.touches[0].clientX); }}>
+      <img src={after} alt={`${title} after`} className="w-full h-auto block pointer-events-none" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ width: `${pos}%` }}>
+        <img src={before} alt={`${title} before`} className="block pointer-events-none"
+          style={{ width: `${(100 / pos) * 100}%`, maxWidth: "none", height: "100%", objectFit: "cover", objectPosition: "left top" }} />
+      </div>
+      <div className="absolute top-0 bottom-0 pointer-events-none" style={{ left: `${pos}%`, transform: "translateX(-50%)" }}>
+        <div className="w-0.5 h-full" style={{ background: CYAN, boxShadow: `0 0 16px ${CYAN}` }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center"
+          style={{ background: "hsla(0,0%,4%,0.95)", border: `2px solid ${CYAN}`, boxShadow: `0 0 20px ${CYAN}88` }}>
+          <ArrowLeft size={10} style={{ color: CYAN }} />
+          <ArrowRight size={10} style={{ color: CYAN }} className="-ml-1" />
+        </div>
+      </div>
+      <div className="absolute top-3 left-3 font-mono text-[9px] tracking-widest px-2 py-1 rounded-full pointer-events-none"
+        style={{ color: "hsl(0,85%,60%)", background: "hsla(0,0%,4%,0.85)", border: "1px solid hsla(0,85%,60%,0.4)" }}>BEFORE</div>
+      <div className="absolute top-3 right-3 font-mono text-[9px] tracking-widest px-2 py-1 rounded-full pointer-events-none"
+        style={{ color: CYAN, background: "hsla(0,0%,4%,0.85)", border: `1px solid ${CYAN}66` }}>AFTER</div>
+    </div>
   );
 }
 
@@ -948,6 +1102,20 @@ export default function ErpRedesign() {
         </div>
       </section>
 
+      <Transition text="What did our research reveal? Four insights that shaped every design decision." accent={CYAN} />
+
+      {/* KEY INSIGHTS */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
+        <Reveal>
+          <SectionLabel>05.5 — KEY INSIGHTS</SectionLabel>
+          <H2>From friction to focus.</H2>
+          <p className="text-white/60 max-w-2xl mb-10 leading-[1.75]">Four connected insights that bridged raw research with concrete design decisions.</p>
+        </Reveal>
+        <KeyInsights />
+      </section>
+
+      <Transition text="Who are these students, really? Meet the people behind the data." accent={PINK} />
+
       {/* PERSONAS */}
       <section id="personas" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
@@ -976,8 +1144,8 @@ export default function ErpRedesign() {
                   </div>
                   <div>
                     {([
-                      ["GOALS", p.goals], ["BEHAVIORS", p.behaviors],
-                      ["FRUSTRATIONS", p.frustrations], ["NEEDS", p.needs],
+                      ["TOP GOALS", p.goals.slice(0, 3)],
+                      ["FRUSTRATIONS", p.frustrations.slice(0, 3)],
                     ] as const).map(([label, items]) => (
                       <div key={label} className="mb-3">
                         <div className="font-mono text-[10px] tracking-widest text-white/40 mb-1.5">{label}</div>
@@ -1002,105 +1170,177 @@ export default function ErpRedesign() {
         </div>
       </section>
 
+      <Transition text="Where exactly was the system failing? A heuristic audit revealed the breakdown points." accent={CYAN} />
+
       {/* HEURISTIC */}
       <section id="evaluation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>07 — EVALUATION</SectionLabel>
           <H2>Heuristic Evaluation</H2>
-          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Scored against Nielsen's 10 usability heuristics with severity tags — every dimension scored below 60%.</p>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Scored against Nielsen's 10 usability heuristics, grouped by severity. Every dimension scored below 60%.</p>
         </Reveal>
-        <div className={`${card} p-6`}>
-          <div className="grid md:grid-cols-2 gap-x-10 gap-y-5">
-            {heuristics.map((h) => (
-              <div key={h.name}>
-                <div className="flex justify-between items-baseline mb-1.5 gap-3">
-                  <span className="text-white/85 text-sm font-medium">{h.name}</span>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <SeverityBadge level={h.severity} />
-                    <span className="font-mono text-[11px] font-medium" style={{ color: h.score < 40 ? PINK : CYAN }}>{h.score}%</span>
-                  </div>
+
+        {/* Top 3 UX problems */}
+        <Reveal delay={0.05}>
+          <div className="mb-6 rounded-2xl p-6 relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, hsla(0,90%,62%,0.08), hsla(0,0%,4%,0.6))",
+              border: "1px solid hsla(0,90%,62%,0.3)",
+              boxShadow: "0 10px 40px hsla(0,90%,62%,0.1)",
+            }}>
+            <div className="flex items-center gap-2 mb-4">
+              <AlertTriangle size={18} style={{ color: "hsl(0,90%,62%)" }} />
+              <div className="font-mono text-[11px] tracking-widest" style={{ color: "hsl(0,90%,62%)" }}>TOP 3 UX PROBLEMS DISCOVERED</div>
+            </div>
+            <div className="grid md:grid-cols-3 gap-4">
+              {heuristics.filter(h => h.severity === "Critical").slice(0, 3).map((h, i) => (
+                <div key={h.name} className="rounded-xl p-4 bg-black/30 border border-white/10">
+                  <div className="font-heading font-bold mb-2" style={{ fontSize: 32, color: "hsl(0,90%,62%)", textShadow: "0 0 14px hsla(0,90%,62%,0.5)" }}>#{i + 1}</div>
+                  <div className="text-white font-semibold mb-1 text-sm font-heading">{h.name}</div>
+                  <p className="text-white/60 text-xs leading-[1.7]">{h.desc}</p>
                 </div>
-                <HeuristicBar score={h.score} color={h.score < 40 ? PINK : CYAN} />
-                <p className="text-white/55 text-xs leading-[1.75]">{h.desc}</p>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+
+        {/* Grouped severity heatmap */}
+        {(["Critical", "Major", "Moderate"] as const).map((group) => {
+          const items = heuristics.filter(h => h.severity === group);
+          if (!items.length) return null;
+          const groupColor = group === "Critical" ? "hsl(0,90%,62%)" : group === "Major" ? PINK : "hsl(38,100%,60%)";
+          return (
+            <Reveal key={group} delay={0.08}>
+              <div className="mb-4">
+                <div className="flex items-center gap-3 mb-3 px-2">
+                  <SeverityBadge level={group} />
+                  <div className="h-px flex-1" style={{ background: `linear-gradient(90deg, ${groupColor}66, transparent)` }} />
+                  <span className="font-mono text-[10px] text-white/40">{items.length} ISSUE{items.length > 1 ? "S" : ""}</span>
+                </div>
+                <div className="grid md:grid-cols-2 gap-3">
+                  {items.map((h) => (
+                    <div key={h.name} className={`${card} p-4`}>
+                      <div className="flex justify-between items-baseline mb-1.5 gap-3">
+                        <span className="text-white/90 text-sm font-medium">{h.name}</span>
+                        <span className="font-mono text-[11px] font-medium" style={{ color: groupColor }}>{h.score}%</span>
+                      </div>
+                      <HeuristicBar score={h.score} color={h.score < 40 ? PINK : CYAN} />
+                      <p className="text-white/55 text-xs leading-[1.7]">{h.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+          );
+        })}
+      </section>
+
+      <Transition text="Knowing the breakdown points, we reimagined how students actually move through the portal." accent={PINK} />
+
+      {/* USER FLOW */}
+      <section id="flow" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
+        <Reveal>
+          <SectionLabel>08 — USER FLOW</SectionLabel>
+          <H2>Previous Flow vs Redesigned Flow</H2>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">A linear, mobile-friendly flow that surfaces the most-used academic journeys first and removes hidden detours.</p>
+        </Reveal>
+
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
+          <Reveal>
+            <div className="rounded-2xl p-5 h-full"
+              style={{ background: "linear-gradient(135deg, hsla(0,85%,60%,0.06), hsla(0,0%,4%,0.6))", border: "1px solid hsla(0,85%,60%,0.25)" }}>
+              <div className="font-mono text-[10px] tracking-widest mb-3" style={{ color: "hsl(0,85%,60%)" }}>PREVIOUS FLOW · 7 STEPS</div>
+              <div className="flex flex-wrap items-center gap-2">
+                {["Login", "Home", "Menu", "Submenu", "Module", "Subpage", "Action"].map((s, i, arr) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <div className="px-3 py-1.5 rounded-md text-xs font-medium"
+                      style={{ background: "hsla(0,85%,60%,0.08)", border: "1px solid hsla(0,85%,60%,0.3)", color: "hsl(0,85%,60%)" }}>{s}</div>
+                    {i < arr.length - 1 && <ArrowRight size={12} className="text-white/30" />}
+                  </div>
+                ))}
+              </div>
+              <p className="text-white/55 text-xs mt-4 leading-[1.7]">Deep nesting, unclear labels, and hidden modules required trial-and-error to complete daily academic tasks.</p>
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <div className="rounded-2xl p-5 h-full relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, hsla(187,100%,50%,0.08), hsla(0,0%,4%,0.6))", border: "1px solid hsla(187,100%,50%,0.35)", boxShadow: "0 0 30px hsla(187,100%,50%,0.12)" }}>
+              <div className="font-mono text-[10px] tracking-widest mb-3" style={{ color: CYAN }}>REDESIGNED FLOW · 3 STEPS</div>
+              <div className="flex flex-wrap items-center gap-2">
+                {["Login", "Home", "Action"].map((s, i, arr) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <div className="px-3 py-1.5 rounded-md text-xs font-medium relative"
+                      style={{ background: "hsla(187,100%,50%,0.1)", border: `1px solid ${CYAN}`, color: CYAN, boxShadow: `0 0 12px ${CYAN}55` }}>{s}</div>
+                    {i < arr.length - 1 && <ArrowRight size={14} style={{ color: CYAN, filter: `drop-shadow(0 0 6px ${CYAN})` }} />}
+                  </div>
+                ))}
+              </div>
+              <p className="text-white/70 text-xs mt-4 leading-[1.7]">Flattened structure with priority cards on Home — students reach key actions in a fraction of the taps.</p>
+            </div>
+          </Reveal>
+        </div>
+
+        <div className={`${card} p-6 md:p-8`}>
+          <div className="font-mono text-[10px] tracking-widest text-white/40 mb-4">FULL REDESIGNED NAVIGATION FLOW</div>
+          <div className="flex flex-wrap items-center gap-2 md:gap-3 justify-center">
+            {userFlow.map((step, i) => (
+              <div key={step} className="flex items-center gap-2 md:gap-3">
+                <div className="px-3 md:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105"
+                  style={{
+                    background: i % 2 === 0 ? "hsla(187,100%,50%,0.08)" : "hsla(342,100%,59%,0.08)",
+                    border: `1px solid ${i % 2 === 0 ? "hsla(187,100%,50%,0.3)" : "hsla(342,100%,59%,0.3)"}`,
+                    color: i % 2 === 0 ? CYAN : PINK,
+                    boxShadow: `0 0 12px ${i % 2 === 0 ? "hsla(187,100%,50%,0.2)" : "hsla(342,100%,59%,0.2)"}`,
+                  }}>{step}</div>
+                {i < userFlow.length - 1 && <ArrowRight size={14} className="text-white/30" />}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* USER FLOW */}
-      <section id="flow" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
-        <Reveal>
-          <SectionLabel>08 — USER FLOW</SectionLabel>
-          <H2>Redesigned User Flow</H2>
-          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">A linear, mobile-friendly flow that surfaces the most-used academic journeys first and removes hidden detours.</p>
-        </Reveal>
-        <div className={`${card} p-6 md:p-8`}>
-          <div className="flex flex-wrap items-center gap-2 md:gap-3 justify-center">
-            {userFlow.map((step, i) => (
-              <div key={step} className="flex items-center gap-2 md:gap-3">
-                <div className="px-3 md:px-4 py-2 rounded-lg text-sm font-medium"
-                  style={{
-                    background: i % 2 === 0 ? "hsla(187,100%,50%,0.08)" : "hsla(342,100%,59%,0.08)",
-                    border: `1px solid ${i % 2 === 0 ? "hsla(187,100%,50%,0.3)" : "hsla(342,100%,59%,0.3)"}`,
-                    color: i % 2 === 0 ? CYAN : PINK,
-                  }}>{step}</div>
-                {i < userFlow.length - 1 && <ArrowRight size={14} className="text-white/30" />}
-              </div>
-            ))}
-          </div>
-          <div className="grid md:grid-cols-3 gap-4 mt-8">
-            {[
-              ["Why Redesigned", "The legacy flow forced students through deep, unclear menus to reach daily-use modules."],
-              ["Pain Points Addressed", "Hidden academics, weak attendance access, scattered exam information."],
-              ["Navigation Simplified", "Flattened structure, predictable order, and shortcut surfacing on Home."],
-            ].map(([t, d]) => (
-              <div key={t} className="rounded-lg p-4 border border-white/10 bg-white/[0.02] erp-card">
-                <div className="font-mono text-[10px] tracking-widest text-white/40 mb-2">{t.toUpperCase()}</div>
-                <p className="text-white/70 text-sm leading-[1.75]">{d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Transition text="Six structured stages turned insights into a delivered redesign." accent={CYAN} />
 
       {/* PROCESS */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <Reveal>
           <SectionLabel>09 — PROCESS</SectionLabel>
           <H2>Design Process</H2>
-          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Six structured stages, from raw research to a delivered redesign.</p>
+          <p className="text-white/60 max-w-2xl mb-10 leading-[1.75]">Six structured stages, from raw research to a delivered redesign.</p>
         </Reveal>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {process.map((s, i) => {
-            const Icon = s.icon;
-            const color = i % 2 === 0 ? CYAN : PINK;
-            return (
-              <Reveal key={s.label} delay={i * 0.06}>
-                <div className={`${card} p-5 h-full`}>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center"
-                      style={{ background: "hsla(0,0%,4%,0.9)", border: `1px solid ${color}55` }}>
-                      <Icon size={18} style={{ color }} />
+
+        <div className="relative">
+          <div className="hidden md:block absolute top-7 left-[8%] right-[8%] h-px"
+            style={{ background: `linear-gradient(90deg, ${CYAN}, ${PINK}, ${CYAN})`, boxShadow: `0 0 8px ${CYAN}66` }} />
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+            {process.map((s, i) => {
+              const Icon = s.icon;
+              const color = i % 2 === 0 ? CYAN : PINK;
+              return (
+                <Reveal key={s.label} delay={i * 0.08}>
+                  <div className="text-center">
+                    <div className="relative mx-auto w-14 h-14 rounded-full flex items-center justify-center mb-3 transition-transform duration-300 hover:scale-110"
+                      style={{ background: "hsla(0,0%,2%,0.95)", border: `2px solid ${color}`, boxShadow: `0 0 24px ${color}66` }}>
+                      <Icon size={20} style={{ color }} />
                     </div>
-                    <div>
-                      <div className="font-mono text-[10px] tracking-widest text-white/40">0{i + 1}</div>
-                      <div className="text-white font-semibold text-sm font-heading">{s.label}</div>
-                    </div>
+                    <div className="font-mono text-[9px] tracking-widest text-white/40 mb-1">STAGE 0{i + 1}</div>
+                    <div className="text-white font-semibold text-sm font-heading mb-2">{s.label}</div>
+                    <ul className="space-y-1 text-left">
+                      {s.items.map((it) => (
+                        <li key={it} className="text-white/60 text-xs flex gap-1.5 leading-[1.6]">
+                          <span style={{ color }} className="mt-0.5">·</span>{it}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <ul className="space-y-1.5">
-                    {s.items.map((it) => (
-                      <li key={it} className="text-white/65 text-sm flex gap-2 leading-[1.75]">
-                        <span style={{ color }} className="mt-1">·</span>{it}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Reveal>
-            );
-          })}
+                </Reveal>
+              );
+            })}
+          </div>
         </div>
       </section>
+
+      <Transition text="Now see those decisions come alive in the prototype." accent={PINK} />
 
       {/* PROTOTYPE */}
       <section id="prototype" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
@@ -1154,7 +1394,28 @@ export default function ErpRedesign() {
         <Reveal>
           <SectionLabel>11 — TRANSFORMATION</SectionLabel>
           <H2>Before &amp; After</H2>
-          <p className="text-white/60 max-w-2xl mb-12 leading-[1.75]">Five core screens redesigned end-to-end. Each pairs research insight, design decision, and outcome.</p>
+          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Five core screens redesigned end-to-end. Drag the slider on the featured screen to compare — each pairs research insight, design decision, and outcome.</p>
+        </Reveal>
+
+        {/* Featured interactive slider */}
+        <Reveal delay={0.05}>
+          <div className="mb-10 rounded-3xl p-6 md:p-8 relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, hsla(187,100%,50%,0.05), hsla(0,0%,3%,0.7))",
+              border: "1px solid hsla(187,100%,50%,0.25)",
+              boxShadow: "0 24px 60px rgba(0,0,0,0.5), 0 0 30px hsla(187,100%,50%,0.1)",
+            }}>
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <span className="inline-block font-mono text-[9px] tracking-[0.2em] px-2.5 py-1 rounded-full mb-3"
+                  style={{ color: CYAN, border: `1px solid ${CYAN}66`, background: "hsla(187,100%,50%,0.08)" }}>FEATURED · INTERACTIVE</span>
+                <h3 className="font-heading font-semibold text-white text-xl md:text-2xl mb-3">{showcases[1].title}</h3>
+                <p className="text-white/70 text-sm leading-[1.75] mb-3">{showcases[1].insight}</p>
+                <p className="text-white/60 text-xs leading-[1.7]"><span className="font-mono tracking-widest" style={{ color: CYAN }}>OUTCOME · </span>{showcases[1].outcome}</p>
+              </div>
+              <BASlider before={showcases[1].before} after={showcases[1].after} title={showcases[1].title} />
+            </div>
+          </div>
         </Reveal>
 
         <div>
@@ -1219,19 +1480,42 @@ export default function ErpRedesign() {
         </div>
       </section>
 
+      {/* PROJECT AT A GLANCE */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 56, paddingBottom: 56 }}>
+        <Reveal>
+          <div className="text-center mb-8">
+            <SectionLabel>SNAPSHOT</SectionLabel>
+            <H2>Project At a Glance</H2>
+          </div>
+        </Reveal>
+        <ImpactDashboard />
+      </section>
+
+      <Transition text="The numbers behind the transformation." accent={CYAN} />
+
       {/* OUTCOMES */}
-      <section id="outcomes" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
+      <section id="outcomes" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 56 }}>
         <Reveal>
           <SectionLabel>14 — OUTCOMES</SectionLabel>
-          <H2>Key Outcomes</H2>
-          <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Qualitative improvements drawn from the redesign — focused on clarity, usability, and a modern visual identity.</p>
+          <H2>Measurable Impact</H2>
+          <p className="text-white/60 max-w-2xl mb-10 leading-[1.75]">Quantified improvements drawn from the redesign — focused on clarity, usability, and modern academic workflows.</p>
         </Reveal>
+
+        {/* Bold delta metrics */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <OutcomeMetric direction="down" value="60%" label="Navigation Complexity" color="hsl(150,90%,55%)" delay={0} />
+          <OutcomeMetric direction="up" value="45%" label="Task Completion Efficiency" color={CYAN} delay={0.08} />
+          <OutcomeMetric direction="up" value="70%" label="Mobile Usability" color={CYAN} delay={0.16} />
+          <OutcomeMetric direction="up" value="80%" label="Information Discoverability" color={PINK} delay={0.24} />
+        </div>
+
+        {/* Qualitative outcomes */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {outcomes.map((o, i) => (
             <Reveal key={o.title} delay={i * 0.05}>
               <div className={`${card} p-5 h-full`}>
                 <div className="flex items-center gap-2 mb-2">
-                  <CheckCircle2 size={16} style={{ color: CYAN }} />
+                  <Award size={16} style={{ color: CYAN }} />
                   <span className="text-white font-semibold font-heading">{o.title}</span>
                 </div>
                 <p className="text-white/65 text-sm leading-[1.75]">{o.text}</p>
@@ -1240,6 +1524,7 @@ export default function ErpRedesign() {
           ))}
         </div>
       </section>
+
 
       {/* Footer */}
       <footer className="relative z-10 max-w-6xl mx-auto px-6 py-16 border-t border-white/5">
