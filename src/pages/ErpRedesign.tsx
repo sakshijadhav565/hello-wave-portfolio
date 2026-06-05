@@ -1130,8 +1130,8 @@ export default function ErpRedesign() {
                   </div>
                   <div>
                     {([
-                      ["GOALS", p.goals], ["BEHAVIORS", p.behaviors],
-                      ["FRUSTRATIONS", p.frustrations], ["NEEDS", p.needs],
+                      ["TOP GOALS", p.goals.slice(0, 3)],
+                      ["FRUSTRATIONS", p.frustrations.slice(0, 3)],
                     ] as const).map(([label, items]) => (
                       <div key={label} className="mb-3">
                         <div className="font-mono text-[10px] tracking-widest text-white/40 mb-1.5">{label}</div>
