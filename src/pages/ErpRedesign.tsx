@@ -466,6 +466,159 @@ function BAComparison({ s, i, reverse }: { s: any; i: number; reverse: boolean }
   );
 }
 
+/* ── Narrative transition statement between sections ── */
+function Transition({ text, accent = CYAN }: { text: string; accent?: string }) {
+  const { ref, v } = useReveal(0.3);
+  return (
+    <div ref={ref as any} className="relative max-w-4xl mx-auto px-6 py-8 text-center"
+      style={{ opacity: v ? 1 : 0, transform: v ? "translateY(0)" : "translateY(16px)", transition: "all 0.8s cubic-bezier(0.2,0.8,0.2,1)" }}>
+      <div className="mx-auto mb-4 h-px w-16" style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)`, boxShadow: `0 0 10px ${accent}` }} />
+      <p className="font-heading text-white/85 italic" style={{ fontSize: "clamp(18px, 2.2vw, 26px)", lineHeight: 1.4, textShadow: `0 0 18px ${accent}33` }}>
+        {text}
+      </p>
+      <div className="mx-auto mt-4 h-px w-16" style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)`, boxShadow: `0 0 10px ${accent}` }} />
+    </div>
+  );
+}
+
+/* ── Key Insights — connected journey ── */
+function KeyInsights() {
+  const items = [
+    { icon: Compass, title: "Navigation Problems", text: "Multi-level menus buried daily-use modules behind unclear paths." },
+    { icon: Eye, title: "Information Hidden", text: "Attendance, exams & grades were not surfaced where students looked." },
+    { icon: AlertTriangle, title: "Students Miss Deadlines", text: "Weak notifications + poor hierarchy = missed submissions." },
+    { icon: TrendingDown, title: "Reduced Academic Confidence", text: "Friction at every step lowered overall trust in the system." },
+  ];
+  return (
+    <div className="grid md:grid-cols-4 gap-4 relative">
+      <div className="hidden md:block absolute top-12 left-[12%] right-[12%] h-px"
+        style={{ background: `linear-gradient(90deg, transparent, ${CYAN}66, ${PINK}66, transparent)`, boxShadow: `0 0 10px ${CYAN}44` }} />
+      {items.map((it, i) => {
+        const Icon = it.icon;
+        const color = i < 2 ? CYAN : PINK;
+        return (
+          <Reveal key={it.title} delay={i * 0.12}>
+            <div className={`${card} p-5 h-full relative text-center`}>
+              <div className="w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center relative z-10"
+                style={{ background: "hsla(0,0%,2%,0.95)", border: `2px solid ${color}`, boxShadow: `0 0 20px ${color}66` }}>
+                <Icon size={20} style={{ color }} />
+              </div>
+              <div className="font-mono text-[9px] tracking-widest mb-1.5" style={{ color }}>STEP 0{i + 1}</div>
+              <div className="text-white font-semibold mb-2 font-heading text-sm">{it.title}</div>
+              <p className="text-white/60 text-xs leading-[1.7]">{it.text}</p>
+            </div>
+          </Reveal>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── Project At a Glance impact dashboard ── */
+function ImpactDashboard() {
+  const stats = [
+    { value: "80+", label: "Students Surveyed", icon: Users, color: CYAN },
+    { value: "12", label: "Pain Points", icon: AlertTriangle, color: PINK },
+    { value: "10", label: "Heuristics Evaluated", icon: BarChart3, color: CYAN },
+    { value: "8", label: "Screens Redesigned", icon: Layers, color: PINK },
+    { value: "6", label: "Weeks Duration", icon: Zap, color: CYAN },
+  ];
+  return (
+    <div className="relative rounded-3xl p-8 md:p-12 overflow-hidden"
+      style={{
+        background: "linear-gradient(135deg, hsla(187,100%,50%,0.06), hsla(342,100%,59%,0.04), hsla(0,0%,3%,0.85))",
+        border: "1px solid hsla(187,100%,50%,0.25)",
+        boxShadow: "0 30px 80px rgba(0,0,0,0.6), 0 0 60px hsla(187,100%,50%,0.12)",
+      }}>
+      <div className="absolute inset-0 erp-dot-grid opacity-50 pointer-events-none" />
+      <div className="relative grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-4">
+        {stats.map((s, i) => {
+          const Icon = s.icon;
+          return (
+            <Reveal key={s.label} delay={i * 0.08}>
+              <div className="text-center relative">
+                {i < stats.length - 1 && (
+                  <div className="hidden md:block absolute top-8 -right-2 w-4 h-px"
+                    style={{ background: `linear-gradient(90deg, ${s.color}88, transparent)` }} />
+                )}
+                <Icon size={20} style={{ color: s.color }} className="mx-auto mb-2" />
+                <div className="font-heading font-bold mb-1" style={{ fontSize: "clamp(32px, 4vw, 48px)", color: s.color, textShadow: `0 0 20px ${s.color}55` }}>
+                  <CountUp value={s.value} />
+                </div>
+                <div className="font-mono text-[10px] tracking-widest text-white/55">{s.label.toUpperCase()}</div>
+              </div>
+            </Reveal>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ── Animated outcome delta metric ── */
+function OutcomeMetric({ direction, value, label, color, delay = 0 }: { direction: "up" | "down"; value: string; label: string; color: string; delay?: number }) {
+  const Icon = direction === "up" ? TrendingUp : TrendingDown;
+  return (
+    <Reveal delay={delay}>
+      <div className={`${card} p-6 md:p-8 h-full text-center relative overflow-hidden`}>
+        <div className="absolute inset-0 pointer-events-none opacity-30"
+          style={{ background: `radial-gradient(ellipse 70% 60% at 50% 0%, ${color}33, transparent 70%)` }} />
+        <div className="relative">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Icon size={28} style={{ color }} />
+            <div className="font-heading font-bold" style={{ fontSize: "clamp(40px, 5vw, 64px)", color, textShadow: `0 0 24px ${color}66`, lineHeight: 1 }}>
+              <CountUp value={value} />
+            </div>
+          </div>
+          <div className="font-mono text-[10px] tracking-[0.2em] text-white/55 mt-3">{label.toUpperCase()}</div>
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
+/* ── Interactive Before/After comparison slider ── */
+function BASlider({ before, after, title }: { before: string; after: string; title: string }) {
+  const [pos, setPos] = useState(50);
+  const ref = useRef<HTMLDivElement>(null);
+  const dragging = useRef(false);
+  const onMove = (clientX: number) => {
+    const el = ref.current; if (!el) return;
+    const r = el.getBoundingClientRect();
+    const p = Math.max(0, Math.min(100, ((clientX - r.left) / r.width) * 100));
+    setPos(p);
+  };
+  return (
+    <div ref={ref}
+      className="relative w-full max-w-md mx-auto rounded-[28px] overflow-hidden select-none cursor-ew-resize"
+      style={{ border: "1px solid hsla(187,100%,50%,0.35)", boxShadow: "0 18px 50px rgba(0,0,0,0.6), 0 0 30px hsla(187,100%,50%,0.18)" }}
+      onMouseDown={(e) => { dragging.current = true; onMove(e.clientX); }}
+      onMouseMove={(e) => { if (dragging.current) onMove(e.clientX); }}
+      onMouseUp={() => { dragging.current = false; }}
+      onMouseLeave={() => { dragging.current = false; }}
+      onTouchStart={(e) => { onMove(e.touches[0].clientX); }}
+      onTouchMove={(e) => { onMove(e.touches[0].clientX); }}>
+      <img src={after} alt={`${title} after`} className="w-full h-auto block pointer-events-none" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ width: `${pos}%` }}>
+        <img src={before} alt={`${title} before`} className="block pointer-events-none"
+          style={{ width: `${(100 / pos) * 100}%`, maxWidth: "none", height: "100%", objectFit: "cover", objectPosition: "left top" }} />
+      </div>
+      <div className="absolute top-0 bottom-0 pointer-events-none" style={{ left: `${pos}%`, transform: "translateX(-50%)" }}>
+        <div className="w-0.5 h-full" style={{ background: CYAN, boxShadow: `0 0 16px ${CYAN}` }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center"
+          style={{ background: "hsla(0,0%,4%,0.95)", border: `2px solid ${CYAN}`, boxShadow: `0 0 20px ${CYAN}88` }}>
+          <ArrowLeft size={10} style={{ color: CYAN }} />
+          <ArrowRight size={10} style={{ color: CYAN }} className="-ml-1" />
+        </div>
+      </div>
+      <div className="absolute top-3 left-3 font-mono text-[9px] tracking-widest px-2 py-1 rounded-full pointer-events-none"
+        style={{ color: "hsl(0,85%,60%)", background: "hsla(0,0%,4%,0.85)", border: "1px solid hsla(0,85%,60%,0.4)" }}>BEFORE</div>
+      <div className="absolute top-3 right-3 font-mono text-[9px] tracking-widest px-2 py-1 rounded-full pointer-events-none"
+        style={{ color: CYAN, background: "hsla(0,0%,4%,0.85)", border: `1px solid ${CYAN}66` }}>AFTER</div>
+    </div>
+  );
+}
+
 export default function ErpRedesign() {
   const navigate = useNavigate();
 
