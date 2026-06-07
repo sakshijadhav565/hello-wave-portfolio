@@ -1817,7 +1817,8 @@ export default function ErpRedesign() {
       <Transition text="The redesign wasn't measured by aesthetics alone — it was measured by impact." accent={CYAN} />
 
       {/* OUTCOMES */}
-      <section id="outcomes" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 56 }}>
+      <section id="outcomes" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5 overflow-hidden" style={{ paddingTop: 48, paddingBottom: 56 }}>
+        <BlueprintBg variant="blueprint" opacity={0.06} accent={CYAN} />
         <Reveal>
           <SectionLabel>14 — OUTCOMES</SectionLabel>
           <H2>Measurable Impact</H2>
