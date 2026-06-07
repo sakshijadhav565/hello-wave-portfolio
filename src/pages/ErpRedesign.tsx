@@ -23,8 +23,8 @@ import testScoreImg from "@/assets/erp-testscore.png";
 import academicsImg from "@/assets/erp-academics.png";
 import prototypeVideo from "@/assets/erp-prototype.mov";
 
-import personaAarohi from "@/assets/persona-aarohi.jpg";
-import personaNeha from "@/assets/persona-neha.jpg";
+import personaAarav from "@/assets/persona-aarav-v2.jpg";
+import personaNeha from "@/assets/persona-neha-v2.jpg";
 
 const CYAN = "hsl(187, 100%, 50%)";
 const PINK = "hsl(342, 100%, 59%)";
@@ -690,20 +690,20 @@ export default function ErpRedesign() {
 
   const personas = [
     {
-      name: "Aarohi Sharma", age: 19, year: "Second Year", program: "B.Tech Computer Engineering",
-      img: personaAarohi, color: CYAN,
-      goals: ["Access academic tools in under 3 taps", "Track attendance reliably each week", "View timetable at a glance"],
+      name: "Aarav Patil", age: 19, year: "Second Year", program: "B.Tech Computer Engineering",
+      img: personaAarav, color: CYAN,
+      goals: ["Check attendance quickly", "View timetable at a glance", "Access academic modules fast"],
       behaviors: ["Mobile-first — phone over laptop", "Checks ERP 4–5 times a day", "Quick task-driven sessions"],
-      frustrations: ["Confusing module layout", "Cluttered dashboard hierarchy", "Hard to discover key actions"],
+      frustrations: ["Hidden navigation", "Too many clicks for basic tasks", "Hard to find key features"],
       needs: ["Predictable, simple navigation", "Stronger hierarchy", "Fast paths to common actions"],
       quote: "I just want to find what I need without clicking through five screens.",
     },
     {
-      name: "Neha Patil", age: 20, year: "Third Year", program: "B.Tech Information Technology",
+      name: "Neha Sharma", age: 20, year: "Third Year", program: "B.Tech Information Technology",
       img: personaNeha, color: PINK,
-      goals: ["Track exam and project deadlines", "Monitor academic progress over semesters", "Stay organized across modules"],
+      goals: ["Track deadlines reliably", "Monitor academic progress", "Stay organized across modules"],
       behaviors: ["Splits usage between phone and laptop", "Plans week in one sitting", "Relies on notifications"],
-      frustrations: ["Hidden updates", "Missed deadlines", "Weak information hierarchy"],
+      frustrations: ["Missed notifications", "Poor information hierarchy", "Hidden updates and changes"],
       needs: ["Visible reminders and alerts", "Organized academic timeline", "Clear progress visibility"],
       quote: "I shouldn't have to search multiple pages to know what's due this week.",
     },
@@ -1109,7 +1109,7 @@ export default function ErpRedesign() {
         </div>
       </section>
 
-      <Transition text="What did our research reveal? Four insights that shaped every design decision." accent={CYAN} />
+      <Transition text="Behind every statistic was a student trying to complete a simple task." accent={CYAN} />
 
       {/* KEY INSIGHTS */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
@@ -1121,7 +1121,7 @@ export default function ErpRedesign() {
         <KeyInsights />
       </section>
 
-      <Transition text="Who are these students, really? Meet the people behind the data." accent={PINK} />
+      <Transition text="To understand the patterns, we first needed to understand the people." accent={PINK} />
 
       {/* PERSONAS */}
       <section id="personas" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
@@ -1177,7 +1177,7 @@ export default function ErpRedesign() {
         </div>
       </section>
 
-      <Transition text="Where exactly was the system failing? A heuristic audit revealed the breakdown points." accent={CYAN} />
+      <Transition text="These students revealed where the experience was breaking down." accent={CYAN} />
 
       {/* HEURISTIC */}
       <section id="evaluation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
@@ -1242,7 +1242,7 @@ export default function ErpRedesign() {
         })}
       </section>
 
-      <Transition text="Knowing the breakdown points, we reimagined how students actually move through the portal." accent={PINK} />
+      <Transition text="Once the failures were mapped, the structure itself needed rethinking." accent={PINK} />
 
       {/* USER FLOW */}
       <section id="flow" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
@@ -1306,7 +1306,7 @@ export default function ErpRedesign() {
         </div>
       </section>
 
-      <Transition text="Six structured stages turned insights into a delivered redesign." accent={CYAN} />
+      <Transition text="Research became strategy. Strategy became design." accent={CYAN} />
 
       {/* PROCESS */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
@@ -1347,7 +1347,7 @@ export default function ErpRedesign() {
         </div>
       </section>
 
-      <Transition text="Now see those decisions come alive in the prototype." accent={PINK} />
+      <Transition text="The decisions were no longer theoretical. They were ready to be tested." accent={PINK} />
 
       {/* PROTOTYPE */}
       <section id="prototype" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
@@ -1498,7 +1498,7 @@ export default function ErpRedesign() {
         <ImpactDashboard />
       </section>
 
-      <Transition text="The numbers behind the transformation." accent={CYAN} />
+      <Transition text="The redesign wasn't measured by aesthetics alone — it was measured by impact." accent={CYAN} />
 
       {/* OUTCOMES */}
       <section id="outcomes" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 56 }}>
