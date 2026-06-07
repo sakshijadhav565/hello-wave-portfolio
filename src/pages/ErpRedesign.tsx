@@ -1485,7 +1485,8 @@ export default function ErpRedesign() {
       <Transition text="These students revealed where the experience was breaking down." accent={CYAN} />
 
       {/* HEURISTIC */}
-      <section id="evaluation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
+      <section id="evaluation" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5 overflow-hidden" style={{ paddingTop: 48, paddingBottom: 48 }}>
+        <BlueprintBg variant="blueprint" opacity={0.06} accent={PINK} />
         <Reveal>
           <SectionLabel>07 — EVALUATION</SectionLabel>
           <H2>Heuristic Evaluation</H2>
