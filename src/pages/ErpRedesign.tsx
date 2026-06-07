@@ -428,7 +428,7 @@ function BAComparison({ s, i, reverse }: { s: any; i: number; reverse: boolean }
               boxShadow: `0 18px 50px rgba(0,0,0,0.6), 0 0 20px ${label === "AFTER" ? "hsla(187,100%,50%,0.15)" : "hsla(0,85%,60%,0.1)"}`,
             }}>
             <img src={src as string} alt={`${s.title} ${label}`} loading="lazy" decoding="async"
-              className="w-full max-w-[230px] h-auto rounded-[22px]" />
+              className="w-full max-w-[180px] h-auto rounded-[22px]" />
           </div>
         </div>
       ))}
