@@ -590,7 +590,7 @@ function BASlider({ before, after, title }: { before: string; after: string; tit
   };
   return (
     <div ref={ref}
-      className="relative w-full max-w-md mx-auto rounded-[28px] overflow-hidden select-none cursor-ew-resize"
+      className="relative w-full max-w-[340px] mx-auto rounded-[28px] overflow-hidden select-none cursor-ew-resize"
       style={{ border: "1px solid hsla(187,100%,50%,0.35)", boxShadow: "0 18px 50px rgba(0,0,0,0.6), 0 0 30px hsla(187,100%,50%,0.18)" }}
       onMouseDown={(e) => { dragging.current = true; onMove(e.clientX); }}
       onMouseMove={(e) => { if (dragging.current) onMove(e.clientX); }}
