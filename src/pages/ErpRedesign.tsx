@@ -1825,6 +1825,8 @@ export default function ErpRedesign() {
           <p className="text-white/60 max-w-2xl mb-10 leading-[1.75]">Quantified improvements drawn from the redesign — focused on clarity, usability, and modern academic workflows.</p>
         </Reveal>
 
+        <OutcomeBars />
+
         {/* Bold delta metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <OutcomeMetric direction="down" value="60%" label="Navigation Complexity" color="hsl(150,90%,55%)" delay={0} />
