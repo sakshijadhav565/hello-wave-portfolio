@@ -1350,6 +1350,7 @@ export default function ErpRedesign() {
             </Reveal>
           ))}
         </div>
+        <ResearchChart data={research} />
       </section>
 
       {/* VOICE OF STUDENTS */}
