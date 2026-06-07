@@ -858,11 +858,18 @@ export default function ErpRedesign() {
 
             <SectionLabel color={PINK}>UI / UX CASE STUDY</SectionLabel>
             <h1
-              className="font-heading font-bold tracking-tight text-white mt-5 mb-5 pb-2"
+              className="font-heading font-bold tracking-tight text-white mt-5 mb-5"
               style={{ fontSize: "clamp(40px, 5.5vw, 64px)", lineHeight: 1.15, overflow: "visible" }}
             >
               ERP Portal{" "}
-              <span className="erp-anim-underline inline-block pb-1" style={{ color: CYAN, lineHeight: 1.2 }}>
+              <span
+                className="inline-block"
+                style={{
+                  color: CYAN,
+                  lineHeight: 1.15,
+                  textShadow: "0 0 30px hsla(187,100%,50%,0.45), 0 0 60px hsla(187,100%,50%,0.2)",
+                }}
+              >
                 Redesign
               </span>
             </h1>
