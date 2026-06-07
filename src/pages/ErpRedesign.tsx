@@ -1495,6 +1495,8 @@ export default function ErpRedesign() {
           <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">Scored against Nielsen's 10 usability heuristics, grouped by severity. Every dimension scored below 60%.</p>
         </Reveal>
 
+        <HeuristicHeatmap data={heuristics} />
+
         {/* Top 3 UX problems */}
         <Reveal delay={0.05}>
           <div className="mb-6 rounded-2xl p-6 relative overflow-hidden"
