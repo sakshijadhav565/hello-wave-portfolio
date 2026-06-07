@@ -1551,7 +1551,8 @@ export default function ErpRedesign() {
       <Transition text="Once the failures were mapped, the structure itself needed rethinking." accent={PINK} />
 
       {/* USER FLOW */}
-      <section id="flow" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
+      <section id="flow" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5 overflow-hidden" style={{ paddingTop: 48, paddingBottom: 48 }}>
+        <BlueprintBg variant="grid" opacity={0.06} accent={CYAN} />
         <Reveal>
           <SectionLabel>08 — USER FLOW</SectionLabel>
           <H2>Previous Flow vs Redesigned Flow</H2>
