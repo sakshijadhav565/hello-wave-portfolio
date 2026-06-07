@@ -1354,7 +1354,8 @@ export default function ErpRedesign() {
       </section>
 
       {/* VOICE OF STUDENTS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5 overflow-hidden" style={{ paddingTop: 48, paddingBottom: 48 }}>
+        <BlueprintBg variant="grid" opacity={0.05} accent={PINK} />
         <Reveal>
           <SectionLabel color={PINK}>04 — VOICE OF STUDENTS</SectionLabel>
           <H2>In their own words.</H2>
