@@ -1325,7 +1325,8 @@ export default function ErpRedesign() {
       </section>
 
       {/* RESEARCH */}
-      <section id="research" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
+      <section id="research" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5 overflow-hidden" style={{ paddingTop: 48, paddingBottom: 48 }}>
+        <BlueprintBg variant="dots" opacity={0.07} accent={CYAN} />
         <BlueprintBg variant="dots" opacity={0.07} accent={CYAN} />
         <Reveal>
           <SectionLabel>03 — RESEARCH</SectionLabel>
