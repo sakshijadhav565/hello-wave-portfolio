@@ -619,6 +619,307 @@ function BASlider({ before, after, title }: { before: string; after: string; tit
   );
 }
 
+/* ── Subtle background texture (dots / grid / blueprint) ── */
+function BlueprintBg({ variant = "dots", opacity = 0.07, accent = CYAN }: { variant?: "dots" | "grid" | "blueprint"; opacity?: number; accent?: string }) {
+  const c1 = accent === CYAN ? "hsla(187,100%,50%,0.55)" : "hsla(342,100%,59%,0.55)";
+  const c2 = accent === CYAN ? "hsla(342,100%,59%,0.35)" : "hsla(187,100%,50%,0.35)";
+  const patterns: Record<string, string> = {
+    dots: `radial-gradient(${c1} 1px, transparent 1px)`,
+    grid: `linear-gradient(${c1} 1px, transparent 1px), linear-gradient(90deg, ${c1} 1px, transparent 1px)`,
+    blueprint: `linear-gradient(${c2} 1px, transparent 1px), linear-gradient(90deg, ${c1} 1px, transparent 1px)`,
+  };
+  const size = variant === "dots" ? "22px 22px" : "44px 44px";
+  return (
+    <div aria-hidden className="absolute inset-0 pointer-events-none"
+      style={{
+        backgroundImage: patterns[variant], backgroundSize: size, opacity, zIndex: 0,
+        maskImage: "radial-gradient(ellipse at center, black 35%, transparent 85%)",
+        WebkitMaskImage: "radial-gradient(ellipse at center, black 35%, transparent 85%)",
+      }} />
+  );
+}
+
+/* ── Research survey distribution chart ── */
+function ResearchChart({ data }: { data: { value: string; title: string }[] }) {
+  const { ref, v } = useReveal(0.2);
+  return (
+    <div ref={ref as any} className={`${card} p-6 mt-5`}>
+      <div className="flex items-center justify-between mb-4">
+        <div className="font-mono text-[10px] tracking-widest text-white/45">SURVEY DISTRIBUTION · n = 80+ STUDENTS</div>
+        <div className="font-mono text-[9px] tracking-widest text-white/30">% RESPONDENTS</div>
+      </div>
+      <div className="space-y-3">
+        {data.map((d, i) => {
+          const n = parseFloat(d.value);
+          return (
+            <div key={d.title}>
+              <div className="flex justify-between text-xs mb-1.5">
+                <span className="text-white/75">{d.title}</span>
+                <span className="font-mono font-medium" style={{ color: CYAN }}>{d.value}</span>
+              </div>
+              <div className="h-2 rounded-full bg-white/[0.04] overflow-hidden border border-white/5">
+                <div className="h-full rounded-full transition-all duration-1000 ease-out"
+                  style={{
+                    width: v ? `${n}%` : "0%",
+                    background: `linear-gradient(90deg, ${CYAN}, ${PINK})`,
+                    boxShadow: `0 0 10px ${CYAN}77`,
+                    transitionDelay: `${i * 80}ms`,
+                  }} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ── Affinity map · clustered insight notes ── */
+function AffinityMap() {
+  const clusters = [
+    { theme: "Navigation Pain", color: CYAN, notes: ["Hidden modules", "Multi-level menus", "Trial & error", "No search"] },
+    { theme: "Visual & Hierarchy", color: PINK, notes: ["Cluttered UI", "Flat emphasis", "Dated typography", "No dark mode"] },
+    { theme: "Mobile Failures", color: "hsl(38,100%,60%)", notes: ["Broken layouts", "Tiny tap targets", "Overflowing tables"] },
+    { theme: "Feedback Gaps", color: GREEN, notes: ["Silent errors", "Missed notifications", "Grievance void"] },
+  ];
+  return (
+    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+      {clusters.map((c, i) => (
+        <Reveal key={c.theme} delay={i * 0.06}>
+          <div className={`${card} p-4 h-full`} style={{ borderColor: `${c.color}55`, boxShadow: `0 0 18px ${c.color}22` }}>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: c.color, boxShadow: `0 0 8px ${c.color}` }} />
+              <div className="font-mono text-[10px] tracking-widest" style={{ color: c.color }}>{c.theme.toUpperCase()}</div>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {c.notes.map(n => (
+                <span key={n} className="text-[11px] px-2 py-1 rounded bg-white/[0.04] border border-white/10 text-white/75 transition-colors hover:bg-white/[0.08]">{n}</span>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+      ))}
+    </div>
+  );
+}
+
+/* ── Persona behavioral comparison ── */
+function PersonaCompare() {
+  const dims = [
+    { label: "Mobile Usage Intensity", a: 95, b: 60 },
+    { label: "Notification Reliance", a: 40, b: 90 },
+    { label: "Need For Speed", a: 90, b: 55 },
+    { label: "Planning Behavior", a: 35, b: 85 },
+    { label: "Daily Sessions", a: 85, b: 50 },
+  ];
+  const { ref, v } = useReveal(0.2);
+  return (
+    <div ref={ref as any} className={`${card} p-6 mt-5`}>
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <div className="font-mono text-[10px] tracking-widest text-white/45">PERSONA COMPARISON · BEHAVIORAL DIMENSIONS</div>
+        <div className="flex gap-4 text-[10px] font-mono">
+          <span className="flex items-center gap-1.5" style={{ color: CYAN }}><span className="w-2 h-2 rounded-full" style={{ background: CYAN, boxShadow: `0 0 6px ${CYAN}` }} />Aarav</span>
+          <span className="flex items-center gap-1.5" style={{ color: PINK }}><span className="w-2 h-2 rounded-full" style={{ background: PINK, boxShadow: `0 0 6px ${PINK}` }} />Neha</span>
+        </div>
+      </div>
+      <div className="space-y-3">
+        {dims.map((d, i) => (
+          <div key={d.label}>
+            <div className="text-xs text-white/70 mb-1">{d.label}</div>
+            <div className="relative h-3 rounded-full bg-white/[0.04] overflow-hidden">
+              <div className="absolute top-0 left-0 h-1.5 rounded-full transition-all duration-1000 ease-out"
+                style={{ width: v ? `${d.a}%` : "0%", background: CYAN, boxShadow: `0 0 8px ${CYAN}88`, transitionDelay: `${i * 60}ms` }} />
+              <div className="absolute bottom-0 left-0 h-1.5 rounded-full transition-all duration-1000 ease-out"
+                style={{ width: v ? `${d.b}%` : "0%", background: PINK, boxShadow: `0 0 8px ${PINK}88`, transitionDelay: `${i * 60 + 100}ms` }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Emotional journey map ── */
+function JourneyMap() {
+  const stages = [
+    { name: "Login", emotion: 60, note: "Unclear branding" },
+    { name: "Home", emotion: 30, note: "Cluttered modules" },
+    { name: "Navigate", emotion: 15, note: "Lost in menus" },
+    { name: "Find Info", emotion: 25, note: "Hidden data" },
+    { name: "Take Action", emotion: 45, note: "Silent feedback" },
+    { name: "Exit", emotion: 40, note: "Half-done tasks" },
+  ];
+  const w = 600, h = 140;
+  const points = stages.map((s, i) => [(i / (stages.length - 1)) * w, h - (s.emotion / 100) * h]);
+  const path = points.map((p, i) => `${i === 0 ? "M" : "L"}${p[0]},${p[1]}`).join(" ");
+  return (
+    <div className={`${card} p-6 mb-6`}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="font-mono text-[10px] tracking-widest text-white/45">CURRENT JOURNEY · EMOTIONAL CURVE</div>
+        <div className="font-mono text-[9px] tracking-widest text-white/30">SENTIMENT</div>
+      </div>
+      <div className="relative">
+        <svg viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className="w-full h-36">
+          <defs>
+            <linearGradient id="jcurve" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor={PINK} stopOpacity="0.45" />
+              <stop offset="100%" stopColor={PINK} stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          {[0.25, 0.5, 0.75].map(y => (
+            <line key={y} x1="0" x2={w} y1={h * y} y2={h * y} stroke="hsla(255,100%,100%,0.05)" strokeDasharray="3 4" />
+          ))}
+          <path d={`${path} L${w},${h} L0,${h} Z`} fill="url(#jcurve)" />
+          <path d={path} stroke={PINK} strokeWidth="2" fill="none" style={{ filter: `drop-shadow(0 0 6px ${PINK})` }} />
+          {points.map((p, i) => (
+            <circle key={i} cx={p[0]} cy={p[1]} r="4" fill={CYAN} style={{ filter: `drop-shadow(0 0 6px ${CYAN})` }} />
+          ))}
+        </svg>
+        <div className="grid grid-cols-6 mt-2 gap-1">
+          {stages.map(s => (
+            <div key={s.name} className="text-center">
+              <div className="text-white/80 text-[11px] font-medium">{s.name}</div>
+              <div className="text-white/45 text-[10px] leading-tight mt-0.5">{s.note}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Heuristic evaluation heatmap ── */
+function HeuristicHeatmap({ data }: { data: { name: string; score: number }[] }) {
+  return (
+    <div className={`${card} p-5 mb-6`}>
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <div className="font-mono text-[10px] tracking-widest text-white/45">HEURISTIC HEATMAP · 10 DIMENSIONS</div>
+        <div className="flex items-center gap-2 text-[9px] font-mono text-white/40">
+          <span>LOW</span>
+          <div className="w-20 h-2 rounded-full" style={{ background: `linear-gradient(90deg, hsl(0,90%,62%), hsl(38,100%,60%), ${CYAN})` }} />
+          <span>HIGH</span>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+        {data.map(h => {
+          const hue = h.score < 40 ? 0 : h.score < 55 ? 38 : 187;
+          return (
+            <div key={h.name} className="aspect-square rounded-lg p-2.5 flex flex-col justify-between transition-transform duration-300 hover:scale-[1.04]"
+              style={{
+                background: `hsla(${hue},90%,55%,${0.12 + h.score / 280})`,
+                border: `1px solid hsla(${hue},90%,55%,0.45)`,
+                boxShadow: `0 0 14px hsla(${hue},90%,55%,0.22)`,
+              }}>
+              <div className="text-[9px] leading-tight text-white/85 font-medium">{h.name}</div>
+              <div className="font-mono text-sm font-bold self-end" style={{ color: `hsl(${hue},95%,68%)`, textShadow: `0 0 8px hsla(${hue},95%,55%,0.6)` }}>{h.score}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ── Information architecture diagram ── */
+function IADiagram() {
+  const data = [
+    { title: "Legacy IA · 7 levels deep", color: PINK, rows: [["Home"], ["Menu", "Menu"], ["Sub", "Sub", "Sub"], ["Module", "Module", "Module", "Module"]] },
+    { title: "Redesigned IA · 3 levels flat", color: CYAN, rows: [["Home"], ["Priority", "Priority", "Priority", "Priority"], ["Action", "Action", "Action", "Action", "Action"]] },
+  ];
+  return (
+    <div className="grid md:grid-cols-2 gap-4 mb-6">
+      {data.map(d => (
+        <Reveal key={d.title}>
+          <div className={`${card} p-5 h-full`} style={{ borderColor: `${d.color}45`, boxShadow: `0 0 20px ${d.color}1a` }}>
+            <div className="font-mono text-[10px] tracking-widest mb-4" style={{ color: d.color }}>{d.title.toUpperCase()}</div>
+            <div className="space-y-2.5">
+              {d.rows.map((row, ri) => (
+                <div key={ri} className="flex justify-center gap-1.5 flex-wrap">
+                  {row.map((n, ni) => (
+                    <div key={ni} className="px-2.5 py-1 rounded text-[10px] font-mono"
+                      style={{ background: `${d.color}18`, border: `1px solid ${d.color}66`, color: "hsla(0,0%,100%,0.85)" }}>{n}</div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+      ))}
+    </div>
+  );
+}
+
+/* ── Wireframe progression ── */
+function WireframeRow() {
+  const wires = [
+    { label: "Sketch", lines: [80, 55, 70, 50, 65], intensity: 0.06 },
+    { label: "Lo-Fi", lines: [85, 65, 75, 55], intensity: 0.12 },
+    { label: "Mid-Fi", lines: [90, 70, 80, 60], intensity: 0.2 },
+    { label: "Hi-Fi", lines: [95, 75, 85], intensity: 0.32 },
+  ];
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8">
+      {wires.map((w, i) => (
+        <Reveal key={w.label} delay={i * 0.08}>
+          <div className={`${card} p-3 group`}>
+            <div className="aspect-[3/4] rounded-md bg-black/40 border border-white/10 p-2 flex flex-col gap-1.5 transition-transform duration-300 group-hover:scale-[1.02]">
+              <div className="h-3 rounded" style={{ background: `hsla(187,100%,50%,${w.intensity + 0.05})` }} />
+              {w.lines.map((width, li) => (
+                <div key={li} className="rounded" style={{ height: 5, width: `${width}%`, background: `hsla(187,100%,50%,${w.intensity})` }} />
+              ))}
+              <div className="mt-auto h-10 rounded"
+                style={{ background: `linear-gradient(135deg, hsla(187,100%,50%,${w.intensity + 0.05}), hsla(342,100%,59%,${w.intensity * 0.6}))`, border: "1px solid hsla(255,100%,100%,0.06)" }} />
+            </div>
+            <div className="font-mono text-[10px] tracking-widest text-white/60 mt-2 text-center">{w.label.toUpperCase()}</div>
+          </div>
+        </Reveal>
+      ))}
+    </div>
+  );
+}
+
+/* ── Outcome comparison bars (before vs after) ── */
+function OutcomeBars() {
+  const data = [
+    { label: "Taps to Reach Attendance", before: 7, after: 2, max: 10 },
+    { label: "Time on Grade Card (sec)", before: 42, after: 12, max: 60 },
+    { label: "Mobile Usability Score", before: 28, after: 86, max: 100, invert: true },
+    { label: "Navigation Success Rate", before: 43, after: 92, max: 100, invert: true },
+  ];
+  const { ref, v } = useReveal(0.2);
+  return (
+    <div ref={ref as any} className={`${card} p-6 mb-8`}>
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <div className="font-mono text-[10px] tracking-widest text-white/45">BEFORE vs AFTER · IMPACT MEASUREMENTS</div>
+        <div className="flex gap-4 text-[10px] font-mono">
+          <span className="flex items-center gap-1.5" style={{ color: "hsl(0,85%,60%)" }}><span className="w-2 h-2 rounded-full" style={{ background: "hsl(0,85%,60%)" }} />Before</span>
+          <span className="flex items-center gap-1.5" style={{ color: CYAN }}><span className="w-2 h-2 rounded-full" style={{ background: CYAN, boxShadow: `0 0 6px ${CYAN}` }} />After</span>
+        </div>
+      </div>
+      <div className="space-y-4">
+        {data.map((d, i) => (
+          <div key={d.label}>
+            <div className="flex justify-between text-xs mb-1.5">
+              <span className="text-white/75">{d.label}</span>
+              <span className="font-mono text-white/55">
+                <span style={{ color: "hsl(0,85%,60%)" }}>{d.before}</span>
+                <span className="mx-1.5 text-white/30">→</span>
+                <span style={{ color: CYAN }}>{d.after}</span>
+              </span>
+            </div>
+            <div className="relative h-3 rounded-full bg-white/[0.04] overflow-hidden">
+              <div className="absolute top-0 left-0 h-1.5 rounded-full transition-all duration-1000 ease-out"
+                style={{ width: v ? `${(d.before / d.max) * 100}%` : "0%", background: "hsl(0,85%,60%)", opacity: 0.85, transitionDelay: `${i * 70}ms` }} />
+              <div className="absolute bottom-0 left-0 h-1.5 rounded-full transition-all duration-1000 ease-out"
+                style={{ width: v ? `${(d.after / d.max) * 100}%` : "0%", background: CYAN, boxShadow: `0 0 8px ${CYAN}88`, transitionDelay: `${i * 70 + 120}ms` }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function ErpRedesign() {
   const navigate = useNavigate();
 
