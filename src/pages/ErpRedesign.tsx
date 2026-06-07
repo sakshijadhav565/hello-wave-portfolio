@@ -1373,6 +1373,7 @@ export default function ErpRedesign() {
             </Reveal>
           ))}
         </div>
+        <AffinityMap />
       </section>
 
       {/* EXPECTATIONS VS GAPS */}
