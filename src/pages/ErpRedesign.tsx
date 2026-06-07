@@ -1563,6 +1563,9 @@ export default function ErpRedesign() {
           <p className="text-white/60 max-w-2xl mb-8 leading-[1.75]">A linear, mobile-friendly flow that surfaces the most-used academic journeys first and removes hidden detours.</p>
         </Reveal>
 
+        <JourneyMap />
+        <IADiagram />
+
         <div className="grid md:grid-cols-2 gap-4 mb-6">
           <Reveal>
             <div className="rounded-2xl p-5 h-full"
