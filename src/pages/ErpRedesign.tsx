@@ -1481,6 +1481,7 @@ export default function ErpRedesign() {
             </Reveal>
           ))}
         </div>
+        <PersonaCompare />
       </section>
 
       <Transition text="These students revealed where the experience was breaking down." accent={CYAN} />
