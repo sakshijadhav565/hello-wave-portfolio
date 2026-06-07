@@ -1428,7 +1428,8 @@ export default function ErpRedesign() {
       <Transition text="To understand the patterns, we first needed to understand the people." accent={PINK} />
 
       {/* PERSONAS */}
-      <section id="personas" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
+      <section id="personas" className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5 overflow-hidden" style={{ paddingTop: 48, paddingBottom: 48 }}>
+        <BlueprintBg variant="grid" opacity={0.05} accent={CYAN} />
         <Reveal>
           <SectionLabel>06 — USERS</SectionLabel>
           <H2>User Personas</H2>
