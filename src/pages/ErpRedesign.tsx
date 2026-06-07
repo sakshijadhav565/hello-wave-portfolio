@@ -1623,7 +1623,8 @@ export default function ErpRedesign() {
       <Transition text="Research became strategy. Strategy became design." accent={CYAN} />
 
       {/* PROCESS */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5" style={{ paddingTop: 48, paddingBottom: 48 }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 border-t border-white/5 overflow-hidden" style={{ paddingTop: 48, paddingBottom: 48 }}>
+        <BlueprintBg variant="dots" opacity={0.07} accent={PINK} />
         <Reveal>
           <SectionLabel>09 — PROCESS</SectionLabel>
           <H2>Design Process</H2>
