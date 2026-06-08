@@ -1692,7 +1692,6 @@ export default function ErpRedesign() {
             })}
           </div>
         </div>
-        <WireframeRow />
       </section>
 
       <Transition text="The decisions were no longer theoretical. They were ready to be tested." accent={PINK} />
