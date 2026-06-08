@@ -1726,7 +1726,7 @@ export default function ErpRedesign() {
         </Reveal>
         <Reveal delay={0.18}>
           <div className="flex justify-center mt-8">
-            <a href="https://www.figma.com" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.figma.com/design/RWRrZVB0qlLRk2W02QMDoC/Main?node-id=0-1&p=f&t=wajvtNLxpLwk1Gfq-0" target="_blank" rel="noopener noreferrer"
               className="group inline-flex items-center gap-2 px-6 py-3 rounded-full font-mono text-sm font-medium transition-all duration-300 relative overflow-hidden"
               style={{
                 color: CYAN,
