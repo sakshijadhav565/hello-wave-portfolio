@@ -1895,7 +1895,7 @@ export default function ErpRedesign() {
               className="px-5 py-2.5 rounded-lg border border-white/15 text-white/80 text-sm hover:bg-white/5 transition-colors inline-flex items-center gap-2">
               <ArrowLeft size={14} /> Back to Projects
             </button>
-            <a href="https://www.figma.com" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.figma.com/design/RWRrZVB0qlLRk2W02QMDoC/Main?node-id=0-1&p=f&t=wajvtNLxpLwk1Gfq-0" target="_blank" rel="noopener noreferrer"
               className="px-5 py-2.5 rounded-lg text-sm font-medium inline-flex items-center gap-2 transition-all hover:scale-[1.02]"
               style={{ background: `linear-gradient(135deg, ${CYAN}, hsl(187,80%,45%))`, color: "hsl(0,0%,4%)" }}>
               <Figma size={14} /> View on Figma
