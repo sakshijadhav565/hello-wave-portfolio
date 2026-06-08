@@ -7,6 +7,7 @@ import {
   Users, Eye, Compass, Zap, Award,
 } from "lucide-react";
 import AntigravityBackground from "@/components/AntigravityBackground";
+import AmbientAtmosphere from "@/components/AmbientAtmosphere";
 
 import loginBefore from "@/assets/erp-login-before.png";
 import loginAfter from "@/assets/erp-login-after.png";
