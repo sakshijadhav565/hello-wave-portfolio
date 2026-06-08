@@ -6,6 +6,7 @@ import {
   MessageSquare, Layers, Type, Sparkles, ExternalLink, TrendingDown, TrendingUp,
   Users, Eye, Compass, Zap, Award,
 } from "lucide-react";
+import AntigravityBackground from "@/components/AntigravityBackground";
 
 import loginBefore from "@/assets/erp-login-before.png";
 import loginAfter from "@/assets/erp-login-after.png";
@@ -1134,6 +1135,7 @@ export default function ErpRedesign() {
       <StickyNav />
       <Rocket />
       <Particles />
+      <AntigravityBackground />
       <Starfield />
       <MouseGlow />
       <div className="fixed inset-0 pointer-events-none -z-10" style={{
