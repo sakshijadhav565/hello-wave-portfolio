@@ -1167,6 +1167,7 @@ export default function ErpRedesign() {
       <Rocket />
       <Particles />
       <AntigravityBackground />
+      <AmbientAtmosphere />
       <Starfield />
       <MouseGlow />
       <div className="fixed inset-0 pointer-events-none -z-10" style={{
