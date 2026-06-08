@@ -1,38 +1,46 @@
 /**
- * Subtle ambient background: a few faint cyan glow dots that drift and pulse
- * very slowly. CSS-only, pointer-events none, sits behind content.
+ * Ambient background: many soft cyan radial glow particles drifting across
+ * the whole page. CSS-only, pointer-events none, sits behind content.
  */
 const AmbientAtmosphere = () => {
-  const CYAN = "#00E5FF";
-  const dots = [
-    { top: "12%", left: "8%",  size: 4, delay: 0,   dur: 9 },
-    { top: "28%", left: "82%", size: 3, delay: 1.4, dur: 11 },
-    { top: "44%", left: "18%", size: 5, delay: 0.6, dur: 13 },
-    { top: "62%", left: "70%", size: 3, delay: 2.1, dur: 10 },
-    { top: "78%", left: "12%", size: 4, delay: 1.0, dur: 12 },
-    { top: "88%", left: "88%", size: 3, delay: 0.3, dur: 14 },
-    { top: "20%", left: "48%", size: 2, delay: 1.8, dur: 9 },
-    { top: "55%", left: "92%", size: 2, delay: 0.9, dur: 10 },
-    { top: "70%", left: "40%", size: 3, delay: 2.4, dur: 11 },
-  ];
+  const CYAN = "#22e3ff";
+  const COUNT = 80;
+
+  // Deterministic pseudo-random so positions stay stable between renders
+  const rand = (seed: number) => {
+    const x = Math.sin(seed * 9301 + 49297) * 233280;
+    return x - Math.floor(x);
+  };
+
+  const dots = Array.from({ length: COUNT }, (_, i) => {
+    const size = 2 + rand(i + 1) * 5;        // 2 – 7 px core
+    return {
+      top: `${rand(i + 11) * 100}%`,
+      left: `${rand(i + 23) * 100}%`,
+      size,
+      delay: rand(i + 37) * 8,
+      dur: 6 + rand(i + 53) * 8,              // 6 – 14 s
+      base: 0.25 + rand(i + 71) * 0.35,       // base opacity
+    };
+  });
 
   return (
     <>
       <style>{`
         @keyframes erp-amb-pulse {
-          0%, 100% { opacity: 0.15; transform: translateY(0); }
-          50%      { opacity: 0.55; transform: translateY(-6px); }
+          0%, 100% { opacity: var(--base, 0.3); transform: translateY(0) scale(1); }
+          50%      { opacity: 1;                transform: translateY(-8px) scale(1.15); }
         }
         @media (prefers-reduced-motion: reduce) {
-          .erp-amb-dot { animation: none !important; opacity: 0.25 !important; }
+          .erp-amb-dot { animation: none !important; }
         }
       `}</style>
       <div
         aria-hidden
-        className="fixed inset-0 pointer-events-none -z-10"
+        className="fixed inset-0 pointer-events-none -z-10 overflow-hidden"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 20% 30%, hsla(187,100%,50%,0.04), transparent 45%), radial-gradient(circle at 80% 70%, hsla(342,100%,59%,0.03), transparent 50%)",
+            "radial-gradient(circle at 20% 30%, hsla(187,100%,50%,0.06), transparent 45%), radial-gradient(circle at 80% 70%, hsla(342,100%,59%,0.04), transparent 50%)",
         }}
       >
         {dots.map((d, i) => (
@@ -45,8 +53,11 @@ const AmbientAtmosphere = () => {
               width: d.size,
               height: d.size,
               background: CYAN,
-              boxShadow: `0 0 ${d.size * 4}px ${CYAN}, 0 0 ${d.size * 8}px hsla(187,100%,50%,0.4)`,
+              boxShadow: `0 0 ${d.size * 5}px ${CYAN}, 0 0 ${d.size * 12}px hsla(187,90%,55%,0.55), 0 0 ${d.size * 22}px hsla(187,90%,55%,0.25)`,
+              ["--base" as any]: d.base,
+              opacity: d.base,
               animation: `erp-amb-pulse ${d.dur}s ease-in-out ${d.delay}s infinite`,
+              willChange: "opacity, transform",
             }}
           />
         ))}
