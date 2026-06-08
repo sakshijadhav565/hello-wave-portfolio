@@ -390,7 +390,8 @@ function SectionLabel({ children, color = CYAN }: { children: React.ReactNode; c
 
 function H2({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="font-heading font-semibold tracking-tight text-white mb-3" style={{ fontSize: "clamp(26px, 3.2vw, 36px)" }}>
+    <h2 className="font-heading font-semibold tracking-tight text-white mb-3"
+      style={{ fontSize: "clamp(26px, 3.2vw, 36px)", textShadow: "0 0 18px hsla(187,100%,50%,0.18), 0 0 2px hsla(187,100%,50%,0.25)" }}>
       {children}
     </h2>
   );
