@@ -790,33 +790,62 @@ function JourneyMap() {
   );
 }
 
-/* ── Heuristic evaluation heatmap ── */
+/* ── Heuristic evaluation dashboard ── */
 function HeuristicHeatmap({ data }: { data: { name: string; score: number }[] }) {
+  const sevOf = (s: number) =>
+    s < 40
+      ? { label: "CRITICAL", c: "hsl(0,85%,62%)" }
+      : s < 55
+      ? { label: "MAJOR", c: "hsl(38,100%,60%)" }
+      : { label: "MODERATE", c: CYAN };
+  const avg = Math.round(data.reduce((a, h) => a + h.score, 0) / data.length);
   return (
-    <div className={`${card} p-5 mb-6`}>
-      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-        <div className="font-mono text-[10px] tracking-widest text-white/45">HEURISTIC HEATMAP · 10 DIMENSIONS</div>
-        <div className="flex items-center gap-2 text-[9px] font-mono text-white/40">
-          <span>LOW</span>
-          <div className="w-20 h-2 rounded-full" style={{ background: `linear-gradient(90deg, hsl(0,90%,62%), hsl(38,100%,60%), ${CYAN})` }} />
-          <span>HIGH</span>
+    <div className={`${card} p-6 mb-6`}>
+      <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
+        <div>
+          <div className="font-mono text-[10px] tracking-widest text-white/45 mb-1">UX AUDIT · NIELSEN'S 10 HEURISTICS</div>
+          <div className="text-white/80 text-sm">Severity overview across all dimensions</div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="text-right">
+            <div className="font-mono text-[9px] tracking-widest text-white/40">AVG SCORE</div>
+            <div className="font-mono text-xl font-bold" style={{ color: CYAN, textShadow: `0 0 10px ${CYAN}55` }}>{avg}<span className="text-white/40 text-sm">/100</span></div>
+          </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-        {data.map(h => {
-          const hue = h.score < 40 ? 0 : h.score < 55 ? 38 : 187;
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        {data.map((h) => {
+          const sev = sevOf(h.score);
           return (
-            <div key={h.name} className="aspect-square rounded-lg p-2.5 flex flex-col justify-between transition-transform duration-300 hover:scale-[1.04]"
+            <div key={h.name}
+              className="group flex items-center gap-3 rounded-lg px-3.5 py-3 transition-all duration-300 hover:translate-x-0.5"
               style={{
-                background: `hsla(${hue},90%,55%,${0.12 + h.score / 280})`,
-                border: `1px solid hsla(${hue},90%,55%,0.45)`,
-                boxShadow: `0 0 14px hsla(${hue},90%,55%,0.22)`,
+                background: "hsla(0,0%,100%,0.025)",
+                border: "1px solid hsla(0,0%,100%,0.06)",
               }}>
-              <div className="text-[9px] leading-tight text-white/85 font-medium">{h.name}</div>
-              <div className="font-mono text-sm font-bold self-end" style={{ color: `hsl(${hue},95%,68%)`, textShadow: `0 0 8px hsla(${hue},95%,55%,0.6)` }}>{h.score}</div>
+              <div className="w-1 self-stretch rounded-full" style={{ background: sev.c, boxShadow: `0 0 8px ${sev.c}88` }} />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-baseline justify-between gap-3 mb-1.5">
+                  <span className="text-white/90 text-[13px] font-medium truncate">{h.name}</span>
+                  <span className="font-mono text-[11px] font-semibold tabular-nums" style={{ color: sev.c }}>{h.score}</span>
+                </div>
+                <div className="h-1 rounded-full bg-white/[0.06] overflow-hidden">
+                  <div className="h-full rounded-full transition-all duration-700"
+                    style={{ width: `${h.score}%`, background: `linear-gradient(90deg, ${sev.c}, ${sev.c}aa)` }} />
+                </div>
+              </div>
+              <span className="font-mono text-[8.5px] tracking-widest px-1.5 py-0.5 rounded shrink-0"
+                style={{ color: sev.c, background: `${sev.c}14`, border: `1px solid ${sev.c}40` }}>{sev.label}</span>
             </div>
           );
         })}
+      </div>
+
+      <div className="mt-5 pt-4 border-t border-white/5 flex flex-wrap gap-4 text-[10px] font-mono text-white/50">
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full" style={{ background: "hsl(0,85%,62%)" }} />Critical · &lt; 40</span>
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full" style={{ background: "hsl(38,100%,60%)" }} />Major · 40–54</span>
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full" style={{ background: CYAN }} />Moderate · 55+</span>
       </div>
     </div>
   );
