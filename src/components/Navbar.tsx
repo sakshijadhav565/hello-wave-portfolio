@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import logo from "@/assets/sj-logo.png";
 
-const navLinks = ["Home", "About", "Skills", "Projects", "Contact"];
-const sectionIds = ["home", "about", "skills", "projects", "contact"];
+const navLinks = ["Home", "About", "Projects", "Contact"];
+const sectionIds = ["home", "about", "projects", "contact"];
 
 const Navbar = () => {
   const [activeLink, setActiveLink] = useState("Home");
