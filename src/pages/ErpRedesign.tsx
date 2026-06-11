@@ -1185,6 +1185,7 @@ export default function ErpRedesign() {
       <AntigravityBackground />
       <AmbientAtmosphere />
       <Starfield />
+      <SectionGlows />
       <MouseGlow />
       <div className="fixed inset-0 pointer-events-none -z-10" style={{
         background: "radial-gradient(ellipse 55% 40% at 18% 12%, hsla(187,100%,50%,0.10), transparent 65%), radial-gradient(ellipse 50% 40% at 82% 78%, hsla(342,100%,59%,0.09), transparent 65%), radial-gradient(ellipse 40% 30% at 50% 50%, hsla(270,80%,55%,0.05), transparent 70%)"
