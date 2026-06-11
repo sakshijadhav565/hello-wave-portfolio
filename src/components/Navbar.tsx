@@ -7,9 +7,13 @@ const sectionIds = ["home", "about", "projects", "contact"];
 const Navbar = () => {
   const [activeLink, setActiveLink] = useState("Home");
 
-  // Scroll-based active section detection
+  // Scroll-based active section detection — rAF-throttled to avoid
+  // a setState per scroll event (which caused re-render storms in prod).
   useEffect(() => {
-    const onScroll = () => {
+    let raf = 0;
+    let ticking = false;
+    const compute = () => {
+      ticking = false;
       const scrollY = window.scrollY + 120;
       for (let i = sectionIds.length - 1; i >= 0; i--) {
         const el = document.getElementById(sectionIds[i]);
@@ -20,8 +24,13 @@ const Navbar = () => {
       }
       setActiveLink("Home");
     };
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      raf = requestAnimationFrame(compute);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); };
   }, []);
 
   const handleClick = useCallback((link: string) => {
