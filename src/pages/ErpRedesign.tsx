@@ -110,13 +110,21 @@ function CursorDot() {
 function ScrollProgress() {
   const [p, setP] = useState(0);
   useEffect(() => {
-    const onScroll = () => {
+    let raf = 0;
+    let ticking = false;
+    const compute = () => {
+      ticking = false;
       const h = document.documentElement.scrollHeight - window.innerHeight;
       setP(h > 0 ? (window.scrollY / h) * 100 : 0);
     };
-    onScroll();
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      raf = requestAnimationFrame(compute);
+    };
+    compute();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); };
   }, []);
   return (
     <div className="fixed top-0 left-0 right-0 h-[2px] z-[99] bg-transparent">
@@ -135,7 +143,10 @@ function StickyNav() {
   const [show, setShow] = useState(false);
   const [active, setActive] = useState(NAV_SECTIONS[0][0]);
   useEffect(() => {
-    const onScroll = () => {
+    let raf = 0;
+    let ticking = false;
+    const compute = () => {
+      ticking = false;
       setShow(window.scrollY > 600);
       const y = window.scrollY + 200;
       for (let i = NAV_SECTIONS.length - 1; i >= 0; i--) {
@@ -143,8 +154,13 @@ function StickyNav() {
         if (el && el.offsetTop <= y) { setActive(NAV_SECTIONS[i][0]); return; }
       }
     };
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      raf = requestAnimationFrame(compute);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); };
   }, []);
   return (
     <div className={`fixed left-1/2 -translate-x-1/2 z-50 transition-all duration-500 hidden md:flex ${show ? "top-4 opacity-100" : "-top-16 opacity-0"}`}>
@@ -230,7 +246,7 @@ function Rocket() {
         .erp-rocket-a { animation: erp-rocket-path-a 70s ease-in-out infinite; }
         .erp-rocket-b { animation: erp-rocket-path-b 85s ease-in-out infinite; animation-delay: -30s; }
         @keyframes erp-flame-flicker { 0%,100% { opacity: 0.7; transform: scaleX(1);} 50% { opacity: 1; transform: scaleX(1.15);} }
-        .erp-rocket-flame { transform-origin: 46px 60px; animation: erp-flame-flicker 0.25s ease-in-out infinite; }
+        .erp-rocket-flame { transform-origin: 46px 60px; animation: erp-flame-flicker 1.2s ease-in-out infinite; }
         .erp-rocket-trail { animation: erp-flame-flicker 0.6s ease-in-out infinite; }
       `}</style>
     </>
