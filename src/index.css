@@ -117,3 +117,8 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* Subtle cyan text glow used across ERP case study cyan accents */
+.text-cyan-glow {
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.25);
+}
