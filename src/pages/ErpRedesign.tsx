@@ -246,7 +246,7 @@ function Rocket() {
         .erp-rocket-a { animation: erp-rocket-path-a 70s ease-in-out infinite; }
         .erp-rocket-b { animation: erp-rocket-path-b 85s ease-in-out infinite; animation-delay: -30s; }
         @keyframes erp-flame-flicker { 0%,100% { opacity: 0.7; transform: scaleX(1);} 50% { opacity: 1; transform: scaleX(1.15);} }
-        .erp-rocket-flame { transform-origin: 46px 60px; animation: erp-flame-flicker 0.25s ease-in-out infinite; }
+        .erp-rocket-flame { transform-origin: 46px 60px; animation: erp-flame-flicker 1.2s ease-in-out infinite; }
         .erp-rocket-trail { animation: erp-flame-flicker 0.6s ease-in-out infinite; }
       `}</style>
     </>
