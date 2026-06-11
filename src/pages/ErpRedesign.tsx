@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import AntigravityBackground from "@/components/AntigravityBackground";
 import AmbientAtmosphere from "@/components/AmbientAtmosphere";
+import SectionGlows from "@/components/SectionGlows";
 
 import loginBefore from "@/assets/erp-login-before.png";
 import loginAfter from "@/assets/erp-login-after.png";
