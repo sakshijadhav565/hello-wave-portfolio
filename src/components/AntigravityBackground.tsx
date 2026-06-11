@@ -21,13 +21,19 @@ const AntigravityBackground = () => {
     };
   }, []);
 
+  // Disable the WebGL canvas entirely on mobile or reduced-motion.
+  // The full-screen blur filter over a live <canvas> is what was tanking
+  // the production build (continuous GPU recomposite).
+  if (isMobile || reduced) return null;
+
   return (
     <div
       aria-hidden
       className="fixed inset-0 pointer-events-none -z-20"
       style={{
-        opacity: isMobile ? 0.12 : 0.18,
-        filter: `blur(${isMobile ? 18 : 26}px) saturate(1.1)`,
+        opacity: 0.14,
+        // Drop heavy filter blur — it forced a fullscreen GPU readback
+        // every animation frame. The mask alone gives the soft falloff.
         WebkitMaskImage:
           "radial-gradient(ellipse 90% 80% at 50% 50%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.75) 55%, rgba(0,0,0,1) 100%)",
         maskImage:
@@ -35,18 +41,18 @@ const AntigravityBackground = () => {
       }}
     >
       <Antigravity
-        count={isMobile ? 60 : 130}
+        count={80}
         color="#00E5FF"
         particleSize={1.1}
         particleShape="capsule"
-        waveSpeed={reduced ? 0.05 : 0.25}
+        waveSpeed={0.2}
         waveAmplitude={0.7}
-        rotationSpeed={reduced ? 0 : 0.04}
+        rotationSpeed={0.03}
         pulseSpeed={2}
         fieldStrength={4}
         magnetRadius={0}
         lerpSpeed={0.03}
-        autoAnimate={!reduced}
+        autoAnimate
       />
     </div>
   );
