@@ -110,13 +110,21 @@ function CursorDot() {
 function ScrollProgress() {
   const [p, setP] = useState(0);
   useEffect(() => {
-    const onScroll = () => {
+    let raf = 0;
+    let ticking = false;
+    const compute = () => {
+      ticking = false;
       const h = document.documentElement.scrollHeight - window.innerHeight;
       setP(h > 0 ? (window.scrollY / h) * 100 : 0);
     };
-    onScroll();
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      raf = requestAnimationFrame(compute);
+    };
+    compute();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); };
   }, []);
   return (
     <div className="fixed top-0 left-0 right-0 h-[2px] z-[99] bg-transparent">
