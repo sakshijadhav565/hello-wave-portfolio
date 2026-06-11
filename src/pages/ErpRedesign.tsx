@@ -143,7 +143,10 @@ function StickyNav() {
   const [show, setShow] = useState(false);
   const [active, setActive] = useState(NAV_SECTIONS[0][0]);
   useEffect(() => {
-    const onScroll = () => {
+    let raf = 0;
+    let ticking = false;
+    const compute = () => {
+      ticking = false;
       setShow(window.scrollY > 600);
       const y = window.scrollY + 200;
       for (let i = NAV_SECTIONS.length - 1; i >= 0; i--) {
@@ -151,8 +154,13 @@ function StickyNav() {
         if (el && el.offsetTop <= y) { setActive(NAV_SECTIONS[i][0]); return; }
       }
     };
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      raf = requestAnimationFrame(compute);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); };
   }, []);
   return (
     <div className={`fixed left-1/2 -translate-x-1/2 z-50 transition-all duration-500 hidden md:flex ${show ? "top-4 opacity-100" : "-top-16 opacity-0"}`}>
